@@ -1,7 +1,15 @@
 <div>
     <h1>{{title}}</h1>
 
-    <video *ngIf="videoUrl" id="cenas" width="320" height="240" controls [src]="videoUrl"></video>
+    <!--<video *ngIf="videoUrl" width="320" height="240" controls [src]="videoUrl"></video>-->
 
-    <button (click)="addToGallery()">Choose from file system</button>
+    <button (click)="openChooseItemDialog()">Choose file</button>
+
+    <!--<button (click)="addVideoToGallery('cenas.txt')">Add To IndexedDB</button>-->
+
+    <div>
+        <h1>Gallery</h1>
+
+        <video *ngFor="let video of videos" width="320" height="240" controls [src]="video.path"></video>
+    </div>
 </div>

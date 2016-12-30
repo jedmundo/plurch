@@ -1,43 +1,72 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 
+const { remote } = electron;
+
+const allowedExtensions: string[] = ['.mp4', '.m4v'];
+
+export class Video {
+    constructor(
+        public path: string
+    ) {}
+}
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
-    title = 'app works!';
 
-    public videoUrl: string;
+    public title = 'Plurch';
+    public videos: Video[] = [];
 
     constructor(private zone: NgZone) {
     }
 
     public ngOnInit(): void {
-
+        const videoList: Video[] = JSON.parse(localStorage.getItem('videos'));
+        if (videoList) {
+            videoList.forEach((video: Video) => {
+                this.videos.push(new Video(video.path))
+            });
+        }
     }
 
-    public addToGallery() {
-        const { remote } = electron;
-
-        remote.dialog.showOpenDialog((fileNames) => {
+    public openChooseItemDialog() {
+        remote.dialog.showOpenDialog({
+            title:"Select files or a folder",
+            properties: ["openDirectory","openFile","multiSelections"]
+        }, (itemPaths) => {
             this.zone.run(() => {
-                if (fileNames === undefined){
-                    console.log("You didn't save the file");
-                    return;
-                }
-                this.videoUrl = fileNames[0];
-
-                console.log(fileNames);
-                // fileName is a string that contains the path and filename created in the save file dialog.
-                // fs.writeFile(fileNames[0] + '.txt', 'sdadasda', function (err) {
-                //     if(err){
-                //         alert("An error ocurred creating the file "+ err.message)
-                //     }
-                //
-                //     alert("The file has been succesfully saved");
-                // });
+                this.addVideosFromFolderOrFile(itemPaths);
             });
         });
+    }
+
+    private addVideosFromFolderOrFile(itemPaths: string[]): void {
+        if (itemPaths) {
+            itemPaths.forEach((itemPath) => {
+                const isDirectory = fs.lstatSync(itemPath).isDirectory();
+                if (isDirectory) {
+                    fs.readdir(itemPath, (err, files) => {
+                        this.zone.run(() => {
+                            files.forEach(file => {
+                                if (allowedExtensions.find((extension) => path.extname(file).indexOf(extension) > -1)) {
+                                    this.addVideoToGallery(itemPath + '/' + file);
+                                }
+                            });
+                        });
+                    })
+                } else {
+                    this.addVideoToGallery(itemPath);
+                }
+            });
+        }
+    }
+
+    private addVideoToGallery(path: string) {
+        console.log('ADD Video:', path);
+        this.videos.push(new Video(path));
+        localStorage.setItem('videos', JSON.stringify(this.videos));
     }
 }
