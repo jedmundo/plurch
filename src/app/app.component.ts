@@ -51,14 +51,16 @@ export class AppComponent implements OnInit {
                     fs.readdir(itemPath, (err, files) => {
                         this.zone.run(() => {
                             files.forEach(file => {
-                                if (allowedExtensions.find((extension) => path.extname(file).indexOf(extension) > -1)) {
+                                if (this.isFileAllowed(file)) {
                                     this.addVideoToGallery(itemPath + '/' + file);
                                 }
                             });
                         });
                     })
                 } else {
-                    this.addVideoToGallery(itemPath);
+                    if (this.isFileAllowed(itemPath)) {
+                        this.addVideoToGallery(itemPath);
+                    }
                 }
             });
         }
@@ -68,5 +70,9 @@ export class AppComponent implements OnInit {
         console.log('ADD Video:', path);
         this.videos.push(new Video(path));
         localStorage.setItem('videos', JSON.stringify(this.videos));
+    }
+
+    private isFileAllowed(itemPath: string): boolean {
+        return !!allowedExtensions.find((extension) => path.extname(itemPath).indexOf(extension) > -1);
     }
 }
