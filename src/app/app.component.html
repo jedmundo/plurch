@@ -1,15 +1,25 @@
+<router-outlet></router-outlet>
+
 <div>
     <h1>{{title}}</h1>
 
-    <!--<video *ngIf="videoUrl" width="320" height="240" controls [src]="videoUrl"></video>-->
+    <button [routerLink]="['/fs']"></button>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 
-    <!--<button (click)="addVideoToGallery('cenas.txt')">Add To IndexedDB</button>-->
+    <button (click)="newW()">New Window</button>
 
     <div>
-        <h1>Gallery</h1>
-
-        <video *ngFor="let video of videos" width="320" height="240" controls [src]="video.path"></video>
+        <h1>Files</h1>
+        <div *ngFor="let file of files" (click)="openFile(file.path)" class="link">
+            <div *ngIf="file.type === 'video'">
+                <video width="320" height="240" controls [src]="file.path"></video>
+            </div>
+            <div *ngIf="file.type !== 'video'">
+                <img [src]="file.previewPath" width="150px">
+                {{file.path}}
+            </div>
+            <button (click)="deleteFile(file.path)">DELETE</button>
+        </div>
     </div>
 </div>

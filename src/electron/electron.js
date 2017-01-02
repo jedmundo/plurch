@@ -1,16 +1,22 @@
 // src/electron.js
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const url = require('url');
+// const filepreview = require('filepreview');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let win2;
 
 function createWindow () {
     // Create the browser window.
-    win = new BrowserWindow({width: 1024, height: 800});
-    win2 = new BrowserWindow({width: 1024, height: 800});
+    win = new BrowserWindow({
+        title: 'Plurch',
+        icon: 'assets/icon.png',
+        width: 1280,
+        height: 800
+    });
 
     // and load the index.html of the app.
     win.loadURL(`file://${__dirname}/index.html`);
@@ -51,3 +57,52 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+    console.log(arg);  // prints "ping"
+    let win2 = new BrowserWindow({width: 1280, height: 800, show: false});
+    // and load the index.html of the app.
+    // win2.loadURL(`file://${__dirname}/index.html`);
+    // win2.loadURL(`/fs`);
+    const indexPath = path.resolve(__dirname, '..', 'dist', 'index.html');
+    const indexUrl = url.format({
+        protocol: 'file',
+        pathname: indexPath,
+        slashes: true,
+        hash: encodeURIComponent(JSON.stringify('/#/fs'))
+    });
+
+    win2.on('closed', () => {
+        win2 = null;
+    });
+
+    win2.webContents.on('did-finish-load', () => {
+        win2.show();
+        console.log('window is now visible!')
+    });
+
+    console.log('FINAL URL: ', indexUrl);
+    console.log(' URL 1: ', `file://${__dirname}/index.html`);
+    console.log(' URL 2: ', indexUrl);
+    win2.loadURL(indexUrl);
+
+    event.sender.send('asynchronous-reply', 'pong');
+});
+
+// ipcMain.on('save-preview', (event, arg) => {
+//
+//     const pathList = arg.split('/');
+//     const targetPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_' + pathList[pathList.length-1];
+//     console.log('SOURCE: ', arg);
+//     console.log('TARGET: ', targetPath);
+//
+//     filepreview.generate(arg, targetPath, (error) => {
+//         if (error) {
+//             return console.log(error);
+//         }
+//         event.sender.send('save-preview-reply', targetPath);
+//         console.log('File preview is /home/myfile_preview.gif');
+//     });
+//
+//
+// });
