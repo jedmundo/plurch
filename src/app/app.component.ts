@@ -101,25 +101,21 @@ export class AppComponent implements OnInit {
 
     private addFile(path: string, type: FILE_TYPE): void {
         console.log('ADD File:', path);
-        // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
-        //     console.log(thumbnailPath);
-        //     list.push(new File(path, thumbnailPath));
-        //     localStorage.setItem(key, JSON.stringify(list));
-        // });
-        // ipcRenderer.send('save-preview', path);
-        const pathList = path.split('/');
-        const thumbnailPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_'
-            + pathList[pathList.length-1].split('.')[0] + '.gif';
 
         if (type === FILE_TYPE.VIDEO) {
-            this.storeFile(path, type, thumbnailPath);
+            this.storeFile(path, type);
         } else {
-            if (!filepreview.generateSync(path, thumbnailPath)) {
-                console.log('Oops, something went wrong.');
-                this.storeFile(path, type);
-            } else {
-                this.storeFile(path, type, thumbnailPath);
-            }
+            ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
+                this.zone.run(() => {
+                    if (thumbnailPath) {
+                        this.storeFile(path, type, thumbnailPath);
+                    } else {
+                        this.storeFile(path, type);
+                    }
+                });
+            });
+            ipcRenderer.send('save-preview', path);
+
         }
     }
 

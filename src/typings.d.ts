@@ -4,4 +4,3 @@
 declare var electron: any;
 declare var fs: any;
 declare var path: any;
-declare var filepreview: any;

@@ -3,7 +3,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
-// const filepreview = require('filepreview');
+const filepreview = require('filepreview');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -89,20 +89,16 @@ ipcMain.on('asynchronous-message', (event, arg) => {
     event.sender.send('asynchronous-reply', 'pong');
 });
 
-// ipcMain.on('save-preview', (event, arg) => {
-//
-//     const pathList = arg.split('/');
-//     const targetPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_' + pathList[pathList.length-1];
-//     console.log('SOURCE: ', arg);
-//     console.log('TARGET: ', targetPath);
-//
-//     filepreview.generate(arg, targetPath, (error) => {
-//         if (error) {
-//             return console.log(error);
-//         }
-//         event.sender.send('save-preview-reply', targetPath);
-//         console.log('File preview is /home/myfile_preview.gif');
-//     });
-//
-//
-// });
+ipcMain.on('save-preview', (event, path) => {
+
+    const pathList = path.split('/');
+    const thumbnailPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_'
+        + pathList[pathList.length-1].split('.')[0] + '.gif';
+
+    if (!filepreview.generateSync(path, thumbnailPath)) {
+        console.log('Oops, something went wrong.');
+        event.sender.send('save-preview-reply', null);
+    } else {
+        event.sender.send('save-preview-reply', thumbnailPath);
+    }
+});
