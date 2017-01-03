@@ -12,11 +12,11 @@
     <div>
         <h1>Files</h1>
         <div *ngFor="let file of files" (click)="openFile(file.path)" class="link">
-            <div *ngIf="file.type === 'video'">
+            <div *ngIf="file.type === FILE_TYPE.VIDEO">
                 <video width="320" height="240" controls [src]="file.path"></video>
             </div>
-            <div *ngIf="file.type !== 'video'">
-                <img [src]="file.previewPath" width="150px">
+            <div *ngIf="file.type === FILE_TYPE.DEFAULT">
+                <img [src]="file.thumbnailPath" width="50px" height="50px">
                 {{file.path}}
             </div>
             <button (click)="deleteFile(file.path)">DELETE</button>
