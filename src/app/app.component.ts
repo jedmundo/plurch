@@ -16,6 +16,10 @@ export class File {
         public type: FILE_TYPE = FILE_TYPE.DEFAULT,
         public thumbnailPath?: string
     ) {}
+
+    public getName(): string {
+        return this.path.split('/')[this.path.split('/').length-1].split('.')[0]
+    }
 }
 
 @Component({

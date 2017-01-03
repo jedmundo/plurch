@@ -4,3 +4,13 @@
     color: blue;
     text-decoration: underline;
 }
+
+.item {
+    display: flex;
+    flex-direction: row;
+
+    .details {
+        display: flex;
+        flex-direction: column;
+    }
+}
