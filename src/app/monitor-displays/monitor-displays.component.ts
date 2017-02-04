@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, Input, Output, EventEmitter } from '@angular/core';
 import Display = Electron.Display;
 
 @Component({
@@ -8,7 +8,8 @@ import Display = Electron.Display;
 })
 export class MonitorDisplaysComponent implements OnInit {
 
-    public displays: PlurchDisplay[] = [];
+    @Input() public displays: PlurchDisplay[] = [];
+    @Output() public displaysChange = new EventEmitter<PlurchDisplay[]>();
 
     constructor(private zone: NgZone) { }
 
@@ -18,12 +19,14 @@ export class MonitorDisplaysComponent implements OnInit {
         const connectedDisplays = electronScreen.getAllDisplays();
         connectedDisplays.forEach((display) => {
             this.displays.push(new PlurchDisplay(display));
+            this.displaysChange.emit(this.displays);
         });
 
         electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
             this.zone.run(() => {
                 console.log('Display Added', newDisplay);
-                this.displays.push(new PlurchDisplay(newDisplay))
+                this.displays.push(new PlurchDisplay(newDisplay));
+                this.displaysChange.emit(this.displays);
             });
         });
 
@@ -31,6 +34,7 @@ export class MonitorDisplaysComponent implements OnInit {
             this.zone.run(() => {
                 console.log('Display Removed', oldDisplay);
                 this.displays.splice(this.displays.findIndex((display) => display.electronDisplay.id === oldDisplay.id), 1);
+                this.displaysChange.emit(this.displays);
             });
         });
     }

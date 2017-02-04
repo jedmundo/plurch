@@ -1,6 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
+import { PlurchDisplay } from './monitor-displays/monitor-displays.component';
+import BrowserWindow = Electron.BrowserWindow;
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -31,9 +33,12 @@ export class File {
 })
 export class AppComponent implements OnInit {
 
+    public displays: PlurchDisplay[] = [];
     public title = 'Plurch';
     public files: File[] = [];
     public FILE_TYPE = FILE_TYPE;
+
+    private previewWindow: BrowserWindow;
 
     constructor(private zone: NgZone) {
     }
@@ -71,20 +76,37 @@ export class AppComponent implements OnInit {
     }
 
     public openNewScreen() {
-        // const electronScreen = electron.screen;
-        // const displays = electronScreen.getAllDisplays();
-        // console.log(displays);
-        // const externalDisplay = null;
-        // for (let i in displays) {
-        //     if (displays[i].bounds.x != 0 || displays[i].bounds.y != 0) {
-        //         externalDisplay = displays[i];
-        //         break;
-        //     }
-        // }
-        // ipcRenderer.on('newDisplay-reply', (event, arg) => {
-        //     console.log(arg);
-        // });
-        // ipcRenderer.send('newDisplay-message');
+
+        const externalDisplay = this.displays.find((display) => display.external);
+
+        if (this.previewWindow) {
+            // and load the index.html of the app.
+            this.previewWindow.loadURL(`file://${__dirname}/index.html`);
+        } else {
+            this.previewWindow = new remote.BrowserWindow({
+                title: 'Plurch - Full screen mode',
+                icon: 'assets/icon.png',
+                width: 800,
+                height: 600,
+                fullscreen: true,
+                x: externalDisplay.electronDisplay.size.width + 10,
+                y: 150
+            });
+
+            // and load the index.html of the app.
+            this.previewWindow.loadURL(`file://${__dirname}/index.html`);
+
+            // Open the DevTools.
+            this.previewWindow.webContents.openDevTools();
+
+            // Emitted when the window is closed.
+            this.previewWindow.on('closed', () => {
+                // Dereference the window object, usually you would store windows
+                // in an array if your app supports multi windows, this is the time
+                // when you should delete the corresponding element.
+                this.previewWindow = null
+            });
+        }
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
