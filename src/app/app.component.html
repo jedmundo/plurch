@@ -1,5 +1,7 @@
 <router-outlet></router-outlet>
 
+<app-monitor-displays></app-monitor-displays>
+
 <div>
     <h1>{{title}}</h1>
 
@@ -11,7 +13,7 @@
 
     <div>
         <h1>Files</h1>
-        <div *ngFor="let file of files" (click)="openFile(file.path)" class="link">
+        <div *ngFor="let file of files" class="link">
 
             <div class="item">
                 <div *ngIf="file.type === FILE_TYPE.VIDEO">
@@ -28,6 +30,8 @@
                 </div>
             </div>
             <button (click)="deleteFile(file.path)">DELETE</button>
+            <button (click)="openFile(file.path)">Open Source</button>
+            <button (click)="openNewScreen()">Preview</button>
         </div>
     </div>
 </div>

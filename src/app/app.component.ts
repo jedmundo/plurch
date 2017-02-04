@@ -1,4 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import Display = Electron.Display;
+import Event = Electron.Event;
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -66,6 +68,23 @@ export class AppComponent implements OnInit {
         const file = this.files.find((file) => file.path === path);
         this.files.splice(this.files.indexOf(file) , 1);
         localStorage.setItem('files', JSON.stringify(this.files));
+    }
+
+    public openNewScreen() {
+        // const electronScreen = electron.screen;
+        // const displays = electronScreen.getAllDisplays();
+        // console.log(displays);
+        // const externalDisplay = null;
+        // for (let i in displays) {
+        //     if (displays[i].bounds.x != 0 || displays[i].bounds.y != 0) {
+        //         externalDisplay = displays[i];
+        //         break;
+        //     }
+        // }
+        // ipcRenderer.on('newDisplay-reply', (event, arg) => {
+        //     console.log(arg);
+        // });
+        // ipcRenderer.send('newDisplay-message');
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
