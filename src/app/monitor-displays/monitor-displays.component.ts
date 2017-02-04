@@ -17,23 +17,20 @@ export class MonitorDisplaysComponent implements OnInit {
 
         const connectedDisplays = electronScreen.getAllDisplays();
         connectedDisplays.forEach((display) => {
-            if (display.bounds.x != 0 || display.bounds.y != 0) {
-                this.displays.push(new PlurchDisplay(true, display));
-            } else {
-                this.displays.push(new PlurchDisplay(false, display));
-            }
+            this.displays.push(new PlurchDisplay(display));
         });
 
         electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
             this.zone.run(() => {
                 console.log('Display Added', newDisplay);
-                // this.displays.push(new PlurchDisplay())
+                this.displays.push(new PlurchDisplay(newDisplay))
             });
         });
 
         electronScreen.on('display-removed', (event: Event, oldDisplay: Display) => {
             this.zone.run(() => {
                 console.log('Display Removed', oldDisplay);
+                this.displays.splice(this.displays.findIndex((display) => display.electronDisplay.id === oldDisplay.id), 1);
             });
         });
     }
@@ -42,6 +39,13 @@ export class MonitorDisplaysComponent implements OnInit {
 
 export class PlurchDisplay {
 
-    constructor(public external: boolean, public electronDisplay: Display) {
+    public external: boolean;
+
+    constructor(public electronDisplay: Display) {
+        this.external = this.isExternal(electronDisplay);
+    }
+
+    private isExternal(electronDisplay: Display): boolean {
+        return electronDisplay.bounds.x != 0 || electronDisplay.bounds.y != 0;
     }
 }
