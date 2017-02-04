@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { FullScreenComponent } from './full-screen/full-screen.component';
 import { ROUTER_MODULE } from './app.routes';
 import { MonitorDisplaysComponent } from './monitor-displays/monitor-displays.component';
+import { DayScheduleComponent } from './day-schedule/day-schedule.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         FullScreenComponent,
-        MonitorDisplaysComponent
+        MonitorDisplaysComponent,
+        DayScheduleComponent
     ],
     imports: [
         BrowserModule,

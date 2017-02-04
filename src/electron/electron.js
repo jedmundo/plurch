@@ -4,6 +4,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const filepreview = require('filepreview');
+var http = require('http');
+var fs = require('fs');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -19,7 +21,7 @@ function createWindow () {
     });
 
     // and load the index.html of the app.
-    win.loadURL(`file://${__dirname}/index.html`);
+    win.loadURL('http://localhost:9527/index.html');
 
     // Open the DevTools.
     win.webContents.openDevTools();
@@ -36,7 +38,45 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+    var server = http.createServer(requestHandler).listen(9527);
+
+    function requestHandler(req, res) {
+        console.log('REQ URL: ', req.url);
+        var
+            file    = req.url == '/' ? '/index.html' : req.url,
+            root    = __dirname,
+            page404 = root + '/404.html';
+
+        getFile((root + file), res, page404);
+    };
+
+    function getFile(filePath, res, page404) {
+
+        fs.exists(filePath, function(exists) {
+            if(exists) {
+                fs.readFile(filePath, function(err, contents) {
+                    if(!err) {
+                        res.end(contents);
+                    } else {
+                        console.dir(err);
+                    }
+                });
+            } else {
+                fs.readFile(page404, function(err, contents) {
+                    if(!err) {
+                        res.writeHead(404, {'Content-Type': 'text/html'});
+                        res.end(contents);
+                    } else {
+                        console.dir(err);
+                    }
+                });
+            }
+        });
+    };
+
+    createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -60,31 +100,21 @@ app.on('activate', () => {
 
 ipcMain.on('asynchronous-message', (event, arg) => {
     console.log(arg);  // prints "ping"
-    let win2 = new BrowserWindow({width: 1280, height: 800, show: false});
-    // and load the index.html of the app.
-    // win2.loadURL(`file://${__dirname}/index.html`);
-    // win2.loadURL(`/fs`);
-    const indexPath = path.resolve(__dirname, '..', 'dist', 'index.html');
-    const indexUrl = url.format({
-        protocol: 'file',
-        pathname: indexPath,
-        slashes: true,
-        hash: encodeURIComponent(JSON.stringify('/#/fs'))
-    });
+    let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});
 
     win2.on('closed', () => {
         win2 = null;
     });
 
-    win2.webContents.on('did-finish-load', () => {
-        win2.show();
-        console.log('window is now visible!')
-    });
+    // win2.webContents.on('did-finish-load', () => {
+    //     win2.show();
+    //     console.log('window is now visible!')
+    // });
 
-    console.log('FINAL URL: ', indexUrl);
-    console.log(' URL 1: ', `file://${__dirname}/index.html`);
-    console.log(' URL 2: ', indexUrl);
-    win2.loadURL(indexUrl);
+    // console.log('FINAL URL: ', indexUrl);
+    // console.log(' URL 1: ', `file://${__dirname}/index.html`);
+    // console.log(' URL 2: ', indexUrl);
+    win2.loadURL('http://localhost:9527/#/fs');
 
     event.sender.send('asynchronous-reply', 'pong');
 });

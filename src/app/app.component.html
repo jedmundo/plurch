@@ -1,37 +1,3 @@
 <router-outlet></router-outlet>
 
-<app-monitor-displays [(displays)]="displays"></app-monitor-displays>
 
-<div>
-    <h1>{{title}}</h1>
-
-    <button [routerLink]="['/fs']"></button>
-
-    <button (click)="openChooseItemDialog()">Choose file</button>
-
-    <button (click)="newW()">New Window</button>
-
-    <div>
-        <h1>Files</h1>
-        <div *ngFor="let file of files" class="link">
-
-            <div class="item">
-                <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <video width="320" height="240" controls [src]="file.path"></video>
-                </div>
-
-                <div *ngIf="file.type === FILE_TYPE.DEFAULT">
-                    <img [src]="file.thumbnailPath" width="50px" height="50px">
-                </div>
-
-                <div class="details">
-                    <div>Name: {{file.getName()}}</div>
-                    <div>Path: {{file.path}}</div>
-                </div>
-            </div>
-            <button (click)="deleteFile(file.path)">DELETE</button>
-            <button (click)="openFile(file.path)">Open Source</button>
-            <button (click)="openNewScreen()">Preview</button>
-        </div>
-    </div>
-</div>

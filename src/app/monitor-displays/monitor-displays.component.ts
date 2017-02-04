@@ -8,6 +8,9 @@ import Display = Electron.Display;
 })
 export class MonitorDisplaysComponent implements OnInit {
 
+    @Input() public isPreviewPossible: boolean;
+    @Output() public isPreviewPossibleChange = new EventEmitter<boolean>();
+
     @Input() public displays: PlurchDisplay[] = [];
     @Output() public displaysChange = new EventEmitter<PlurchDisplay[]>();
 
@@ -27,6 +30,7 @@ export class MonitorDisplaysComponent implements OnInit {
                 console.log('Display Added', newDisplay);
                 this.displays.push(new PlurchDisplay(newDisplay));
                 this.displaysChange.emit(this.displays);
+                this.isPreviewPossibleChange.emit(this.checkIfPreviewPossible());
             });
         });
 
@@ -37,6 +41,10 @@ export class MonitorDisplaysComponent implements OnInit {
                 this.displaysChange.emit(this.displays);
             });
         });
+    }
+
+    private checkIfPreviewPossible(): boolean {
+        return this.displays.length > 1;
     }
 
 }
