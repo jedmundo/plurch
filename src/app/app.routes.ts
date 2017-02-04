@@ -4,7 +4,7 @@ import { DayScheduleComponent } from './day-schedule/day-schedule.component';
 
 const routes: Routes = [
     { path: '', component: DayScheduleComponent },
-    { path: 'fs', component: FullScreenComponent }
+    { path: 'fs/:id', component: FullScreenComponent }
 ];
 
 export const ROUTER_MODULE = RouterModule.forRoot(routes, { useHash: true });

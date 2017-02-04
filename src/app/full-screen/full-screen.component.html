@@ -1,3 +1,15 @@
-<p>
-  full-screen works!
-</p>
+<div>
+    full-screen works!
+
+    PATH: {{ paramItem.path }}
+
+    <div *ngIf="paramItem.type === FILE_TYPE.VIDEO">
+        <video width="320" height="240" controls [src]="paramItem.path"></video>
+    </div>
+
+    <div *ngIf="paramItem.type === FILE_TYPE.DEFAULT">
+        NOT A VIDEO
+    </div>
+
+    <!--<video width="320" height="240" controls [src]="(paramItem | async)"></video>-->
+</div>

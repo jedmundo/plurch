@@ -9,12 +9,12 @@ const { remote, ipcRenderer, shell } = electron;
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
 
-enum FILE_TYPE {
+export enum FILE_TYPE {
     VIDEO,
     DEFAULT
 }
 
-export class File {
+export class PlayableItem {
     constructor(
         public path: string,
         public type: FILE_TYPE = FILE_TYPE.DEFAULT,
@@ -37,7 +37,7 @@ export class DayScheduleComponent implements OnInit {
     public isPreviewPossible: boolean = false;
 
     public title = 'Plurch';
-    public files: File[] = [];
+    public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
 
     private previewWindow: BrowserWindow;
@@ -76,9 +76,10 @@ export class DayScheduleComponent implements OnInit {
         localStorage.setItem('files', JSON.stringify(this.files));
     }
 
-    public openNewScreen() {
+    public openNewScreen(file: PlayableItem) {
 
         const externalDisplay = this.displays.find((display) => display.external);
+        const url = 'http://localhost:9527/#/fs/' + file.path.replace(/\//g, '___') + '____' + file.type;
 
         if (!externalDisplay) {
             return;
@@ -86,7 +87,7 @@ export class DayScheduleComponent implements OnInit {
 
         if (this.previewWindow) {
             // and load the index.html of the app.
-            this.previewWindow.loadURL('http://localhost:9527/#/fs');
+            this.previewWindow.loadURL(url);
         } else {
             this.previewWindow = new remote.BrowserWindow({
                 title: 'Plurch - Full screen mode',
@@ -99,7 +100,7 @@ export class DayScheduleComponent implements OnInit {
             });
 
             // and load the index.html of the app.
-            this.previewWindow.loadURL('http://localhost:9527/#/fs');
+            this.previewWindow.loadURL(url);
 
             // Open the DevTools.
             this.previewWindow.webContents.openDevTools();
@@ -150,7 +151,7 @@ export class DayScheduleComponent implements OnInit {
     }
 
     private addFile(path: string, type: FILE_TYPE): void {
-        console.log('ADD File:', path);
+        console.log('ADD PlayableItem:', path);
 
         if (type === FILE_TYPE.VIDEO) {
             this.storeFile(path, type);
@@ -170,15 +171,15 @@ export class DayScheduleComponent implements OnInit {
     }
 
     private storeFile(path: string, type: FILE_TYPE, thumbnailPath?: string): void {
-        this.files.push(new File(path, type, thumbnailPath));
+        this.files.push(new PlayableItem(path, type, thumbnailPath));
         localStorage.setItem('files', JSON.stringify(this.files));
     }
 
-    private loadItems(key: string, list: File[]): void {
-        const fileList: File[] = JSON.parse(localStorage.getItem(key));
+    private loadItems(key: string, list: PlayableItem[]): void {
+        const fileList: PlayableItem[] = JSON.parse(localStorage.getItem(key));
         if (fileList) {
-            fileList.forEach((file: File) => {
-                list.push(new File(file.path, file.type, file.thumbnailPath));
+            fileList.forEach((file: PlayableItem) => {
+                list.push(new PlayableItem(file.path, file.type, file.thumbnailPath));
             });
         }
     }

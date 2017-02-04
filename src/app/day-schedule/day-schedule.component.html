@@ -3,7 +3,7 @@
 <div>
     <h1>{{title}}</h1>
 
-    <button [routerLink]="['/fs']"></button>
+    <button [routerLink]="['/fs/12']"></button>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 
@@ -29,7 +29,7 @@
             </div>
             <button (click)="deleteFile(file.path)">DELETE</button>
             <button (click)="openFile(file.path)">Open Source</button>
-            <button *ngIf="isPreviewPossible" (click)="openNewScreen()">Preview</button>
+            <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">Preview</button>
         </div>
     </div>
 </div>

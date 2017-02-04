@@ -23,6 +23,7 @@ export class MonitorDisplaysComponent implements OnInit {
         connectedDisplays.forEach((display) => {
             this.displays.push(new PlurchDisplay(display));
             this.displaysChange.emit(this.displays);
+            this.isPreviewPossibleChange.emit(this.checkIfPreviewPossible());
         });
 
         electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
