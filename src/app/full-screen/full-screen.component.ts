@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { PlayableItem, FILE_TYPE, VideoCommand, VIDEO_COMMAND_TYPE } from '../day-schedule/day-schedule.component';
+import { PlayableItem, FILE_TYPE, VIDEO_COMMAND_TYPE } from '../day-schedule/day-schedule.component';
 
 const { remote, ipcRenderer, shell } = electron;
 
