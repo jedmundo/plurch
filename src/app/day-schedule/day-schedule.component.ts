@@ -58,13 +58,6 @@ export class DayScheduleComponent implements OnInit {
         this.loadItems('files', this.files);
     }
 
-    public newW(): void {
-        ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            console.log(arg);
-        });
-        ipcRenderer.send('asynchronous-message', location.href);
-    }
-
     public openChooseItemDialog() {
         remote.dialog.showOpenDialog({
             title:"Select files or a folder",
