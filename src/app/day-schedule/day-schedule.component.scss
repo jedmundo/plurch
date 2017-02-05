@@ -1,0 +1,28 @@
+
+.link {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    border-bottom: 1px solid lightgray;
+
+    .item {
+        .details {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .item-default-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .item-video-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 1rem;
+    }
+}

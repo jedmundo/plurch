@@ -1,17 +1,1 @@
 
-.link {
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-}
-
-.item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .details {
-        display: flex;
-        flex-direction: column;
-    }
-}

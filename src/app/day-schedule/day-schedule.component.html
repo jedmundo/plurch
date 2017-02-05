@@ -23,13 +23,18 @@
                     <div>Path: {{file.path}}</div>
                 </div>
             </div>
-            <button (click)="deleteFile(file.path)">DELETE</button>
-            <button (click)="openFile(file.path)">Open Source</button>
-            <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">Preview</button>
-            <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
-            <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
-            <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
-            <button *ngIf="isPreviewWindowOpened()" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.CLOSE)">Close</button>
+
+            <div class="item-default-controls">
+                <button (click)="deleteFile(file.path)">DELETE</button>
+                <button (click)="openFile(file.path)">Open Source</button>
+            </div>
+            <div class="item-video-controls">
+                <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>
+                <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
+                <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
+                <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
+                <button *ngIf="isPreviewWindowOpened()" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.CLOSE)">Close</button>
+            </div>
         </div>
     </div>
 </div>
