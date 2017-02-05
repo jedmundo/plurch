@@ -26,6 +26,17 @@ export class PlayableItem {
     }
 }
 
+export interface VideoCommand {
+    type: VIDEO_COMMAND_TYPE;
+    // value?: boolean;
+}
+
+export enum VIDEO_COMMAND_TYPE {
+    PLAY,
+    PAUSE,
+    RESTART
+}
+
 @Component({
     selector: 'app-day-schedule',
     templateUrl: './day-schedule.component.html',
@@ -39,8 +50,9 @@ export class DayScheduleComponent implements OnInit {
     public title = 'Plurch';
     public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
+    public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
-    public paused: boolean = false;
+    public isVideoPaused: boolean = true;
 
     private previewWindow: BrowserWindow;
 
@@ -122,11 +134,10 @@ export class DayScheduleComponent implements OnInit {
         }
     }
 
-    public sendVideoControls(): void {
-        this.paused = !this.paused;
-
+    public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
+        this.isVideoPaused = !this.isVideoPaused;
         let myWindows = remote.BrowserWindow.getAllWindows();
-        myWindows[0].webContents.send('send-video-command', { command: 0, value: this.paused });
+        myWindows[0].webContents.send('send-video-type', command);
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

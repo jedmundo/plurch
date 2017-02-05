@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { PlayableItem, FILE_TYPE } from '../day-schedule/day-schedule.component';
+import { PlayableItem, FILE_TYPE, VideoCommand, VIDEO_COMMAND_TYPE } from '../day-schedule/day-schedule.component';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -25,22 +25,22 @@ export class FullScreenComponent implements OnInit, AfterViewChecked {
                 this.paramItem = new PlayableItem(path, type === FILE_TYPE.DEFAULT ? FILE_TYPE.DEFAULT : FILE_TYPE.VIDEO);
             });
 
-        ipcRenderer.on('send-video-command', (event, command) => {
+        ipcRenderer.on('send-video-type', (event, command: VIDEO_COMMAND_TYPE) => {
             const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
-            const value = command.value;
-            if (value) {
-                video.play();
-            } else {
-                video.pause();
+            switch (command) {
+                case VIDEO_COMMAND_TYPE.PLAY:
+                    return video.play();
+                case VIDEO_COMMAND_TYPE.PAUSE:
+                    return video.pause();
+                case VIDEO_COMMAND_TYPE.RESTART:
+                    return video.load();
             }
-
         });
     }
 
     public ngAfterViewChecked(): void {
-
-        const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
-        video.play();
+        // const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
+        // video.play();
     }
 
 }

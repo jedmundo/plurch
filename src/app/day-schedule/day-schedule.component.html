@@ -30,7 +30,9 @@
             <button (click)="deleteFile(file.path)">DELETE</button>
             <button (click)="openFile(file.path)">Open Source</button>
             <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">Preview</button>
-            <button (click)="sendVideoControls()">COMMAND</button>
+            <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
+            <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
+            <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
         </div>
     </div>
 </div>

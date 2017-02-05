@@ -135,12 +135,12 @@ app.on('activate', () => {
 //     event.sender.send('asynchronous-reply', 'pong');
 // });
 
-// ipcMain.on('send-video-command', (event, arg) => {
+// ipcMain.on('send-video-type', (event, arg) => {
 //     console.log(arg);  // prints "ping"
 //
 //     const myWindows = BrowserWindow.getAllWindows();
 //     console.log(myWindows);
-//     myWindows[0].webContents.send('send-video-command-win2', arg);
+//     myWindows[0].webContents.send('send-video-type-win2', arg);
 // });
 
 ipcMain.on('save-preview', (event, path) => {
