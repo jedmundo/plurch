@@ -131,12 +131,15 @@ export class DayScheduleComponent implements OnInit {
         const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_thumbnail');
         switch (command) {
             case VIDEO_COMMAND_TYPE.PLAY:
-                return video.play();
+                video.play();
+                break;
             case VIDEO_COMMAND_TYPE.PAUSE:
-                return video.pause();
+                video.pause();
+                break;
             case VIDEO_COMMAND_TYPE.RESTART:
                 this.isVideoPaused = true;
-                return video.load();
+                video.load();
+                break;
             case VIDEO_COMMAND_TYPE.CLOSE:
                 this.isVideoPaused = true;
                 return this.previewWindow.close();
