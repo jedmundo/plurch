@@ -146,8 +146,9 @@ export class DayScheduleComponent implements OnInit {
         if (command === VIDEO_COMMAND_TYPE.RESTART) {
             this.isVideoPaused = true;
         }
-        let myWindows = remote.BrowserWindow.getAllWindows();
-        myWindows[0].webContents.send('send-video-type', command);
+        // let myWindows = remote.BrowserWindow.getAllWindows();
+        this.previewWindow.webContents.send('send-video-type', command);
+        // myWindows[0].webContents.send('send-video-type', command);
     }
 
     public isPreviewWindowOpened(): boolean {
