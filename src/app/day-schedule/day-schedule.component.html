@@ -11,7 +11,7 @@
 
             <div class="item">
                 <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <video id="video_thumbnail" preload='auto' width="320" height="240" controls [src]="file.path"></video>
+                    <video id="video_thumbnail" width="320" height="240" controls [src]="file.path"></video>
                 </div>
 
                 <div *ngIf="file.type === FILE_TYPE.DEFAULT">
@@ -28,7 +28,7 @@
                 <button (click)="deleteFile(file.path)">DELETE</button>
                 <button (click)="openFile(file.path)">Open Source</button>
             </div>
-            <div class="item-video-controls">
+            <div *ngIf="file.type === FILE_TYPE.VIDEO" class="item-video-controls">
                 <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>
                 <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
                 <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>

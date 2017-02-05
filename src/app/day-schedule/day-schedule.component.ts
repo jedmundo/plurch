@@ -26,10 +26,16 @@ export class PlayableItem {
     }
 }
 
+export interface VideoCommand {
+    type: VIDEO_COMMAND_TYPE;
+    value?: number
+}
+
 export enum VIDEO_COMMAND_TYPE {
     PLAY,
     PAUSE,
     RESTART,
+    SYNC_TIME,
     CLOSE
 }
 
@@ -145,8 +151,20 @@ export class DayScheduleComponent implements OnInit {
                 return this.previewWindow.close();
         }
 
+        video.addEventListener("seeking", () => {
+            if (this.previewWindow) {
+                this.previewWindow.webContents.send('send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            }
+        });
+
+        video.addEventListener("seeked", () => {
+            if (this.previewWindow) {
+                this.previewWindow.webContents.send('send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            }
+        });
+
         if (this.previewWindow) {
-            this.previewWindow.webContents.send('send-video-type', command);
+            this.previewWindow.webContents.send('send-video-type', { type: command });
             // let myWindows = remote.BrowserWindow.getAllWindows();
             // myWindows[0].webContents.send('send-video-type', command);
         }
