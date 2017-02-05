@@ -126,7 +126,7 @@ export class DayScheduleComponent implements OnInit {
 
             // Emitted when the window is closed.
             this.previewWindow.on('closed', () => {
-                // Dereference the window object, usually you would store windows
+                // Dereference twhe window object, usually you would store windows
                 // in an array if your app supports multi windows, this is the time
                 // when you should delete the corresponding element.
                 this.previewWindow = null;
@@ -136,6 +136,9 @@ export class DayScheduleComponent implements OnInit {
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
         this.isVideoPaused = !this.isVideoPaused;
+        if (command === VIDEO_COMMAND_TYPE.RESTART) {
+            this.isVideoPaused = true;
+        }
         let myWindows = remote.BrowserWindow.getAllWindows();
         myWindows[0].webContents.send('send-video-type', command);
     }
