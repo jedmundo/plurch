@@ -39,23 +39,25 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    var server = http.createServer(requestHandler).listen(9527);
+    const server = http.createServer(requestHandler).listen(9527);
 
     function requestHandler(req, res) {
         console.log('REQ URL: ', req.url);
-        var
-            file    = req.url == '/' ? '/index.html' : req.url,
+
+        var file    = req.url == '/' ? '/index.html' : req.url,
             root    = __dirname,
             page404 = root + '/404.html';
 
-        getFile((root + file), res, page404);
+        getFile(root, file, res, page404);
     };
 
-    function getFile(filePath, res, page404) {
+    function getFile(root, file, res, page404) {
 
-        fs.exists(filePath, function(exists) {
+        const localFile = root + file;
+
+        fs.exists(localFile, function(exists) {
             if(exists) {
-                fs.readFile(filePath, function(err, contents) {
+                fs.readFile(localFile, function(err, contents) {
                     if(!err) {
                         res.end(contents);
                     } else {
@@ -63,12 +65,26 @@ app.on('ready', () => {
                     }
                 });
             } else {
-                fs.readFile(page404, function(err, contents) {
-                    if(!err) {
-                        res.writeHead(404, {'Content-Type': 'text/html'});
-                        res.end(contents);
+                // look for files with absolute paths
+                fs.exists(file, function(exists) {
+                    if(exists) {
+                        fs.readFile(file, function(err, contents) {
+                            if(!err) {
+                                res.end(contents);
+                            } else {
+                                console.dir(err);
+                            }
+                        });
                     } else {
-                        console.dir(err);
+
+                        fs.readFile(page404, function(err, contents) {
+                            if(!err) {
+                                res.writeHead(404, {'Content-Type': 'text/html'});
+                                res.end(contents);
+                            } else {
+                                console.dir(err);
+                            }
+                        });
                     }
                 });
             }
