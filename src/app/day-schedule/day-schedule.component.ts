@@ -40,6 +40,8 @@ export class DayScheduleComponent implements OnInit {
     public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
 
+    public paused: boolean = false;
+
     private previewWindow: BrowserWindow;
 
     constructor(private zone: NgZone) { }
@@ -113,6 +115,14 @@ export class DayScheduleComponent implements OnInit {
                 this.previewWindow = null;
             });
         }
+    }
+
+    public sendVideoControls(): void {
+        this.paused = !this.paused;
+
+        let myWindows = remote.BrowserWindow.getAllWindows();
+        myWindows[0].webContents.send('send-video-command', { command: 0, value: this.paused });
+        // ipcRenderer.send('send-video-command', { command: 0, value: this.paused });
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

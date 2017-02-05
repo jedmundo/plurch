@@ -30,6 +30,7 @@
             <button (click)="deleteFile(file.path)">DELETE</button>
             <button (click)="openFile(file.path)">Open Source</button>
             <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">Preview</button>
+            <button (click)="sendVideoControls()">COMMAND</button>
         </div>
     </div>
 </div>

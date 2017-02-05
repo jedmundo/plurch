@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { PlayableItem, FILE_TYPE } from '../day-schedule/day-schedule.component';
+
+const { remote, ipcRenderer, shell } = electron;
 
 @Component({
     selector: 'app-full-screen',
@@ -23,6 +24,17 @@ export class FullScreenComponent implements OnInit, AfterViewChecked {
                 const type: number = +params['id'].split('____')[1];
                 this.paramItem = new PlayableItem(path, type === FILE_TYPE.DEFAULT ? FILE_TYPE.DEFAULT : FILE_TYPE.VIDEO);
             });
+
+        ipcRenderer.on('send-video-command', (event, command) => {
+            const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
+            const value = command.value;
+            if (value) {
+                video.play();
+            } else {
+                video.pause();
+            }
+
+        });
     }
 
     public ngAfterViewChecked(): void {

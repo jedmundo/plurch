@@ -114,25 +114,33 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('asynchronous-message', (event, arg) => {
+// ipcMain.on('asynchronous-message', (event, arg) => {
+//     console.log(arg);  // prints "ping"
+//     let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});
+//
+//     win2.on('closed', () => {
+//         win2 = null;
+//     });
+//
+//     // win2.webContents.on('did-finish-load', () => {
+//     //     win2.show();
+//     //     console.log('window is now visible!')
+//     // });
+//
+//     // console.log('FINAL URL: ', indexUrl);
+//     // console.log(' URL 1: ', `file://${__dirname}/index.html`);
+//     // console.log(' URL 2: ', indexUrl);
+//     win2.loadURL('http://localhost:9527/#/fs');
+//
+//     event.sender.send('asynchronous-reply', 'pong');
+// });
+
+ipcMain.on('send-video-command', (event, arg) => {
     console.log(arg);  // prints "ping"
-    let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});
 
-    win2.on('closed', () => {
-        win2 = null;
-    });
-
-    // win2.webContents.on('did-finish-load', () => {
-    //     win2.show();
-    //     console.log('window is now visible!')
-    // });
-
-    // console.log('FINAL URL: ', indexUrl);
-    // console.log(' URL 1: ', `file://${__dirname}/index.html`);
-    // console.log(' URL 2: ', indexUrl);
-    win2.loadURL('http://localhost:9527/#/fs');
-
-    event.sender.send('asynchronous-reply', 'pong');
+    const myWindows = BrowserWindow.getAllWindows();
+    console.log(myWindows);
+    myWindows[0].webContents.send('send-video-command-win2', arg);
 });
 
 ipcMain.on('save-preview', (event, path) => {
