@@ -11,7 +11,7 @@
 
             <div class="item">
                 <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <video width="320" height="240" controls [src]="file.path"></video>
+                    <video id="video_thumbnail" preload='auto' width="320" height="240" controls [src]="file.path"></video>
                 </div>
 
                 <div *ngIf="file.type === FILE_TYPE.DEFAULT">

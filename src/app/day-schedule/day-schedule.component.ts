@@ -126,17 +126,27 @@ export class DayScheduleComponent implements OnInit {
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
-        if (command === VIDEO_COMMAND_TYPE.CLOSE) {
-            this.previewWindow.close();
-            return;
-        }
         this.isVideoPaused = !this.isVideoPaused;
-        if (command === VIDEO_COMMAND_TYPE.RESTART) {
-            this.isVideoPaused = true;
+
+        const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_thumbnail');
+        switch (command) {
+            case VIDEO_COMMAND_TYPE.PLAY:
+                return video.play();
+            case VIDEO_COMMAND_TYPE.PAUSE:
+                return video.pause();
+            case VIDEO_COMMAND_TYPE.RESTART:
+                this.isVideoPaused = true;
+                return video.load();
+            case VIDEO_COMMAND_TYPE.CLOSE:
+                this.isVideoPaused = true;
+                return this.previewWindow.close();
         }
-        this.previewWindow.webContents.send('send-video-type', command);
-        // let myWindows = remote.BrowserWindow.getAllWindows();
-        // myWindows[0].webContents.send('send-video-type', command);
+
+        if (this.previewWindow) {
+            this.previewWindow.webContents.send('send-video-type', command);
+            // let myWindows = remote.BrowserWindow.getAllWindows();
+            // myWindows[0].webContents.send('send-video-type', command);
+        }
     }
 
     public isPreviewWindowOpened(): boolean {
