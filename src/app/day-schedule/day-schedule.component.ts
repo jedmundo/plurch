@@ -34,7 +34,8 @@ export interface VideoCommand {
 export enum VIDEO_COMMAND_TYPE {
     PLAY,
     PAUSE,
-    RESTART
+    RESTART,
+    CLOSE
 }
 
 @Component({
@@ -129,18 +130,28 @@ export class DayScheduleComponent implements OnInit {
                 // Dereference twhe window object, usually you would store windows
                 // in an array if your app supports multi windows, this is the time
                 // when you should delete the corresponding element.
-                this.previewWindow = null;
+                this.zone.run(() => {
+                    this.previewWindow = null;
+                });
             });
         }
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
+        if (command === VIDEO_COMMAND_TYPE.CLOSE) {
+            this.previewWindow.close();
+            return;
+        }
         this.isVideoPaused = !this.isVideoPaused;
         if (command === VIDEO_COMMAND_TYPE.RESTART) {
             this.isVideoPaused = true;
         }
         let myWindows = remote.BrowserWindow.getAllWindows();
         myWindows[0].webContents.send('send-video-type', command);
+    }
+
+    public isPreviewWindowOpened(): boolean {
+        return !!this.previewWindow;
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

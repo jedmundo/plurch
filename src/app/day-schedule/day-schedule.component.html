@@ -33,6 +33,7 @@
             <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
             <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
             <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
+            <button *ngIf="isPreviewWindowOpened()" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.CLOSE)">Close</button>
         </div>
     </div>
 </div>
