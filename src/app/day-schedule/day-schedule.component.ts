@@ -87,6 +87,11 @@ export class DayScheduleComponent implements OnInit {
             return;
         }
 
+        const externalMonitorXBounds = externalDisplay.electronDisplay.bounds.x;
+        const externalMonitorYBounds = externalDisplay.electronDisplay.bounds.y;
+        const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
+        const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
+
         if (this.previewWindow) {
             // and load the index.html of the app.
             this.previewWindow.loadURL(url);
@@ -97,8 +102,8 @@ export class DayScheduleComponent implements OnInit {
                 width: 800,
                 height: 600,
                 fullscreen: true,
-                x: externalDisplay.electronDisplay.size.width + 10,
-                y: 150
+                x: rightExternalMonitorXPosition,
+                y: rightExternalMonitorYPosition
             });
 
             // and load the index.html of the app.
@@ -122,7 +127,6 @@ export class DayScheduleComponent implements OnInit {
 
         let myWindows = remote.BrowserWindow.getAllWindows();
         myWindows[0].webContents.send('send-video-command', { command: 0, value: this.paused });
-        // ipcRenderer.send('send-video-command', { command: 0, value: this.paused });
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
