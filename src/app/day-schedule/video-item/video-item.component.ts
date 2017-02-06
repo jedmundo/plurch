@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { PlayableItem, VIDEO_COMMAND_TYPE } from '../day-schedule.component';
 import { WindowManagementService } from '../../shared/services/window-management.service';
 
@@ -7,37 +7,34 @@ import { WindowManagementService } from '../../shared/services/window-management
     templateUrl: 'video-item.component.html',
     styleUrls: ['video-item.component.scss']
 })
-export class VideoItemComponent implements OnInit, AfterViewChecked {
+export class VideoItemComponent implements OnInit {
 
     @ViewChild('videoPlayer') videoplayer: any;
 
     public isVideoPaused: boolean = true;
+    public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
 
     constructor(private windowManagementService: WindowManagementService) { }
 
     public ngOnInit() {
-    }
-
-    public ngAfterViewChecked(): void {
         this.videoLoaded();
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
         this.isVideoPaused = !this.isVideoPaused;
 
-        const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_thumbnail');
         switch (command) {
             case VIDEO_COMMAND_TYPE.PLAY:
-                video.play();
+                this.videoplayer.nativeElement.play();
                 break;
             case VIDEO_COMMAND_TYPE.PAUSE:
-                video.pause();
+                this.videoplayer.nativeElement.pause();
                 break;
             case VIDEO_COMMAND_TYPE.RESTART:
                 this.isVideoPaused = true;
-                video.load();
+                this.videoplayer.nativeElement.load();
                 break;
         }
 
@@ -45,7 +42,7 @@ export class VideoItemComponent implements OnInit, AfterViewChecked {
     }
 
     private videoLoaded(): void {
-        console.log('acefe');
+        console.log('LISTENERS ADDED');
         this.videoplayer.nativeElement.addEventListener("seeking", () => {
             this.windowManagementService.sendMessageToWindow(123, 'send-video-type',
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: this.videoplayer.nativeElement.currentTime });
@@ -56,7 +53,7 @@ export class VideoItemComponent implements OnInit, AfterViewChecked {
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: this.videoplayer.nativeElement.currentTime });
         });
 
-        this.videoplayer.nativeElement.addEventListener("timeupdate", function() {
+        this.videoplayer.nativeElement.addEventListener("timeupdate", () => {
             // Calculate the slider value
             const value = (100 / this.videoplayer.nativeElement.duration) * this.videoplayer.nativeElement.currentTime;
             const seekBar: HTMLInputElement = <HTMLInputElement> document.getElementById("seek-bar");
@@ -64,9 +61,9 @@ export class VideoItemComponent implements OnInit, AfterViewChecked {
             seekBar.value = <any> value;
         });
 
-        this.videoplayer.nativeElement.addEventListener('loadedmetadata', function() {
-            console.log(this.videoplayer.nativeElement.duration);
-        });
+        // this.videoplayer.nativeElement.addEventListener('loadedmetadata', function() {
+        //     console.log(this.videoplayer.nativeElement.duration);
+        // });
     }
 
     public muteVideo(): void {
