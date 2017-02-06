@@ -9,6 +9,7 @@ import { ROUTER_MODULE } from './app.routes';
 import { MonitorDisplaysComponent } from './monitor-displays/monitor-displays.component';
 import { DayScheduleComponent } from './day-schedule/day-schedule.component';
 import { SharedModule } from './shared/shared.module';
+import { VideoItemComponent } from './day-schedule/video-item/video-item.component';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { SharedModule } from './shared/shared.module';
         AppComponent,
         FullScreenComponent,
         MonitorDisplaysComponent,
-        DayScheduleComponent
+        DayScheduleComponent,
+        VideoItemComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

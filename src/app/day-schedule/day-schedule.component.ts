@@ -55,8 +55,6 @@ export class DayScheduleComponent implements OnInit {
     public FILE_TYPE = FILE_TYPE;
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
-    public isVideoPaused: boolean = true;
-
     private previewWindowId: number;
 
     constructor(
@@ -102,32 +100,10 @@ export class DayScheduleComponent implements OnInit {
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
-        this.isVideoPaused = !this.isVideoPaused;
-
-        const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_thumbnail');
         switch (command) {
-            case VIDEO_COMMAND_TYPE.PLAY:
-                video.play();
-                break;
-            case VIDEO_COMMAND_TYPE.PAUSE:
-                video.pause();
-                break;
-            case VIDEO_COMMAND_TYPE.RESTART:
-                this.isVideoPaused = true;
-                video.load();
-                break;
             case VIDEO_COMMAND_TYPE.CLOSE:
-                this.isVideoPaused = true;
                 return this.windowManagementService.closeWindow(123);
         }
-
-        video.addEventListener("seeking", () => {
-            this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-        });
-
-        video.addEventListener("seeked", () => {
-            this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-        });
 
         this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });
     }

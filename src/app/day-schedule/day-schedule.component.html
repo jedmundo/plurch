@@ -11,7 +11,7 @@
 
             <div class="item">
                 <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <video id="video_thumbnail" width="320" height="240" controls [src]="file.path"></video>
+                    <plurch-video-item [file]="file"></plurch-video-item>
                 </div>
 
                 <div *ngIf="file.type === FILE_TYPE.DEFAULT">
@@ -27,15 +27,12 @@
             <div class="item-default-controls">
                 <button (click)="deleteFile(file.path)">DELETE</button>
                 <button (click)="openFile(file.path)">Open Source</button>
-            </div>
-            <div *ngIf="file.type === FILE_TYPE.VIDEO" class="item-video-controls">
+
                 <button (click)="openNewScreen(file)">View in External Monitor</button>
                 <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
-                <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
-                <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
-                <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
                 <button *ngIf="isPreviewWindowOpened()" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.CLOSE)">Close</button>
             </div>
+
         </div>
     </div>
 </div>
