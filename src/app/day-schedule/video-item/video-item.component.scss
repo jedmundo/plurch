@@ -1,0 +1,12 @@
+
+.video-item {
+    display: flex;
+    flex-direction: row;
+
+    .item-video-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 1rem;
+    }
+}
