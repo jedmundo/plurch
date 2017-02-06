@@ -3,7 +3,8 @@ import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import { PlurchDisplay } from '../monitor-displays/monitor-displays.component';
-import { WindowManagementService, PlurchWindow } from '../shared/services/window-management.service';
+import { WindowManagementService } from '../shared/services/window-management.service';
+import { VIDEO_COMMAND_TYPE } from './video-item/video-item.component';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -13,6 +14,10 @@ const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'j
 export enum FILE_TYPE {
     VIDEO,
     DEFAULT
+}
+
+export enum WINDOW_COMMAND_TYPE {
+    CLOSE
 }
 
 export class PlayableItem {
@@ -25,19 +30,6 @@ export class PlayableItem {
     public getName(): string {
         return this.path.split('/')[this.path.split('/').length-1].split('.')[0]
     }
-}
-
-export interface VideoCommand {
-    type: VIDEO_COMMAND_TYPE;
-    value?: number
-}
-
-export enum VIDEO_COMMAND_TYPE {
-    PLAY,
-    PAUSE,
-    RESTART,
-    SYNC_TIME,
-    CLOSE
 }
 
 @Component({
@@ -53,7 +45,7 @@ export class DayScheduleComponent implements OnInit {
     public title = 'Plurch';
     public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
-    public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
+    public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
 
     private previewWindowId: number;
 
@@ -99,13 +91,11 @@ export class DayScheduleComponent implements OnInit {
         this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Preview')
     }
 
-    public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
+    public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {
         switch (command) {
-            case VIDEO_COMMAND_TYPE.CLOSE:
+            case WINDOW_COMMAND_TYPE.CLOSE:
                 return this.windowManagementService.closeWindow(123);
         }
-
-        this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });
     }
 
     public isPreviewWindowOpened(): boolean {

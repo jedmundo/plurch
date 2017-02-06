@@ -1,6 +1,20 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
-import { PlayableItem, VIDEO_COMMAND_TYPE } from '../day-schedule.component';
+import { PlayableItem } from '../day-schedule.component';
 import { WindowManagementService } from '../../shared/services/window-management.service';
+
+export interface VideoCommand {
+    type: VIDEO_COMMAND_TYPE;
+    value?: number
+}
+
+export enum VIDEO_COMMAND_TYPE {
+    PLAY,
+    PAUSE,
+    RESTART,
+    SYNC_TIME,
+    MUTE,
+    UNMUTE
+}
 
 @Component({
     selector: 'plurch-video-item',
@@ -41,6 +55,12 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             case VIDEO_COMMAND_TYPE.PAUSE:
                 this.videoPlayerElement.pause();
                 break;
+            case VIDEO_COMMAND_TYPE.MUTE:
+                this.videoPlayerElement.muted = true;
+                break;
+            case VIDEO_COMMAND_TYPE.UNMUTE:
+                this.videoPlayerElement.muted = false;
+                break;
             case VIDEO_COMMAND_TYPE.RESTART:
                 this.isVideoPaused = true;
                 this.videoPlayerElement.load();
@@ -67,19 +87,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             this.currentVideoTime = this.videoPlayerElement.currentTime;
             this.seekBar.nativeElement.value = <any> value;
         });
-
-        // this.videoPlayerElement.addEventListener('loadedmetadata', function() {
-        //     console.log(this.videoPlayerElement.duration);
-        // });
-    }
-
-    public muteVideo(): void {
-        this.videoPlayerElement.muted = !this.videoPlayerElement.muted;
     }
 
     public videoSeekChange(): void {
         const time = this.videoPlayerElement.duration * (<any> this.seekBar.nativeElement.value / 100);
-        // Update the video time
         this.videoPlayerElement.currentTime = time;
     }
 
