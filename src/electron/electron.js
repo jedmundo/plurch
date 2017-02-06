@@ -4,8 +4,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const filepreview = require('filepreview');
-var http = require('http');
-var fs = require('fs');
+const fs = require('fs');
+const expressLib = require('express');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -22,6 +22,7 @@ function createWindow () {
 
     // and load the index.html of the app.
     win.loadURL('http://localhost:9527/index.html');
+    // win.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools.
     win.webContents.openDevTools();
@@ -39,7 +40,17 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    const server = http.createServer(requestHandler).listen(9527);
+    const express = expressLib();
+    var http = require('http').Server(express);
+    // const server = http.createServer(requestHandler).listen(9527);
+    const port = 9527;
+    http.listen(port, function(){
+        console.log('App listening on port ' + port);
+    });
+
+    express.get('*', function (req, res) {
+        requestHandler(req, res);
+    });
 
     function requestHandler(req, res) {
         console.log('REQ URL: ', req.url);
@@ -68,13 +79,7 @@ app.on('ready', () => {
                 // look for files with absolute paths
                 fs.exists(file, function(exists) {
                     if(exists) {
-                        fs.readFile(file, function(err, contents) {
-                            if(!err) {
-                                res.end(contents);
-                            } else {
-                                console.dir(err);
-                            }
-                        });
+                        res.sendFile(file);
                     } else {
 
                         fs.readFile(page404, function(err, contents) {
