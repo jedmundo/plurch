@@ -8,19 +8,21 @@ import { FullScreenComponent } from './full-screen/full-screen.component';
 import { ROUTER_MODULE } from './app.routes';
 import { MonitorDisplaysComponent } from './monitor-displays/monitor-displays.component';
 import { DayScheduleComponent } from './day-schedule/day-schedule.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        ROUTER_MODULE,
+        SharedModule
+    ],
     declarations: [
         AppComponent,
         FullScreenComponent,
         MonitorDisplaysComponent,
         DayScheduleComponent
-    ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpModule,
-        ROUTER_MODULE
     ],
     providers: [],
     bootstrap: [AppComponent]

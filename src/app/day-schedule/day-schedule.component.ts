@@ -3,6 +3,7 @@ import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import { PlurchDisplay } from '../monitor-displays/monitor-displays.component';
+import { WindowManagementService, PlurchWindow } from '../shared/services/window-management.service';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -56,9 +57,11 @@ export class DayScheduleComponent implements OnInit {
 
     public isVideoPaused: boolean = true;
 
-    private previewWindow: BrowserWindow;
+    private previewWindowId: number;
 
-    constructor(private zone: NgZone) { }
+    constructor(
+        private zone: NgZone, private windowManagementService: WindowManagementService
+    ) { }
 
     public ngOnInit() {
         this.loadItems('files', this.files);
@@ -87,48 +90,15 @@ export class DayScheduleComponent implements OnInit {
 
     public openNewScreen(file: PlayableItem) {
 
-        const externalDisplay = this.displays.find((display) => display.external);
-        const url = 'http://localhost:9527/#/fs/' + file.path.replace(/\//g, '___') + '____' + file.type;
+        // const externalDisplay = this.displays.find((display) => display.external);
+        const externalDisplay = this.displays[0];
+        const url = '#/fs/' + file.path.replace(/\//g, '___') + '____' + file.type;
 
         if (!externalDisplay) {
             return;
         }
 
-        const externalMonitorXBounds = externalDisplay.electronDisplay.bounds.x;
-        const externalMonitorYBounds = externalDisplay.electronDisplay.bounds.y;
-        const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
-        const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
-
-        if (this.previewWindow) {
-            // and load the index.html of the app.
-            this.previewWindow.loadURL(url);
-        } else {
-            this.previewWindow = new remote.BrowserWindow({
-                title: 'Plurch - Full screen mode',
-                icon: 'assets/icon.png',
-                width: 800,
-                height: 600,
-                fullscreen: true,
-                x: rightExternalMonitorXPosition,
-                y: rightExternalMonitorYPosition
-            });
-
-            // and load the index.html of the app.
-            this.previewWindow.loadURL(url);
-
-            // Open the DevTools.
-            this.previewWindow.webContents.openDevTools();
-
-            // Emitted when the window is closed.
-            this.previewWindow.on('closed', () => {
-                // Dereference twhe window object, usually you would store windows
-                // in an array if your app supports multi windows, this is the time
-                // when you should delete the corresponding element.
-                this.zone.run(() => {
-                    this.previewWindow = null;
-                });
-            });
-        }
+        this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Preview')
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
@@ -148,30 +118,28 @@ export class DayScheduleComponent implements OnInit {
                 break;
             case VIDEO_COMMAND_TYPE.CLOSE:
                 this.isVideoPaused = true;
-                return this.previewWindow.close();
+            return this.windowManagementService.closeWindow(123);
         }
 
+        ipcRenderer.send('send-video-command', { type: command });
+
         video.addEventListener("seeking", () => {
-            if (this.previewWindow) {
-                this.previewWindow.webContents.send('send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            if (this.windowManagementService.getPlurchWindow(123)) {
+                this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
             }
         });
 
         video.addEventListener("seeked", () => {
-            if (this.previewWindow) {
-                this.previewWindow.webContents.send('send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            if (this.windowManagementService.getPlurchWindow(123)) {
+                this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
             }
         });
 
-        if (this.previewWindow) {
-            this.previewWindow.webContents.send('send-video-type', { type: command });
-            // let myWindows = remote.BrowserWindow.getAllWindows();
-            // myWindows[0].webContents.send('send-video-type', command);
-        }
+        this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });
     }
 
     public isPreviewWindowOpened(): boolean {
-        return !!this.previewWindow;
+        return !!this.windowManagementService.getPlurchWindow(123);
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

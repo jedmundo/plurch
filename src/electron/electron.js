@@ -21,8 +21,8 @@ function createWindow () {
     });
 
     // and load the index.html of the app.
-    win.loadURL('http://localhost:9527/index.html');
-    // win.loadURL(`file://${__dirname}/index.html`);
+    // win.loadURL('http://localhost:9527/index.html');
+    win.loadURL(`file://${__dirname}/index.html`);
 
     // Open the DevTools.
     win.webContents.openDevTools();
@@ -40,61 +40,61 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    const express = expressLib();
-    var http = require('http').Server(express);
-    // const server = http.createServer(requestHandler).listen(9527);
-    const port = 9527;
-    http.listen(port, function(){
-        console.log('App listening on port ' + port);
-    });
-
-    express.get('*', function (req, res) {
-        requestHandler(req, res);
-    });
-
-    function requestHandler(req, res) {
-        console.log('REQ URL: ', req.url);
-
-        var file    = req.url == '/' ? '/index.html' : req.url,
-            root    = __dirname,
-            page404 = root + '/404.html';
-
-        getFile(root, file, res, page404);
-    };
-
-    function getFile(root, file, res, page404) {
-
-        const localFile = root + file;
-
-        fs.exists(localFile, function(exists) {
-            if(exists) {
-                fs.readFile(localFile, function(err, contents) {
-                    if(!err) {
-                        res.end(contents);
-                    } else {
-                        console.dir(err);
-                    }
-                });
-            } else {
-                // look for files with absolute paths
-                fs.exists(file, function(exists) {
-                    if(exists) {
-                        res.sendFile(file);
-                    } else {
-
-                        fs.readFile(page404, function(err, contents) {
-                            if(!err) {
-                                res.writeHead(404, {'Content-Type': 'text/html'});
-                                res.end(contents);
-                            } else {
-                                console.dir(err);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    };
+    // const express = expressLib();
+    // var http = require('http').Server(express);
+    // // const server = http.createServer(requestHandler).listen(9527);
+    // const port = 9527;
+    // http.listen(port, function(){
+    //     console.log('App listening on port ' + port);
+    // });
+    //
+    // express.get('*', function (req, res) {
+    //     requestHandler(req, res);
+    // });
+    //
+    // function requestHandler(req, res) {
+    //     console.log('REQ URL: ', req.url);
+    //
+    //     var file    = req.url == '/' ? '/index.html' : req.url,
+    //         root    = __dirname,
+    //         page404 = root + '/404.html';
+    //
+    //     getFile(root, file, res, page404);
+    // };
+    //
+    // function getFile(root, file, res, page404) {
+    //
+    //     const localFile = root + file;
+    //
+    //     fs.exists(localFile, function(exists) {
+    //         if(exists) {
+    //             fs.readFile(localFile, function(err, contents) {
+    //                 if(!err) {
+    //                     res.end(contents);
+    //                 } else {
+    //                     console.dir(err);
+    //                 }
+    //             });
+    //         } else {
+    //             // look for files with absolute paths
+    //             fs.exists(file, function(exists) {
+    //                 if(exists) {
+    //                     res.sendFile(file);
+    //                 } else {
+    //
+    //                     fs.readFile(page404, function(err, contents) {
+    //                         if(!err) {
+    //                             res.writeHead(404, {'Content-Type': 'text/html'});
+    //                             res.end(contents);
+    //                         } else {
+    //                             console.dir(err);
+    //                         }
+    //                     });
+    //                 }
+    //             });
+    //         }
+    //     });
+    // };
 
     createWindow();
 });
@@ -118,6 +118,44 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('get-index-url', (event, arg) => {
+
+    // const electronDisplay = arg.externalDisplay;
+    // const externalMonitorXBounds = electronDisplay.bounds.x;
+    // const externalMonitorYBounds = electronDisplay.bounds.y;
+    // const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
+    // const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
+    //
+    // previewWindow = new BrowserWindow({
+    //     title: arg.title,
+    //     icon: 'assets/icon.png',
+    //     width: 800,
+    //     height: 600,
+    //     fullscreen: false,
+    //     x: rightExternalMonitorXPosition,
+    //     y: rightExternalMonitorYPosition
+    // });
+    //
+    // // and load the index.html of the app.
+    // previewWindow.loadURL(`file://${__dirname}/index.html` + arg.loadUrl);
+    //
+    // // Open the DevTools.
+    // previewWindow.webContents.openDevTools();
+    //
+    // // Emitted when the window is closed.
+    // previewWindow.on('closed', () => {
+    //     // Dereference the window object, usually you would store windows
+    //     // in an array if your app supports multi windows, this is the time
+    //     // when you should delete the corresponding element.
+    //     this.previewWindow = null;
+    // });
+
+
+
+    event.sender.send('get-index-url-reply',
+        { id: arg.id, loadUrl: arg.loadUrl,
+            title: arg.title, indexUrl: `file://${__dirname}/index.html`, externalDisplay: arg.externalDisplay });
+});
 
 // ipcMain.on('asynchronous-message', (event, arg) => {
 //     console.log(arg);  // prints "ping"

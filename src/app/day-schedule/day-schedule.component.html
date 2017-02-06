@@ -29,7 +29,8 @@
                 <button (click)="openFile(file.path)">Open Source</button>
             </div>
             <div *ngIf="file.type === FILE_TYPE.VIDEO" class="item-video-controls">
-                <button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>
+                <button (click)="openNewScreen(file)">View in External Monitor</button>
+                <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
                 <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
                 <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
                 <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
