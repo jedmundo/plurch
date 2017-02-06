@@ -118,21 +118,15 @@ export class DayScheduleComponent implements OnInit {
                 break;
             case VIDEO_COMMAND_TYPE.CLOSE:
                 this.isVideoPaused = true;
-            return this.windowManagementService.closeWindow(123);
+                return this.windowManagementService.closeWindow(123);
         }
 
-        ipcRenderer.send('send-video-command', { type: command });
-
         video.addEventListener("seeking", () => {
-            if (this.windowManagementService.getPlurchWindow(123)) {
-                this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-            }
+            this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
         });
 
         video.addEventListener("seeked", () => {
-            if (this.windowManagementService.getPlurchWindow(123)) {
-                this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-            }
+            this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
         });
 
         this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });

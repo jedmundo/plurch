@@ -94,7 +94,10 @@ export class WindowManagementService {
     }
 
     public sendMessageToWindow(id: number, messageTitle: string, message: any): void {
-        this.availableWindows.find((pWindow) => pWindow.id === id).electronWindow.webContents.send(messageTitle, message);
+        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
+        if (pWindow) {
+            pWindow.electronWindow.webContents.send(messageTitle, message);
+        }
     }
 
 }
