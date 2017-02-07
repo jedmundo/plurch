@@ -37,6 +37,8 @@ export class FullScreenVideoComponent implements OnInit, AfterViewInit {
                     return this.renderer.setElementProperty(video, 'mute', true);
                 case VIDEO_COMMAND_TYPE.UNMUTE:
                     return this.renderer.setElementProperty(video, 'mute', false);
+                case VIDEO_COMMAND_TYPE.VOLUME:
+                    return this.renderer.setElementProperty(video, 'volume', command.value);
                 case VIDEO_COMMAND_TYPE.RESTART:
                     return this.renderer.invokeElementMethod(video, 'load');
                 case VIDEO_COMMAND_TYPE.SYNC_TIME:

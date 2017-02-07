@@ -12,6 +12,7 @@ export enum VIDEO_COMMAND_TYPE {
     PAUSE,
     RESTART,
     SYNC_TIME,
+    VOLUME,
     MUTE,
     UNMUTE
 }
@@ -51,15 +52,20 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         const video = this.videoPlayerRef.nativeElement;
         switch (command) {
             case VIDEO_COMMAND_TYPE.PLAY:
-                return this.renderer.invokeElementMethod(video, 'play');
+                this.renderer.invokeElementMethod(video, 'play');
+                break;
             case VIDEO_COMMAND_TYPE.PAUSE:
-                return this.renderer.invokeElementMethod(video, 'pause');
+                this.renderer.invokeElementMethod(video, 'pause');
+                break;
             case VIDEO_COMMAND_TYPE.MUTE:
-                return this.renderer.setElementProperty(video, 'mute', true);
+                this.renderer.setElementProperty(video, 'mute', true);
+                break;
             case VIDEO_COMMAND_TYPE.UNMUTE:
-                return this.renderer.setElementProperty(video, 'mute', false);
+                this.renderer.setElementProperty(video, 'mute', false);
+                break;
             case VIDEO_COMMAND_TYPE.RESTART:
-                return this.renderer.invokeElementMethod(video, 'load');
+                this.renderer.invokeElementMethod(video, 'load');
+                break;
         }
 
         this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });
@@ -92,7 +98,9 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     public volumeChange(): void {
-        this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', this.volumeBar.nativeElement.value);
+        const volumeValue = this.volumeBar.nativeElement.value;
+        this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
+        this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
     }
 
     public get isPaused(): boolean {
