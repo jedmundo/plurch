@@ -15,7 +15,10 @@ export class FullScreenVideoComponent implements OnInit, AfterViewInit {
 
     public videoPath: string;
 
-    constructor(private route: ActivatedRoute, private renderer: Renderer) { }
+    constructor(
+        private route: ActivatedRoute,
+        private renderer: Renderer) {
+    }
 
     public ngOnInit(): void {
         this.route.params
