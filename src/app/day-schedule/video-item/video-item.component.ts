@@ -26,10 +26,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @ViewChild('videoPlayer') private videoplayer: any;
     @ViewChild('seekBar') private seekBar: any;
     @ViewChild('volumeBar') private volumeBar: any;
+
     public videoPlayerElement;
     public currentVideoTime;
 
-    public isVideoPaused: boolean = true;
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
@@ -46,8 +46,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     public sendVideoControls(command: VIDEO_COMMAND_TYPE): void {
-        this.isVideoPaused = !this.isVideoPaused;
-
         switch (command) {
             case VIDEO_COMMAND_TYPE.PLAY:
                 this.videoPlayerElement.play();
@@ -62,7 +60,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 this.videoPlayerElement.muted = false;
                 break;
             case VIDEO_COMMAND_TYPE.RESTART:
-                this.isVideoPaused = true;
                 this.videoPlayerElement.load();
                 break;
         }
@@ -71,7 +68,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     private videoLoaded(): void {
-        console.log('LISTENERS ADDED');
+        console.log('LISTENERS ADDED TO VIDEO');
         this.videoPlayerElement.addEventListener("seeking", () => {
             this.windowManagementService.sendMessageToWindow(123, 'send-video-type',
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: this.videoPlayerElement.currentTime });

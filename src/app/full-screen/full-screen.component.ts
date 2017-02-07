@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { PlayableItem, FILE_TYPE } from '../day-schedule/day-schedule.component';
@@ -11,10 +11,14 @@ const { remote, ipcRenderer, shell } = electron;
     templateUrl: './full-screen.component.html',
     styleUrls: ['./full-screen.component.scss']
 })
-export class FullScreenComponent implements OnInit, AfterViewChecked {
+export class FullScreenComponent implements OnInit, AfterViewInit {
+
+    @ViewChild('videoPlayer') private videoplayer: any;
 
     public FILE_TYPE = FILE_TYPE;
     public paramItem: PlayableItem;
+
+    private videoPlayerElement;
 
     constructor(private route: ActivatedRoute) { }
 
@@ -27,12 +31,16 @@ export class FullScreenComponent implements OnInit, AfterViewChecked {
             });
 
         ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
-            const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
+            const video = this.videoPlayerElement;
             switch (command.type) {
                 case VIDEO_COMMAND_TYPE.PLAY:
                     return video.play();
                 case VIDEO_COMMAND_TYPE.PAUSE:
                     return video.pause();
+                case VIDEO_COMMAND_TYPE.MUTE:
+                    return (<any> video).mute = true;
+                case VIDEO_COMMAND_TYPE.UNMUTE:
+                    return (<any> video).mute = false;
                 case VIDEO_COMMAND_TYPE.RESTART:
                     return video.load();
                 case VIDEO_COMMAND_TYPE.SYNC_TIME:
@@ -42,9 +50,8 @@ export class FullScreenComponent implements OnInit, AfterViewChecked {
         });
     }
 
-    public ngAfterViewChecked(): void {
-        // const video: HTMLVideoElement = <HTMLVideoElement> document.getElementById('video_playback');
-        // video.play();
+    public ngAfterViewInit(): void {
+        this.videoPlayerElement = this.videoplayer.nativeElement;
     }
 
 }

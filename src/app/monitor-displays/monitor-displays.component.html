@@ -7,7 +7,7 @@
             <div>ID: {{ display.electronDisplay.id }}</div>
             <div>({{ display.external ? 'external' : 'default' }})</div>
             <div>Size: ({{ display.electronDisplay.size.width }} x {{ display.electronDisplay.size.height }})</div>
-            <div>Boundaries: ({{ display.electronDisplay.bounds.x }} x {{ display.electronDisplay.bounds.y }})</div>
+            <div>Boundaries: ({{ display.electronDisplay.bounds?.x }} x {{ display.electronDisplay.bounds?.y }})</div>
         </div>
     </div>
 </div>

@@ -2,8 +2,8 @@
     <video width="320" height="240" [src]="file.path" #videoPlayer></video>
 
     <div class="item-video-controls">
-        <button *ngIf="isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
-        <button *ngIf="!isVideoPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
+        <button *ngIf="videoPlayerElement?.paused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
+        <button *ngIf="!videoPlayerElement?.paused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
         <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
         <input (input)="videoSeekChange()" type="range" value="0" #seekBar>
         <button *ngIf="!videoPlayerElement?.muted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" type="button">Mute</button>
