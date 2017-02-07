@@ -58,10 +58,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 this.renderer.invokeElementMethod(video, 'pause');
                 break;
             case VIDEO_COMMAND_TYPE.MUTE:
-                this.renderer.setElementProperty(video, 'mute', true);
+                this.renderer.setElementProperty(video, 'muted', true);
                 break;
             case VIDEO_COMMAND_TYPE.UNMUTE:
-                this.renderer.setElementProperty(video, 'mute', false);
+                this.renderer.setElementProperty(video, 'muted', false);
                 break;
             case VIDEO_COMMAND_TYPE.RESTART:
                 this.renderer.invokeElementMethod(video, 'load');
