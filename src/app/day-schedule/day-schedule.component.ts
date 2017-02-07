@@ -79,7 +79,6 @@ export class DayScheduleComponent implements OnInit {
     }
 
     public openNewScreen(): void {
-
         const externalDisplay = this.displays.find((display) => display.external);
         // TODO: Change because DEV mode 1 screen only
         // const externalDisplay = this.displays[0];
@@ -91,14 +90,15 @@ export class DayScheduleComponent implements OnInit {
         if (!externalDisplay) {
             return;
         }
-
-        // if (file.type === FILE_TYPE.VIDEO) {
-        //     const url = '#/fs-video/' + file.path.replace(/\//g, '___');
-        //
-        // }
     }
 
     public addToWindow(file: PlayableItem, windowId: string): void {
+        this.files.forEach((file) => {
+            if (file.windowIDs.find((windowIdArg) => windowIdArg === windowId)) {
+                file.windowIDs.splice(file.windowIDs.findIndex((windowIdArg) => windowIdArg === windowId), 1)
+            }
+        });
+        file.windowIDs.push(windowId);
         if (file.type === FILE_TYPE.VIDEO) {
             const url = '#/fs-video/' + file.path.replace(/\//g, '___');
             this.windowManagementService.addToWindow(windowId, url);
@@ -115,10 +115,6 @@ export class DayScheduleComponent implements OnInit {
                 break;
         }
     }
-    //
-    // public isPreviewWindowOpened(): boolean {
-    //     return !!this.windowManagementService.getPlurchWindow(this.guid());
-    // }
 
     private guid(): string {
         function s4() {

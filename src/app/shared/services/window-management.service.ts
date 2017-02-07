@@ -83,8 +83,10 @@ export class WindowManagementService {
 
     public closeWindow(id: string): void {
         const pWindow = this.getPlurchWindow(id);
-        pWindow.electronWindow.close();
-        this.availableWindows.splice(this.availableWindows.indexOf(pWindow), 1);
+        if (pWindow) {
+            pWindow.electronWindow.close();
+            this.availableWindows.splice(this.availableWindows.indexOf(pWindow), 1);
+        }
     }
 
     public getPlurchWindow(id: string): PlurchWindow {
@@ -94,7 +96,6 @@ export class WindowManagementService {
     public addToWindow(id: string, loadUrl: string): void {
         const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
         pWindow.electronWindow.loadURL(this.indexUrl + loadUrl);
-        // pWindow.electronWindow.reload();
     }
 
     public sendMessageToWindow(id: string, messageTitle: string, message: any): void {
