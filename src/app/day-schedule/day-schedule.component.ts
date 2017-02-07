@@ -24,7 +24,8 @@ export class PlayableItem {
     constructor(
         public path: string,
         public type: FILE_TYPE = FILE_TYPE.DEFAULT,
-        public thumbnailPath?: string
+        public thumbnailPath?: string,
+        public windowIDs: string[] = []
     ) {}
 
     public getName(): string {
@@ -46,8 +47,6 @@ export class DayScheduleComponent implements OnInit {
     public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
-
-    private previewWindowId: number;
 
     constructor(
         private zone: NgZone, private windowManagementService: WindowManagementService
@@ -90,19 +89,34 @@ export class DayScheduleComponent implements OnInit {
 
         if (file.type === FILE_TYPE.VIDEO) {
             const url = '#/fs-video/' + file.path.replace(/\//g, '___');
-            this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Video Preview')
+            const windowID = this.guid();
+            file.windowIDs.push(windowID);
+            this.windowManagementService.openWindow(windowID, url, externalDisplay.electronDisplay, 'Plurch Video Preview')
         }
     }
 
-    public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {
+    public sendWindowCommands(file: PlayableItem, command: WINDOW_COMMAND_TYPE): void {
         switch (command) {
             case WINDOW_COMMAND_TYPE.CLOSE:
-                return this.windowManagementService.closeWindow(123);
+                file.windowIDs.forEach((windowID) => {
+                    this.windowManagementService.closeWindow(windowID);
+                });
+                break;
         }
     }
+    //
+    // public isPreviewWindowOpened(): boolean {
+    //     return !!this.windowManagementService.getPlurchWindow(this.guid());
+    // }
 
-    public isPreviewWindowOpened(): boolean {
-        return !!this.windowManagementService.getPlurchWindow(123);
+    private guid(): string {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

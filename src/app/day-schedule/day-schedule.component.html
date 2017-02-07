@@ -30,7 +30,7 @@
 
                 <button (click)="openNewScreen(file)">View in External Monitor</button>
                 <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
-                <button *ngIf="isPreviewWindowOpened()" (click)="sendWindowCommands(WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
+                <button (click)="sendWindowCommands(file, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
             </div>
 
         </div>

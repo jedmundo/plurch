@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 const { ipcRenderer, remote } = electron;
 import BrowserWindow = Electron.BrowserWindow;
 import Display = Electron.Display;
+import { PlayableItem } from '../../day-schedule/day-schedule.component';
 
 export class PlurchWindow {
 
     constructor(
-        public id: number,
+        public id: string,
         public electronWindow: BrowserWindow,
         public loadUrl: string,
         public title: string,
@@ -66,7 +67,7 @@ export class WindowManagementService {
         return this.availableWindows;
     }
 
-    public openWindow(id: number,
+    public openWindow(id: string,
                       loadUrl: string,
                       externalDisplay: Display,
                       title: string,
@@ -83,21 +84,30 @@ export class WindowManagementService {
         }
     }
 
-    public closeWindow(id: number): void {
+    public closeWindow(id: string): void {
         const pWindow = this.getPlurchWindow(id);
         pWindow.electronWindow.close();
         this.availableWindows.splice(this.availableWindows.indexOf(pWindow), 1);
     }
 
-    public getPlurchWindow(id: number): PlurchWindow {
+    public getPlurchWindow(id: string): PlurchWindow {
         return this.availableWindows.find((pWindow) => pWindow.id === id);
     }
 
-    public sendMessageToWindow(id: number, messageTitle: string, message: any): void {
+    public sendMessageToWindow(id: string, messageTitle: string, message: any): void {
         const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
         if (pWindow) {
             pWindow.electronWindow.webContents.send(messageTitle, message);
         }
+    }
+
+    public sendMessageToWindows(file: PlayableItem, messageTitle: string, message: any): void {
+        file.windowIDs.forEach((windowID) => {
+            const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowID);
+            if (pWindow) {
+                pWindow.electronWindow.webContents.send(messageTitle, message);
+            }
+        });
     }
 
 }

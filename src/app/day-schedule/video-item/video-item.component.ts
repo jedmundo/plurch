@@ -68,19 +68,19 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 break;
         }
 
-        this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: command });
+        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: command });
     }
 
     private videoLoaded(): void {
         console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
         this.renderer.listen(video, 'seeking', () => {
-            this.windowManagementService.sendMessageToWindow(123, 'send-video-type',
+            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
         });
 
         this.renderer.listen(video, 'seeked', () => {
-            this.windowManagementService.sendMessageToWindow(123, 'send-video-type',
+            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
         });
 
@@ -100,7 +100,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public volumeChange(): void {
         const volumeValue = this.volumeBar.nativeElement.value;
         this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
-        this.windowManagementService.sendMessageToWindow(123, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
+        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
     }
 
     public get isPaused(): boolean {
