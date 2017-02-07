@@ -10,6 +10,7 @@ import { MonitorDisplaysComponent } from './monitor-displays/monitor-displays.co
 import { DayScheduleComponent } from './day-schedule/day-schedule.component';
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './day-schedule/video-item/video-item.component';
+import { EmptyWindowComponent } from './empty-window/empty-window.component';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import { VideoItemComponent } from './day-schedule/video-item/video-item.compone
         FullScreenVideoComponent,
         MonitorDisplaysComponent,
         DayScheduleComponent,
-        VideoItemComponent
+        VideoItemComponent,
+        EmptyWindowComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

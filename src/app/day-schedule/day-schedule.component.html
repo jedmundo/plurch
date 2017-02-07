@@ -1,9 +1,20 @@
+
+<h1>Displays</h1>
 <app-monitor-displays [(displays)]="displays" [(isPreviewPossible)]="isPreviewPossible"></app-monitor-displays>
+
+<h1>Windows</h1>
+
+<div *ngFor="let pWindow of pWindows">
+
+</div>
 
 <div>
     <h1>{{title}}</h1>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
+
+    <button (click)="openNewScreen()">Open Window in External Monitor</button>
+    <button (click)="sendWindowCommands(WINDOW_COMMAND_TYPE.CLOSE)">Close All Windows</button>
 
     <div>
         <h1>Files</h1>
@@ -27,10 +38,10 @@
             <div class="item-default-controls">
                 <button (click)="deleteFile(file.path)">DELETE</button>
                 <button (click)="openFile(file.path)">Open Source</button>
-
-                <button (click)="openNewScreen(file)">View in External Monitor</button>
+                <div>
+                    <button *ngFor="let windowId of pWindowIds" (click)="addToWindow(file, windowId)">Add To Window</button>
+                </div>
                 <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
-                <button (click)="sendWindowCommands(file, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
             </div>
 
         </div>

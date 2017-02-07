@@ -4,7 +4,6 @@ import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import { PlurchDisplay } from '../monitor-displays/monitor-displays.component';
 import { WindowManagementService } from '../shared/services/window-management.service';
-import { VIDEO_COMMAND_TYPE } from './video-item/video-item.component';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -48,6 +47,8 @@ export class DayScheduleComponent implements OnInit {
     public FILE_TYPE = FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
 
+    private pWindowIds: string[] = [];
+
     constructor(
         private zone: NgZone, private windowManagementService: WindowManagementService
     ) { }
@@ -77,30 +78,40 @@ export class DayScheduleComponent implements OnInit {
         localStorage.setItem('files', JSON.stringify(this.files));
     }
 
-    public openNewScreen(file: PlayableItem) {
+    public openNewScreen(): void {
 
-        // const externalDisplay = this.displays.find((display) => display.external);
+        const externalDisplay = this.displays.find((display) => display.external);
         // TODO: Change because DEV mode 1 screen only
-        const externalDisplay = this.displays[0];
+        // const externalDisplay = this.displays[0];
+
+        const windowID = this.guid();
+        this.pWindowIds.push(windowID);
+        this.windowManagementService.openWindow(windowID, '#/empty-window', externalDisplay.electronDisplay, 'Plurch Video Preview');
 
         if (!externalDisplay) {
             return;
         }
 
+        // if (file.type === FILE_TYPE.VIDEO) {
+        //     const url = '#/fs-video/' + file.path.replace(/\//g, '___');
+        //
+        // }
+    }
+
+    public addToWindow(file: PlayableItem, windowId: string): void {
         if (file.type === FILE_TYPE.VIDEO) {
             const url = '#/fs-video/' + file.path.replace(/\//g, '___');
-            const windowID = this.guid();
-            file.windowIDs.push(windowID);
-            this.windowManagementService.openWindow(windowID, url, externalDisplay.electronDisplay, 'Plurch Video Preview')
+            this.windowManagementService.addToWindow(windowId, url);
         }
     }
 
-    public sendWindowCommands(file: PlayableItem, command: WINDOW_COMMAND_TYPE): void {
+    public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {
         switch (command) {
             case WINDOW_COMMAND_TYPE.CLOSE:
-                file.windowIDs.forEach((windowID) => {
-                    this.windowManagementService.closeWindow(windowID);
-                });
+                for (let i = 0; i < this.pWindowIds.length; i++) {
+                    this.windowManagementService.closeWindow(this.pWindowIds[i]);
+                }
+                this.pWindowIds = [];
                 break;
         }
     }

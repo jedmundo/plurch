@@ -23,43 +23,13 @@ export class PlurchWindow {
 export class WindowManagementService {
 
     private availableWindows: PlurchWindow[] = [];
+    private indexUrl: string;
 
     constructor() {
+        ipcRenderer.send('get-index-url');
+
         ipcRenderer.on('get-index-url-reply', (event, arg) => {
-
-            const electronDisplay = arg.externalDisplay;
-            const externalMonitorXBounds = electronDisplay.bounds.x;
-            const externalMonitorYBounds = electronDisplay.bounds.y;
-            const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
-            const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
-
-            let previewWindow = new remote.BrowserWindow({
-                title: arg.title,
-                icon: 'assets/icon.png',
-                width: 800,
-                height: 600,
-                fullscreen: false,
-                x: rightExternalMonitorXPosition,
-                y: rightExternalMonitorYPosition
-            });
-
-            // and load the index.html of the app.
-            const loadUrl = arg.indexUrl + arg.loadUrl;
-            previewWindow.loadURL(loadUrl);
-
-            // Open the DevTools.
-            previewWindow.webContents.openDevTools();
-
-            // Emitted when the window is closed.
-            previewWindow.on('closed', () => {
-                // Dereference twhe window object, usually you would store windows
-                // in an array if your app supports multi windows, this is the time
-                // when you should delete the corresponding element.
-                this.closeWindow(arg.id);
-            });
-
-            this.availableWindows.push(new PlurchWindow(arg.id, previewWindow, loadUrl, arg.title));
-            console.log(this.availableWindows);
+            this.indexUrl = arg.indexUrl;
         });
     }
 
@@ -76,12 +46,39 @@ export class WindowManagementService {
                       width?: number,
                       height?: number): void {
 
-        const selectedWindow = this.getPlurchWindow(id);
-        if (selectedWindow) {
-            selectedWindow.electronWindow.loadURL(loadUrl);
-        } else {
-            ipcRenderer.send('get-index-url', { id: id, loadUrl: loadUrl, externalDisplay: externalDisplay, title: title });
-        }
+        const externalMonitorXBounds = externalDisplay.bounds.x;
+        const externalMonitorYBounds = externalDisplay.bounds.y;
+        const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
+        const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
+
+        let previewWindow = new remote.BrowserWindow({
+            title: title,
+            icon: 'assets/icon.png',
+            width: 800,
+            height: 600,
+            fullscreen: false,
+            x: rightExternalMonitorXPosition,
+            y: rightExternalMonitorYPosition
+        });
+
+        // and load the index.html of the app.
+        const finalLoadUrl = this.indexUrl + loadUrl;
+        previewWindow.loadURL(finalLoadUrl);
+
+        // Open the DevTools.
+        previewWindow.webContents.openDevTools();
+
+        // Emitted when the window is closed.
+        previewWindow.on('closed', () => {
+            // Dereference twhe window object, usually you would store windows
+            // in an array if your app supports multi windows, this is the time
+            // when you should delete the corresponding element.
+            this.closeWindow(id);
+        });
+
+        this.availableWindows.push(new PlurchWindow(id, previewWindow, finalLoadUrl, title));
+        console.log(this.availableWindows);
+
     }
 
     public closeWindow(id: string): void {
@@ -92,6 +89,12 @@ export class WindowManagementService {
 
     public getPlurchWindow(id: string): PlurchWindow {
         return this.availableWindows.find((pWindow) => pWindow.id === id);
+    }
+
+    public addToWindow(id: string, loadUrl: string): void {
+        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
+        pWindow.electronWindow.loadURL(this.indexUrl + loadUrl);
+        // pWindow.electronWindow.reload();
     }
 
     public sendMessageToWindow(id: string, messageTitle: string, message: any): void {

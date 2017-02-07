@@ -150,11 +150,7 @@ ipcMain.on('get-index-url', (event, arg) => {
     //     this.previewWindow = null;
     // });
 
-
-
-    event.sender.send('get-index-url-reply',
-        { id: arg.id, loadUrl: arg.loadUrl,
-            title: arg.title, indexUrl: `file://${__dirname}/index.html`, externalDisplay: arg.externalDisplay });
+    event.sender.send('get-index-url-reply', { indexUrl: `file://${__dirname}/index.html`});
 });
 
 // ipcMain.on('asynchronous-message', (event, arg) => {
