@@ -81,14 +81,17 @@ export class DayScheduleComponent implements OnInit {
     public openNewScreen(file: PlayableItem) {
 
         // const externalDisplay = this.displays.find((display) => display.external);
+        // TODO: Change because DEV mode 1 screen only
         const externalDisplay = this.displays[0];
-        const url = '#/fs/' + file.path.replace(/\//g, '___') + '____' + file.type;
 
         if (!externalDisplay) {
             return;
         }
 
-        this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Preview')
+        if (file.type === FILE_TYPE.VIDEO) {
+            const url = '#/fs-video/' + file.path.replace(/\//g, '___') + '____' + file.type;
+            this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Video Preview')
+        }
     }
 
     public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {

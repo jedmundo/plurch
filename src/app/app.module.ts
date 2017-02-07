@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { FullScreenComponent } from './full-screen/full-screen.component';
+import { FullScreenVideoComponent } from './full-screen/full-screen-video.component';
 import { ROUTER_MODULE } from './app.routes';
 import { MonitorDisplaysComponent } from './monitor-displays/monitor-displays.component';
 import { DayScheduleComponent } from './day-schedule/day-schedule.component';
@@ -21,7 +21,7 @@ import { VideoItemComponent } from './day-schedule/video-item/video-item.compone
     ],
     declarations: [
         AppComponent,
-        FullScreenComponent,
+        FullScreenVideoComponent,
         MonitorDisplaysComponent,
         DayScheduleComponent,
         VideoItemComponent

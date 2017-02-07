@@ -4,14 +4,13 @@ import 'rxjs/add/operator/map';
 import { PlayableItem, FILE_TYPE } from '../day-schedule/day-schedule.component';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../day-schedule/video-item/video-item.component';
 
-const { remote, ipcRenderer, shell } = electron;
+const { ipcRenderer } = electron;
 
 @Component({
-    selector: 'app-full-screen',
-    templateUrl: './full-screen.component.html',
-    styleUrls: ['./full-screen.component.scss']
+    templateUrl: 'full-screen-video.component.html',
+    styleUrls: ['full-screen-video.component.scss']
 })
-export class FullScreenComponent implements OnInit, AfterViewInit {
+export class FullScreenVideoComponent implements OnInit, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoplayer: any;
 
