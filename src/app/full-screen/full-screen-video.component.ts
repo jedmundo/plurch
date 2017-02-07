@@ -1,7 +1,6 @@
-import { Component, OnInit, AfterViewChecked, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Renderer } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { PlayableItem, FILE_TYPE } from '../day-schedule/day-schedule.component';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../day-schedule/video-item/video-item.component';
 
 const { ipcRenderer } = electron;
@@ -12,44 +11,39 @@ const { ipcRenderer } = electron;
 })
 export class FullScreenVideoComponent implements OnInit, AfterViewInit {
 
-    @ViewChild('videoPlayer') private videoplayer: any;
+    @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
 
     public videoPath: string;
 
-    private videoPlayerElement;
-
-    constructor(private route: ActivatedRoute) { }
+    constructor(private route: ActivatedRoute, private renderer: Renderer) { }
 
     public ngOnInit(): void {
         this.route.params
             .subscribe((params: Params) => {
-                const path = params['id'].replace(/___/g, '/');
-                // const type: number = +params['id'].split('____')[1];
-                this.videoPath = path;
+                this.videoPath = params['id'].replace(/___/g, '/');
             });
 
         ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
-            const video = this.videoPlayerElement;
+            const video = this.videoPlayerRef.nativeElement;
             switch (command.type) {
                 case VIDEO_COMMAND_TYPE.PLAY:
-                    return video.play();
+                    return this.renderer.invokeElementMethod(video, 'play');
                 case VIDEO_COMMAND_TYPE.PAUSE:
-                    return video.pause();
+                    return this.renderer.invokeElementMethod(video, 'pause');
                 case VIDEO_COMMAND_TYPE.MUTE:
-                    return (<any> video).mute = true;
+                    return this.renderer.setElementProperty(video, 'mute', true);
                 case VIDEO_COMMAND_TYPE.UNMUTE:
-                    return (<any> video).mute = false;
+                    return this.renderer.setElementProperty(video, 'mute', false);
                 case VIDEO_COMMAND_TYPE.RESTART:
-                    return video.load();
+                    return this.renderer.invokeElementMethod(video, 'load');
                 case VIDEO_COMMAND_TYPE.SYNC_TIME:
-                    video.currentTime = command.value;
+                    this.renderer.setElementProperty(video, 'currentTime', command.value);
                     break;
             }
         });
     }
 
     public ngAfterViewInit(): void {
-        this.videoPlayerElement = this.videoplayer.nativeElement;
     }
 
 }
