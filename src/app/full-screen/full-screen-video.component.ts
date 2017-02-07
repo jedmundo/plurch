@@ -14,8 +14,7 @@ export class FullScreenVideoComponent implements OnInit, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoplayer: any;
 
-    public FILE_TYPE = FILE_TYPE;
-    public paramItem: PlayableItem;
+    public videoPath: string;
 
     private videoPlayerElement;
 
@@ -24,9 +23,9 @@ export class FullScreenVideoComponent implements OnInit, AfterViewInit {
     public ngOnInit(): void {
         this.route.params
             .subscribe((params: Params) => {
-                const path = params['id'].split('____')[0].replace(/___/g, '/');
-                const type: number = +params['id'].split('____')[1];
-                this.paramItem = new PlayableItem(path, type === FILE_TYPE.DEFAULT ? FILE_TYPE.DEFAULT : FILE_TYPE.VIDEO);
+                const path = params['id'].replace(/___/g, '/');
+                // const type: number = +params['id'].split('____')[1];
+                this.videoPath = path;
             });
 
         ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {

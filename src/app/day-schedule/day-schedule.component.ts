@@ -89,7 +89,7 @@ export class DayScheduleComponent implements OnInit {
         }
 
         if (file.type === FILE_TYPE.VIDEO) {
-            const url = '#/fs-video/' + file.path.replace(/\//g, '___') + '____' + file.type;
+            const url = '#/fs-video/' + file.path.replace(/\//g, '___');
             this.windowManagementService.openWindow(123, url, externalDisplay.electronDisplay, 'Plurch Video Preview')
         }
     }

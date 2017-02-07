@@ -1,9 +1,2 @@
-<div>
-    <div *ngIf="paramItem.type === FILE_TYPE.VIDEO">
-        <video id="video_playback" width="100%" height="100%" [src]="paramItem.path" #videoPlayer></video>
-    </div>
 
-    <div *ngIf="paramItem.type === FILE_TYPE.DEFAULT">
-        NOT A VIDEO
-    </div>
-</div>
+<video id="video_playback" width="100%" height="100%" [src]="videoPath" #videoPlayer></video>
