@@ -5,11 +5,7 @@
 }
 
 .link {
-    //cursor: pointer;
-    display: flex;
-    flex-direction: row;
     margin-bottom: 1rem;
-    border-bottom: 1px solid lightgray;
 
     .item {
         .details {
@@ -25,6 +21,20 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+
+    .md-card-header-text {
+        margin: 0;
+    }
+
+    md-card-title {
+        text-transform: uppercase;
+    }
+
+    md-card-actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
     }
 }
 
@@ -97,4 +107,8 @@
             font-weight: bold;
         }
     }
+}
+
+.red-button {
+    color: #ff523a;
 }

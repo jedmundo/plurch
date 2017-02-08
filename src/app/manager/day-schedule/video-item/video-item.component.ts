@@ -31,8 +31,8 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @ViewChild('seekBar') private seekBar: ElementRef;
     @ViewChild('volumeBar') private volumeBar: ElementRef;
 
-    public currentVideoTime;
-    public currentVideoDuration;
+    public currentVideoTime = '???';
+    public currentVideoDuration = '???';
     public isMuted: boolean = false;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;

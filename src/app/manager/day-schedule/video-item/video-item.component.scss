@@ -1,13 +1,13 @@
 
 .video-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
     .item-video-controls {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding: 1rem 0;
+        justify-content: space-around;
+        padding: 1rem;
 
         & > div {
             display: flex;

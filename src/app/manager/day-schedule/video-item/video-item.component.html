@@ -7,8 +7,8 @@
             <button *ngIf="!isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
             <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
             <input (input)="videoSeekChange()" type="range" value="0" #seekBar>
-            <div class="time-info">{{ currentVideoTime }} / {{ currentVideoDuration }}</div>
         </div>
+        <div class="time-info">{{ currentVideoTime }} / {{ currentVideoDuration }}</div>
         <div>
             <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" type="button">Mute</button>
             <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" type="button">Unmute</button>
