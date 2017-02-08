@@ -1,7 +1,7 @@
 
-<h2> Connected Displayss </h2>
+<h2> Connected Displays </h2>
 <div class="displays-container">
-    <div *ngFor="let display of displays" class="display-item">
+    <div *ngFor="let display of display$ | async" class="display-item">
         <div class="icon"></div>
         <div class="label">
             <div>ID: {{ display.electronDisplay.id }}</div>

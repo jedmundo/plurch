@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WindowManagementService } from './services/window-management.service';
+import { DisplayManagementService } from './services/display-management.service';
 
 @NgModule({
     imports: [
@@ -10,7 +11,8 @@ import { WindowManagementService } from './services/window-management.service';
 
     ],
     providers: [
-        WindowManagementService
+        WindowManagementService,
+        DisplayManagementService
     ],
     exports: [
         CommonModule,

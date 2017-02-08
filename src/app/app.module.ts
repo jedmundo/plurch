@@ -11,6 +11,7 @@ import { DayScheduleComponent } from './day-schedule/day-schedule.component';
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './empty-window/empty-window.component';
+import { MaterialModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { EmptyWindowComponent } from './empty-window/empty-window.component';
         FormsModule,
         HttpModule,
         ROUTER_MODULE,
-        SharedModule
+        SharedModule,
+        MaterialModule.forRoot()
     ],
     declarations: [
         AppComponent,

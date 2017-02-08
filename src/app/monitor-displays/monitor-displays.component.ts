@@ -1,5 +1,7 @@
 import { Component, OnInit, NgZone, Input, Output, EventEmitter } from '@angular/core';
 import Display = Electron.Display;
+import { DisplayManagementService, PlurchDisplay } from '../shared/services/display-management.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-monitor-displays',
@@ -8,57 +10,14 @@ import Display = Electron.Display;
 })
 export class MonitorDisplaysComponent implements OnInit {
 
-    @Input() public isPreviewPossible: boolean;
-    @Output() public isPreviewPossibleChange = new EventEmitter<boolean>();
+    public display$ : Observable<PlurchDisplay[]>;
 
-    @Input() public displays: PlurchDisplay[] = [];
-    @Output() public displaysChange = new EventEmitter<PlurchDisplay[]>();
-
-    constructor(private zone: NgZone) { }
+    constructor(private displayManagementService: DisplayManagementService) { }
 
     public ngOnInit() {
-        const electronScreen = electron.screen;
-
-        const connectedDisplays = electronScreen.getAllDisplays();
-        connectedDisplays.forEach((display) => {
-            this.displays.push(new PlurchDisplay(display));
-            this.displaysChange.emit(this.displays);
-            this.isPreviewPossibleChange.emit(this.checkIfPreviewPossible());
-        });
-
-        electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
-            this.zone.run(() => {
-                console.log('Display Added', newDisplay);
-                this.displays.push(new PlurchDisplay(newDisplay));
-                this.displaysChange.emit(this.displays);
-                this.isPreviewPossibleChange.emit(this.checkIfPreviewPossible());
-            });
-        });
-
-        electronScreen.on('display-removed', (event: Event, oldDisplay: Display) => {
-            this.zone.run(() => {
-                console.log('Display Removed', oldDisplay);
-                this.displays.splice(this.displays.findIndex((display) => display.electronDisplay.id === oldDisplay.id), 1);
-                this.displaysChange.emit(this.displays);
-            });
-        });
-    }
-
-    private checkIfPreviewPossible(): boolean {
-        return this.displays.length > 1;
+        this.display$ = this.displayManagementService.display$;
     }
 
 }
 
-export class PlurchDisplay {
 
-    public external: boolean;
-
-    constructor(public electronDisplay: Display) {
-        this.external = this.isExternal(electronDisplay);
-    }
-
-    private isExternal(electronDisplay: Display): boolean {
-        return electronDisplay.bounds.x != 0 || electronDisplay.bounds.y != 0;
-    }
-}

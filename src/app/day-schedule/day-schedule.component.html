@@ -1,15 +1,10 @@
-
-<h1>Displays</h1>
-<app-monitor-displays [(displays)]="displays" [(isPreviewPossible)]="isPreviewPossible"></app-monitor-displays>
-
 <h1>Windows</h1>
 
-<div *ngFor="let pWindow of pWindows">
+<div *ngFor="let pWindow of pWindowIds">
 
 </div>
 
 <div>
-    <h1>{{title}}</h1>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 

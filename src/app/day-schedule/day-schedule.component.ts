@@ -2,8 +2,9 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
-import { PlurchDisplay } from '../monitor-displays/monitor-displays.component';
 import { WindowManagementService } from '../shared/services/window-management.service';
+import { PlurchDisplay, DisplayManagementService } from '../shared/services/display-management.service';
+import { Observable } from 'rxjs';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -39,22 +40,22 @@ export class PlayableItem {
 })
 export class DayScheduleComponent implements OnInit {
 
-    public displays: PlurchDisplay[] = [];
-    public isPreviewPossible: boolean = false;
-
-    public title = 'Plurch';
     public files: PlayableItem[] = [];
     public FILE_TYPE = FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
 
+    private displays: PlurchDisplay[];
     private pWindowIds: string[] = [];
 
     constructor(
-        private zone: NgZone, private windowManagementService: WindowManagementService
+        private zone: NgZone,
+        private windowManagementService: WindowManagementService,
+        private displayManagementService: DisplayManagementService
     ) { }
 
     public ngOnInit() {
         this.loadItems('files', this.files);
+        this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
     }
 
     public openChooseItemDialog() {
@@ -79,9 +80,10 @@ export class DayScheduleComponent implements OnInit {
     }
 
     public openNewScreen(): void {
-        const externalDisplay = this.displays.find((display) => display.external);
-        // TODO: Change because DEV mode 1 screen only
-        // const externalDisplay = this.displays[0];
+        let externalDisplay = this.displays.find((display) => display.external);
+        if (!externalDisplay) {
+            externalDisplay = this.displays[0];
+        }
 
         const windowID = this.guid();
         this.pWindowIds.push(windowID);
