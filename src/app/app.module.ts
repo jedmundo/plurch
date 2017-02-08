@@ -14,6 +14,7 @@ import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.co
 import { MaterialModule } from '@angular/material';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
+import { DayListComponent } from './manager/day-list/day-list.component';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { ManagerComponent } from './manager/manager.component';
         VideoItemComponent,
         EmptyWindowComponent,
         NavigationComponent,
-        ManagerComponent
+        ManagerComponent,
+        DayListComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

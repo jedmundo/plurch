@@ -79,10 +79,8 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     private videoLoaded(): void {
-        console.log('LISTENERS ADDED TO VIDEO');
+        // console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
-        // Always muted
-        this.renderer.setElementProperty(video, 'muted', true);
 
         this.renderer.listen(video, 'seeking', () => {
             this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',

@@ -4,8 +4,10 @@ import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import { WindowManagementService } from '../../shared/services/window-management.service';
 import { PlurchDisplay, DisplayManagementService } from '../../shared/services/display-management.service';
-
+import { ActivatedRoute, Params } from '@angular/router';
 const { remote, ipcRenderer, shell } = electron;
+
+const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
@@ -43,17 +45,22 @@ export class DayScheduleComponent implements OnInit {
     public FILE_TYPE = FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
 
+    private selectedDayName: string;
     private displays: PlurchDisplay[];
     private pWindowIds: string[] = [];
 
     constructor(
         private zone: NgZone,
         private windowManagementService: WindowManagementService,
-        private displayManagementService: DisplayManagementService
+        private displayManagementService: DisplayManagementService,
+        private activatedRoute: ActivatedRoute
     ) { }
 
     public ngOnInit() {
-        this.loadItems('files', this.files);
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.selectedDayName = params['dayName'];
+            this.loadItems(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, this.files);
+        });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
     }
 
@@ -75,7 +82,7 @@ export class DayScheduleComponent implements OnInit {
     public deleteFile(path: string) {
         const file = this.files.find((file) => file.path === path);
         this.files.splice(this.files.indexOf(file) , 1);
-        localStorage.setItem('files', JSON.stringify(this.files));
+        localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, JSON.stringify(this.files));
     }
 
     public openNewScreen(): void {
@@ -184,7 +191,7 @@ export class DayScheduleComponent implements OnInit {
 
     private storeFile(path: string, type: FILE_TYPE, thumbnailPath?: string): void {
         this.files.push(new PlayableItem(path, type, thumbnailPath));
-        localStorage.setItem('files', JSON.stringify(this.files));
+        localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, JSON.stringify(this.files));
     }
 
     private loadItems(key: string, list: PlayableItem[]): void {

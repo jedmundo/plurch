@@ -1,44 +1,48 @@
-<h1>Windows</h1>
+<h1>List for day: {{ selectedDayName }}</h1>
 
-<div *ngFor="let pWindow of pWindowIds">
+<div class="pWindows-container">
+    <h1>Windows</h1>
 
+    <div *ngFor="let pWindow of pWindowIds">
+        <div class="pWindow-thumbnail">
+
+        </div>
+    </div>
+
+    <button (click)="openNewScreen()">Add New Window</button>
+    <button (click)="sendWindowCommands(WINDOW_COMMAND_TYPE.CLOSE)">Close All Windows</button>
 </div>
 
-<div>
+<div class="file-list-container">
+
+    <h1>Files</h1>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 
-    <button (click)="openNewScreen()">Open Window in External Monitor</button>
-    <button (click)="sendWindowCommands(WINDOW_COMMAND_TYPE.CLOSE)">Close All Windows</button>
+    <div *ngFor="let file of files" class="link">
 
-    <div>
-        <h1>Files</h1>
-        <div *ngFor="let file of files" class="link">
-
-            <div class="item">
-                <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <plurch-video-item [file]="file"></plurch-video-item>
-                </div>
-
-                <div *ngIf="file.type === FILE_TYPE.DEFAULT">
-                    <img [src]="file.thumbnailPath" width="50px" height="50px">
-                </div>
-
-                <div class="details">
-                    <div>Name: {{file.getName()}}</div>
-                    <div>Path: {{file.path}}</div>
-                </div>
+        <div class="item">
+            <div *ngIf="file.type === FILE_TYPE.VIDEO">
+                <plurch-video-item [file]="file"></plurch-video-item>
             </div>
 
-            <div class="item-default-controls">
-                <button (click)="deleteFile(file.path)">DELETE</button>
-                <button (click)="openFile(file.path)">Open Source</button>
-                <div>
-                    <button *ngFor="let windowId of pWindowIds" (click)="addToWindow(file, windowId)">Add To Window</button>
-                </div>
-                <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
+            <div *ngIf="file.type === FILE_TYPE.DEFAULT">
+                <img [src]="file.thumbnailPath" width="50px" height="50px">
             </div>
 
+            <div class="details">
+                <div>Name: {{file.getName()}}</div>
+                <div>Path: {{file.path}}</div>
+            </div>
+        </div>
+
+        <div class="item-default-controls">
+            <button (click)="deleteFile(file.path)">DELETE</button>
+            <button (click)="openFile(file.path)">Open Source</button>
+            <div>
+                <button *ngFor="let windowId of pWindowIds" (click)="addToWindow(file, windowId)">Add To Window</button>
+            </div>
+            <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
         </div>
     </div>
 </div>

@@ -4,6 +4,7 @@ import { DayScheduleComponent } from './manager/day-schedule/day-schedule.compon
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
 import { MonitorDisplaysComponent } from './manager/monitor-displays/monitor-displays.component';
 import { ManagerComponent } from './manager/manager.component';
+import { DayListComponent } from './manager/day-list/day-list.component';
 
 const routes: Routes = [
     {
@@ -16,11 +17,12 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'day-schedule',
+                redirectTo: 'day-list',
                 pathMatch: 'full'
             },
-            { path: 'day-schedule', component: DayScheduleComponent },
             { path: 'displays', component: MonitorDisplaysComponent},
+            { path: 'day-list', component: DayListComponent},
+            { path: 'day-schedule/:dayName', component: DayScheduleComponent}
         ]
     },
     { path: 'fs/empty-window', component: EmptyWindowComponent },
