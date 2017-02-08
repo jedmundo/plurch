@@ -52,7 +52,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 const video = this.videoPlayerRef.nativeElement;
                 this.renderer.setElementProperty(video, 'muted', true);
                 setTimeout(() => {
-                    if (!video.isPaused) {
+                    if (!this.isPaused) {
                         this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
                     }
                     this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',

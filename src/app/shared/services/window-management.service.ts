@@ -21,6 +21,7 @@ export class PlurchWindow {
 
 export enum WINDOW_COMMAND_TYPE {
     FULL_SCREEN,
+    STOP_FULL_SCREEN,
     CLOSE
 }
 
@@ -61,7 +62,7 @@ export class WindowManagementService {
             icon: 'assets/icon.png',
             width: 800,
             height: 600,
-            fullscreen: false,
+            fullscreen: true,
             x: rightExternalMonitorXPosition,
             y: rightExternalMonitorYPosition
         });
@@ -123,7 +124,10 @@ export class WindowManagementService {
         if (pWindow) {
             switch (command) {
                 case WINDOW_COMMAND_TYPE.FULL_SCREEN:
-                    pWindow.electronWindow.maximize();
+                    pWindow.electronWindow.setFullScreen(true);
+                    break;
+                case WINDOW_COMMAND_TYPE.STOP_FULL_SCREEN:
+                    pWindow.electronWindow.setFullScreen(false);
                     break;
                 case WINDOW_COMMAND_TYPE.CLOSE:
                     this.closeWindow(id);

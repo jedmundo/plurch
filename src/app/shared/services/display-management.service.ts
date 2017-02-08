@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import Display = Electron.Display;
-import { ReplaySubject, Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 
 export class PlurchDisplay {
 
@@ -15,38 +15,37 @@ export class PlurchDisplay {
     }
 }
 
+export default function runInZone(zone: NgZone) {
+    return function run<T>(input: Observable<T>) {
+        return Observable.create((observer: Observer<T>) => {
+            input.subscribe(
+                (value) => zone.run(() => observer.next(value)),
+                (error) => zone.run(() => observer.error(error)),
+                ()      => zone.run(() => observer.complete())
+            );
+        });
+    };
+}
+
 @Injectable()
 export class DisplayManagementService {
 
-    private displaySubject = new ReplaySubject<PlurchDisplay[]>(1);
-    public display$: Observable<PlurchDisplay[]> = this.displaySubject.asObservable();
+    public display$: Observable<PlurchDisplay[]>;
 
     constructor(private zone: NgZone) {
         const electronScreen = electron.screen;
 
-        const connectedDisplays: Display[] = electronScreen.getAllDisplays();
-        const convertedDisplay: PlurchDisplay[] = connectedDisplays.map((display) => new PlurchDisplay(display));
-        this.displaySubject.next(convertedDisplay);
+        const displayEvents = ['display-added', 'display-removed'];
 
-        electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
-            this.zone.run(() => {
-                console.log('Display Added', newDisplay);
-                Observable.combineLatest(this.display$, Observable.of(newDisplay))
-                    .do(console.log)
-                    .map(([displays, newDisplay]) => displays.concat(new PlurchDisplay(newDisplay)))
-                    .subscribe((displays) => this.displaySubject.next(displays));
-            });
-        });
-        //
-        // electronScreen.on('display-removed', (event: Event, oldDisplay: Display) => {
-        //     this.zone.run(() => {
-        //         console.log('Display Removed', oldDisplay);
-        //         this.displays.splice(this.displays.findIndex((display) => display.electronDisplay.id === oldDisplay.id), 1);
-        //         this.displaysChange.emit(this.displays);
-        //     });
-        // });
+            this.display$ =
+                Observable.merge(
+                    ...displayEvents.map((event) => Observable.fromEvent(electronScreen, event))
+                )
+                    .startWith(null)
+                    .map(() => electronScreen.getAllDisplays())
+                    .map((displays) => displays.map((display) => new PlurchDisplay(display)))
+                    .let(runInZone(zone));
     }
-
 
     // private checkIfPreviewPossible(): boolean {
     //     return this.displays.length > 1;

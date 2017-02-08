@@ -12,7 +12,9 @@ export class MonitorDisplaysComponent implements OnInit {
 
     public display$ : Observable<PlurchDisplay[]>;
 
-    constructor(private displayManagementService: DisplayManagementService) { }
+    constructor(
+        private displayManagementService: DisplayManagementService) {
+    }
 
     public ngOnInit() {
         this.display$ = this.displayManagementService.display$;
