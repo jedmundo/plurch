@@ -19,6 +19,11 @@ export class PlurchWindow {
     }
 }
 
+export enum WINDOW_COMMAND_TYPE {
+    FULL_SCREEN,
+    CLOSE
+}
+
 @Injectable()
 export class WindowManagementService {
 
@@ -111,6 +116,20 @@ export class WindowManagementService {
                 pWindow.electronWindow.webContents.send(messageTitle, message);
             }
         });
+    }
+
+    public sendCommandToWindow(id: string, command: WINDOW_COMMAND_TYPE): void {
+        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
+        if (pWindow) {
+            switch (command) {
+                case WINDOW_COMMAND_TYPE.FULL_SCREEN:
+                    pWindow.electronWindow.maximize();
+                    break;
+                case WINDOW_COMMAND_TYPE.CLOSE:
+                    this.closeWindow(id);
+                    break;
+            }
+        }
     }
 
 }

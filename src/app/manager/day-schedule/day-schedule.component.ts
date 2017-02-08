@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, EventEmitter } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
-import { WindowManagementService } from '../../shared/services/window-management.service';
+import { WindowManagementService, WINDOW_COMMAND_TYPE } from '../../shared/services/window-management.service';
 import { PlurchDisplay, DisplayManagementService } from '../../shared/services/display-management.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -16,10 +16,6 @@ const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'j
 export enum FILE_TYPE {
     VIDEO,
     DEFAULT
-}
-
-export enum WINDOW_COMMAND_TYPE {
-    CLOSE
 }
 
 export class PlayableItem {
@@ -102,6 +98,18 @@ export class DayScheduleComponent implements OnInit {
         }
     }
 
+    public sendCommandToWindow(id: string, command: WINDOW_COMMAND_TYPE) {
+        // TODO: Improve this
+        if (command === WINDOW_COMMAND_TYPE.CLOSE) {
+            this.pWindowIds.splice(this.pWindowIds.indexOf(id), 1);
+            for (let j = 0; j < this.files.length; j++) {
+                if (this.files[j].windowIDs.indexOf(id) > -1)
+                    this.files[j].windowIDs.splice(this.files[j].windowIDs.indexOf(id), 1);
+            }
+        }
+        this.windowManagementService.sendCommandToWindow(id, command);
+    }
+
     public addToWindow(file: PlayableItem, windowId: string): void {
         this.files.forEach((file) => {
             if (file.windowIDs.find((windowIdArg) => windowIdArg === windowId)) {
@@ -116,18 +124,15 @@ export class DayScheduleComponent implements OnInit {
         this.newFileAddedToWindow.emit();
     }
 
-    public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {
-        switch (command) {
-            case WINDOW_COMMAND_TYPE.CLOSE:
-                for (let i = 0; i < this.pWindowIds.length; i++) {
-                    this.windowManagementService.closeWindow(this.pWindowIds[i]);
-                }
-                for (let j = 0; j < this.files.length; j++) {
-                    this.files[j].windowIDs = [];
-                }
-                this.pWindowIds = [];
-                break;
+    public closeAllWindows(): void {
+        // TODO: Improve
+        for (let i = 0; i < this.pWindowIds.length; i++) {
+            this.windowManagementService.closeWindow(this.pWindowIds[i]);
         }
+        for (let j = 0; j < this.files.length; j++) {
+            this.files[j].windowIDs = [];
+        }
+        this.pWindowIds = [];
     }
 
     private guid(): string {

@@ -4,13 +4,19 @@
     <h2>Windows</h2>
 
     <div class="pWindows-list">
-        <div *ngFor="let pWindow of pWindowIds; let i = index" class="pWindow-thumbnail">
-            <div class="pWindow-number">{{i+1}}</div>
+        <div *ngFor="let pWindow of pWindowIds; let i = index" class="pWindow-item">
+            <div class="pWindow-thumbnail">
+                <div class="pWindow-number">{{i+1}}</div>
+            </div>
+            <div class="buttons">
+                <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.FULL_SCREEN)"> FullScreen</button>
+                <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
+            </div>
         </div>
     </div>
 
     <button (click)="openNewScreen()">Add New Window</button>
-    <button (click)="sendWindowCommands(WINDOW_COMMAND_TYPE.CLOSE)">Close All Windows</button>
+    <button (click)="closeAllWindows()">Close All Windows</button>
 </div>
 
 <div class="file-list-container">
