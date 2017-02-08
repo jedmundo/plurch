@@ -2,9 +2,8 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
-import { WindowManagementService } from '../shared/services/window-management.service';
-import { PlurchDisplay, DisplayManagementService } from '../shared/services/display-management.service';
-import { Observable } from 'rxjs';
+import { WindowManagementService } from '../../shared/services/window-management.service';
+import { PlurchDisplay, DisplayManagementService } from '../../shared/services/display-management.service';
 
 const { remote, ipcRenderer, shell } = electron;
 
@@ -35,8 +34,8 @@ export class PlayableItem {
 
 @Component({
     selector: 'app-day-schedule',
-    templateUrl: './day-schedule.component.html',
-    styleUrls: ['./day-schedule.component.scss']
+    templateUrl: 'day-schedule.component.html',
+    styleUrls: ['day-schedule.component.scss']
 })
 export class DayScheduleComponent implements OnInit {
 
@@ -87,7 +86,7 @@ export class DayScheduleComponent implements OnInit {
 
         const windowID = this.guid();
         this.pWindowIds.push(windowID);
-        this.windowManagementService.openWindow(windowID, '#/empty-window', externalDisplay.electronDisplay, 'Plurch Video Preview');
+        this.windowManagementService.openWindow(windowID, '#/fs/empty-window', externalDisplay.electronDisplay, 'Plurch Video Preview');
 
         if (!externalDisplay) {
             return;
@@ -102,7 +101,7 @@ export class DayScheduleComponent implements OnInit {
         });
         file.windowIDs.push(windowId);
         if (file.type === FILE_TYPE.VIDEO) {
-            const url = '#/fs-video/' + file.path.replace(/\//g, '___');
+            const url = '#/fs/video/' + file.path.replace(/\//g, '___');
             this.windowManagementService.addToWindow(windowId, url);
         }
     }

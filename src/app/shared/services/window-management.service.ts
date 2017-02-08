@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 const { ipcRenderer, remote } = electron;
 import BrowserWindow = Electron.BrowserWindow;
 import Display = Electron.Display;
-import { PlayableItem } from '../../day-schedule/day-schedule.component';
+import { PlayableItem } from '../../manager/day-schedule/day-schedule.component';
 
 export class PlurchWindow {
 

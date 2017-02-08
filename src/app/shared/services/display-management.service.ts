@@ -20,7 +20,6 @@ export class DisplayManagementService {
 
     private displaySubject = new ReplaySubject<PlurchDisplay[]>(1);
     public display$: Observable<PlurchDisplay[]> = this.displaySubject.asObservable();
-    private displayAdded$: Observable<any>;
 
     constructor(private zone: NgZone) {
         const electronScreen = electron.screen;
@@ -29,21 +28,15 @@ export class DisplayManagementService {
         const convertedDisplay: PlurchDisplay[] = connectedDisplays.map((display) => new PlurchDisplay(display));
         this.displaySubject.next(convertedDisplay);
 
-        this.displayAdded$ = Observable.fromEvent(electronScreen, 'on');
-        this.displayAdded$.subscribe((value: any) => {
-            console.log(value);
-            Observable.combineLatest(this.display$, this.displayAdded$)
-                .map(([displays, newDisplay]) => displays.concat(newDisplay))
-                .subscribe((displays) => this.displaySubject.next(displays));
+        electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
+            this.zone.run(() => {
+                console.log('Display Added', newDisplay);
+                Observable.combineLatest(this.display$, Observable.of(newDisplay))
+                    .do(console.log)
+                    .map(([displays, newDisplay]) => displays.concat(new PlurchDisplay(newDisplay)))
+                    .subscribe((displays) => this.displaySubject.next(displays));
+            });
         });
-        // electronScreen.on('display-added', (event: Event, newDisplay: Display) => {
-        //     this.zone.run(() => {
-        //         console.log('Display Added', newDisplay);
-        //         this.displays.push(new PlurchDisplay(newDisplay));
-        //         this.displaysChange.emit(this.displays);
-        //         this.isPreviewPossibleChange.emit(this.checkIfPreviewPossible());
-        //     });
-        // });
         //
         // electronScreen.on('display-removed', (event: Event, oldDisplay: Display) => {
         //     this.zone.run(() => {

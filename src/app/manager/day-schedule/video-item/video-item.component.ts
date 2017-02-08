@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer } from '@angular/core';
 import { PlayableItem } from '../day-schedule.component';
-import { WindowManagementService } from '../../shared/services/window-management.service';
+import { WindowManagementService } from '../../../shared/services/window-management.service';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -30,6 +30,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
     public currentVideoTime;
     public currentVideoDuration;
+    public isMuted: boolean = false;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
@@ -58,10 +59,16 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 this.renderer.invokeElementMethod(video, 'pause');
                 break;
             case VIDEO_COMMAND_TYPE.MUTE:
-                this.renderer.setElementProperty(video, 'muted', true);
+                this.isMuted = true;
+                if (!this.isPlayedOnExternalWindow) {
+                    this.renderer.setElementProperty(video, 'muted', true);
+                }
                 break;
             case VIDEO_COMMAND_TYPE.UNMUTE:
-                this.renderer.setElementProperty(video, 'muted', false);
+                this.isMuted = false;
+                if (!this.isPlayedOnExternalWindow) {
+                    this.renderer.setElementProperty(video, 'muted', false);
+                }
                 break;
             case VIDEO_COMMAND_TYPE.RESTART:
                 this.renderer.invokeElementMethod(video, 'load');
@@ -74,6 +81,9 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     private videoLoaded(): void {
         console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
+        // Always muted
+        this.renderer.setElementProperty(video, 'muted', true);
+
         this.renderer.listen(video, 'seeking', () => {
             this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                 { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
@@ -107,8 +117,8 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         return this.videoPlayerRef.nativeElement.paused;
     }
 
-    public get isMuted(): boolean {
-        return this.videoPlayerRef.nativeElement.muted;
+    public get isPlayedOnExternalWindow(): boolean {
+        return this.file.windowIDs.length > 0;
     }
 
 }

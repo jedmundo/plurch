@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Renderer } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
-import { VIDEO_COMMAND_TYPE, VideoCommand } from '../day-schedule/video-item/video-item.component';
+import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 
 const { ipcRenderer } = electron;
 
