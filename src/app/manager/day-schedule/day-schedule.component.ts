@@ -7,7 +7,7 @@ import { PlurchDisplay, DisplayManagementService } from '../../shared/services/d
 import { ActivatedRoute, Params } from '@angular/router';
 const { remote, ipcRenderer, shell } = electron;
 
-const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
+export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);

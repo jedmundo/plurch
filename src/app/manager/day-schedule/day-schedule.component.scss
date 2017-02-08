@@ -22,12 +22,31 @@
 
 .pWindows-container {
     border-top: 1px solid lightgray;
+    padding: 1rem;
 
-    .pWindow-thumbnail {
+    .pWindows-list {
+        display: flex;
+        flex-direction: row;
 
+        .pWindow-thumbnail {
+            width: 2rem;
+            height: 2rem;
+            background: lightblue;
+            border: 1px solid lightseagreen;
+            padding: 1rem;
+
+            .pWindow-number {
+                display: flex;
+                justify-content: center;
+                height: 100%;
+                align-items: center;
+            }
+        }
     }
+
 }
 
 .file-list-container {
     border-top: 1px solid lightgray;
+    padding: 1rem;
 }

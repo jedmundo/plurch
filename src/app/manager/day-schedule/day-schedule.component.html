@@ -1,11 +1,11 @@
 <h1>List for day: {{ selectedDayName }}</h1>
 
 <div class="pWindows-container">
-    <h1>Windows</h1>
+    <h2>Windows</h2>
 
-    <div *ngFor="let pWindow of pWindowIds">
-        <div class="pWindow-thumbnail">
-
+    <div class="pWindows-list">
+        <div *ngFor="let pWindow of pWindowIds; let i = index" class="pWindow-thumbnail">
+            <div class="pWindow-number">{{i+1}}</div>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
 
 <div class="file-list-container">
 
-    <h1>Files</h1>
+    <h2>Files</h2>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 
@@ -40,7 +40,9 @@
             <button (click)="deleteFile(file.path)">DELETE</button>
             <button (click)="openFile(file.path)">Open Source</button>
             <div>
-                <button *ngFor="let windowId of pWindowIds" (click)="addToWindow(file, windowId)">Add To Window</button>
+                <button *ngFor="let windowId of pWindowIds; let i = index" (click)="addToWindow(file, windowId)">
+                    Send To Window {{i+1}}
+                </button>
             </div>
             <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
         </div>
