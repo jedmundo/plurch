@@ -15,7 +15,7 @@
 
 <div class="file-list-container">
 
-    <h2>Files</h2>
+    <h2>File List</h2>
 
     <button (click)="openChooseItemDialog()">Choose file</button>
 
@@ -23,7 +23,7 @@
 
         <div class="item">
             <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                <plurch-video-item [file]="file"></plurch-video-item>
+                <plurch-video-item [file]="file" [newFileAddedToWindow]="newFileAddedToWindow" ></plurch-video-item>
             </div>
 
             <div *ngIf="file.type === FILE_TYPE.DEFAULT">
@@ -41,10 +41,9 @@
             <button (click)="openFile(file.path)">Open Source</button>
             <div>
                 <button *ngFor="let windowId of pWindowIds; let i = index" (click)="addToWindow(file, windowId)">
-                    Send To Window {{i+1}}
+                    Send To Window: {{i+1}}
                 </button>
             </div>
-            <!--<button *ngIf="isPreviewPossible" (click)="openNewScreen(file)">View in External Monitor</button>-->
         </div>
     </div>
 </div>

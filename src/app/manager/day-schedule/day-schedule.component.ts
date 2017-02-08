@@ -1,10 +1,11 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, EventEmitter } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import { WindowManagementService } from '../../shared/services/window-management.service';
 import { PlurchDisplay, DisplayManagementService } from '../../shared/services/display-management.service';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
 const { remote, ipcRenderer, shell } = electron;
 
 export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
@@ -48,6 +49,7 @@ export class DayScheduleComponent implements OnInit {
     private selectedDayName: string;
     private displays: PlurchDisplay[];
     private pWindowIds: string[] = [];
+    private newFileAddedToWindow = new EventEmitter<void>();
 
     constructor(
         private zone: NgZone,
@@ -111,6 +113,7 @@ export class DayScheduleComponent implements OnInit {
             const url = '#/fs/video/' + file.path.replace(/\//g, '___');
             this.windowManagementService.addToWindow(windowId, url);
         }
+        this.newFileAddedToWindow.emit();
     }
 
     public sendWindowCommands(command: WINDOW_COMMAND_TYPE): void {
@@ -118,6 +121,9 @@ export class DayScheduleComponent implements OnInit {
             case WINDOW_COMMAND_TYPE.CLOSE:
                 for (let i = 0; i < this.pWindowIds.length; i++) {
                     this.windowManagementService.closeWindow(this.pWindowIds[i]);
+                }
+                for (let j = 0; j < this.files.length; j++) {
+                    this.files[j].windowIDs = [];
                 }
                 this.pWindowIds = [];
                 break;

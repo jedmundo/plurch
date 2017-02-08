@@ -1,4 +1,7 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer } from '@angular/core';
+import {
+    Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
+    SimpleChanges, EventEmitter
+} from '@angular/core';
 import { PlayableItem } from '../day-schedule.component';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 
@@ -35,6 +38,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
+    @Input() public newFileAddedToWindow: EventEmitter<void>;
 
     constructor(
         private renderer: Renderer,
@@ -42,7 +46,20 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit() {
-
+        this.newFileAddedToWindow.subscribe(() => {
+            if (this.isPlayedOnExternalWindow) {
+                console.log('FILE IS ON EXTERNAL WINDOW');
+                const video = this.videoPlayerRef.nativeElement;
+                this.renderer.setElementProperty(video, 'muted', true);
+                setTimeout(() => {
+                    if (!video.isPaused) {
+                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
+                    }
+                    this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                        { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+                }, 2000);
+            }
+        });
     }
 
     public ngAfterViewInit(): void {
@@ -60,9 +77,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 break;
             case VIDEO_COMMAND_TYPE.MUTE:
                 this.isMuted = true;
-                if (!this.isPlayedOnExternalWindow) {
-                    this.renderer.setElementProperty(video, 'muted', true);
-                }
+                this.renderer.setElementProperty(video, 'muted', true);
                 break;
             case VIDEO_COMMAND_TYPE.UNMUTE:
                 this.isMuted = false;
