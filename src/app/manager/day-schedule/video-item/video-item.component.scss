@@ -1,12 +1,17 @@
 
 .video-item {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     .item-video-controls {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        margin-left: 1rem;
+        padding: 1rem 0;
+
+        & > div {
+            display: flex;
+            flex-direction: row;
+        }
     }
 }

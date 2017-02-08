@@ -1,7 +1,9 @@
-<h1>List for day: {{ selectedDayName }}</h1>
+<div class="main-title">
+    <div>List for day: {{ selectedDayName }}</div>
+</div>
 
 <div class="pWindows-container">
-    <h2>Windows</h2>
+    <div class="title">Windows</div>
 
     <div class="pWindows-list">
         <div *ngFor="let pWindow of pWindowIds; let i = index" class="pWindow-item">
@@ -16,30 +18,34 @@
         </div>
     </div>
 
-    <button (click)="openNewScreen()">Add New Window</button>
-    <button (click)="closeAllWindows()">Close All Windows</button>
+    <div class="buttons">
+        <button (click)="openNewScreen()">Add New Window</button>
+        <button (click)="closeAllWindows()">Close All Windows</button>
+    </div>
+
 </div>
 
 <div class="file-list-container">
 
-    <h2>File List</h2>
-
-    <button (click)="openChooseItemDialog()">Choose file</button>
+    <div class="pick">
+        <div class="title">File List</div>
+        <button (click)="openChooseItemDialog()">Add files</button>
+    </div>
 
     <div *ngFor="let file of files" class="link">
 
         <div class="item">
+            <div class="details">
+                <div><b>Name:</b> {{file.getName()}}</div>
+                <div><b>Path:</b> {{file.path}}</div>
+            </div>
+
             <div *ngIf="file.type === FILE_TYPE.VIDEO">
                 <plurch-video-item [file]="file" [newFileAddedToWindow]="newFileAddedToWindow" ></plurch-video-item>
             </div>
 
             <div *ngIf="file.type === FILE_TYPE.DEFAULT">
                 <img [src]="file.thumbnailPath" width="50px" height="50px">
-            </div>
-
-            <div class="details">
-                <div>Name: {{file.getName()}}</div>
-                <div>Path: {{file.path}}</div>
             </div>
         </div>
 

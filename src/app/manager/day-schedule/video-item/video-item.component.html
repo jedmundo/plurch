@@ -1,15 +1,18 @@
 <div class="video-item">
-    <video width="320" height="240" [src]="file.path" #videoPlayer></video>
+    <video height="240" [src]="file.path" #videoPlayer></video>
 
     <div class="item-video-controls">
-        <button *ngIf="isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
-        <button *ngIf="!isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
-        <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
-        <input (input)="videoSeekChange()" type="range" value="0" #seekBar>
-        <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" type="button">Mute</button>
-        <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" type="button">Unmute</button>
-        <input (input)="volumeChange()" type="range" min="0" max="1" step="0.1" value="1" #volumeBar>
-
-        <div class="time-info">{{ currentVideoTime }} / {{ currentVideoDuration }}</div>
+        <div>
+            <button *ngIf="isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">Play</button>
+            <button *ngIf="!isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">Pause</button>
+            <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)">Restart</button>
+            <input (input)="videoSeekChange()" type="range" value="0" #seekBar>
+            <div class="time-info">{{ currentVideoTime }} / {{ currentVideoDuration }}</div>
+        </div>
+        <div>
+            <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" type="button">Mute</button>
+            <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" type="button">Unmute</button>
+            <input (input)="volumeChange()" type="range" min="0" max="1" step="0.1" value="1" #volumeBar>
+        </div>
     </div>
 </div>

@@ -62,7 +62,6 @@ export class WindowManagementService {
             icon: 'assets/icon.png',
             width: 800,
             height: 600,
-            fullscreen: true,
             x: rightExternalMonitorXPosition,
             y: rightExternalMonitorYPosition
         });

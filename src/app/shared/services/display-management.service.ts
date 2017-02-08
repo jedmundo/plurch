@@ -37,14 +37,14 @@ export class DisplayManagementService {
 
         const displayEvents = ['display-added', 'display-removed'];
 
-            this.display$ =
-                Observable.merge(
-                    ...displayEvents.map((event) => Observable.fromEvent(electronScreen, event))
-                )
-                    .startWith(null)
-                    .map(() => electronScreen.getAllDisplays())
-                    .map((displays) => displays.map((display) => new PlurchDisplay(display)))
-                    .let(runInZone(zone));
+        this.display$ =
+            Observable.merge(
+                ...displayEvents.map((event) => Observable.fromEvent(electronScreen, event))
+            )
+                .startWith(null)
+                .map(() => electronScreen.getAllDisplays())
+                .map((displays) => displays.map((display) => new PlurchDisplay(display)))
+                .let(runInZone(zone));
     }
 
     // private checkIfPreviewPossible(): boolean {
