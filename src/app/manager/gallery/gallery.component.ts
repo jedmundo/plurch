@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, NgZone } from '@angular/core';
 import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -14,6 +14,8 @@ export interface YouTubeVideo {
     embeddedLink: SafeUrl;
     thumbnailUrl: string;
     isDownloaded: boolean;
+    downloading: boolean;
+    percentage?: number;
 }
 
 const opts: youtubeSearch.YouTubeSearchOptions = {
@@ -33,7 +35,10 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     public results$: Observable<YouTubeVideo>;
     private downloadedVideos: YouTubeVideo[] = [];
 
-    constructor(private sanitizer: DomSanitizer) { }
+    constructor(
+        private sanitizer: DomSanitizer,
+        private zone: NgZone
+    ) { }
 
     public ngOnInit() {
         this.loadItems();
@@ -61,14 +66,21 @@ export class GalleryComponent implements OnInit, AfterViewInit {
             const totalSize = res.headers['content-length'];
             let dataRead = 0;
             res.on('data', (data) => {
-                dataRead += data.length;
-                const percent = dataRead / totalSize;
-                console.log((percent * 100).toFixed(2) + '% ');
+                this.zone.run(() => {
+                    dataRead += data.length;
+                    const percent = dataRead / totalSize;
+                    // console.log((percent * 100).toFixed(2) + '% ');
+                    youtubeVideo.percentage = Math.floor(+(percent * 100).toFixed(2));
+                    youtubeVideo.downloading = true;
+                });
             });
             res.on('end', () => {
-                console.log('donwload Finished');
-                this.storeVideo(youtubeVideo);
-                youtubeVideo.isDownloaded = true;
+                this.zone.run(() => {
+                    console.log('donwload Finished');
+                    youtubeVideo.downloading = false;
+                    youtubeVideo.isDownloaded = true;
+                    this.storeVideo(youtubeVideo);
+                });
             });
         });
     }
@@ -115,7 +127,8 @@ export class GalleryComponent implements OnInit, AfterViewInit {
             link: video.link,
             embeddedLink: this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/' + video.id),
             thumbnailUrl: video.thumbnails.high.url,
-            isDownloaded: !!this.downloadedVideos.find((currVideo) => currVideo.id === video.id)
+            isDownloaded: !!this.downloadedVideos.find((currVideo) => currVideo.id === video.id),
+            downloading: false
         };
     }
 
