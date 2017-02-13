@@ -16,7 +16,8 @@
         </md-card-content>
 
         <md-card-actions>
-            <button (click)="downloadVideo(video.link)" md-button>Download</button>
+            <button *ngIf="!video.isDownloaded" (click)="downloadVideo(video)" md-button>Download</button>
+            <div *ngIf="video.isDownloaded" >Already Downloaded</div>
         </md-card-actions>
     </md-card>
 </div>
