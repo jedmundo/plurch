@@ -1,0 +1,23 @@
+<div class="search-bar">
+    <b>Search:</b> <input type="text" width="80%" #searchInput>
+</div>
+
+<div class="youtube-videos-container">
+    <md-card *ngFor="let video of results$ | async" class="youtube-video-card">
+        <md-card-header>
+            <md-card-title><b>{{ video.title }}</b></md-card-title>
+            <md-card-subtitle>{{ video.description }}</md-card-subtitle>
+        </md-card-header>
+
+        <md-card-content>
+            <img *ngIf="!video.link" [src]="video.thumbnailUrl">
+
+            <iframe [src]="video.embeddedLink" height="180"></iframe>
+        </md-card-content>
+
+        <md-card-actions>
+            <button (click)="downloadVideo(video.link)" md-button>Download</button>
+        </md-card-actions>
+    </md-card>
+</div>
+

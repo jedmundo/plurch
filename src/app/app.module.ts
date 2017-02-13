@@ -15,6 +15,7 @@ import { MaterialModule } from '@angular/material';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
+import { GalleryComponent } from './manager/gallery/gallery.component';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { DayListComponent } from './manager/day-list/day-list.component';
         EmptyWindowComponent,
         NavigationComponent,
         ManagerComponent,
-        DayListComponent
+        DayListComponent,
+        GalleryComponent
     ],
     providers: [],
     bootstrap: [AppComponent]
