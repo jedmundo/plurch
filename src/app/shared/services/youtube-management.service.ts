@@ -42,12 +42,11 @@ export class YoutubeManagementService {
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
 
-    // private deleteDay(name: string) {
-    //     const file = this.dayList.find((file) => file.name === name);
-    //     this.dayList.splice(this.dayList.indexOf(file) , 1);
-    //     localStorage.setItem(LOCAL_STORAGE_DAYS_KEY, JSON.stringify(this.dayList));
-    //     localStorage.removeItem(LOCAL_STORAGE_FILE_LIST_PREFIX + name);
-    // }
+    private deleteVideo(id: string) {
+        const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
+        this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
+        localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
+    }
 
     private loadItems(): void {
         const videoList = <YouTubeVideo[]> JSON.parse(localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS));
