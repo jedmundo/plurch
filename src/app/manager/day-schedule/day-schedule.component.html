@@ -32,11 +32,11 @@
         <button (click)="openChooseItemDialog()">Add files</button>
     </div>
 
-    <md-card *ngFor="let file of files" class="link">
+    <md-card *ngFor="let file of files; let i = index" class="link">
         <md-card-header>
             <!--<div md-card-avatar class="example-header-image"></div>-->
-            <md-card-title><b>{{file.getName()}}</b></md-card-title>
-            <md-card-subtitle>{{file.path}}</md-card-subtitle>
+            <md-card-title><b> {{i+1}} - {{ file.getName() }} </b></md-card-title>
+            <md-card-subtitle> {{ file.path }} </md-card-subtitle>
         </md-card-header>
 
         <md-card-content>
