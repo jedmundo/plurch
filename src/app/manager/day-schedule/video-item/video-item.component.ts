@@ -3,7 +3,7 @@ import {
     SimpleChanges, EventEmitter
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
-import { PlayableItem } from '../view/view-day-schedule.component';
+import { PlayableItem } from '../../../shared/services/day-files-management.service';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;

@@ -5,31 +5,14 @@ import BrowserWindow = Electron.BrowserWindow;
 import { WindowManagementService, WINDOW_COMMAND_TYPE } from '../../../shared/services/window-management.service';
 import { PlurchDisplay, DisplayManagementService } from '../../../shared/services/display-management.service';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
-const { remote, ipcRenderer, shell } = electron;
-
-export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
+import {
+    PlayableItem, DayFilesManagementService,
+    PLAYABLE_FILE_TYPE
+} from '../../../shared/services/day-files-management.service';
+const { remote } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
-
-export enum FILE_TYPE {
-    VIDEO,
-    DEFAULT
-}
-
-export class PlayableItem {
-    constructor(
-        public path: string,
-        public type: FILE_TYPE = FILE_TYPE.DEFAULT,
-        public thumbnailPath?: string,
-        public windowIDs: string[] = []
-    ) {}
-
-    public getName(): string {
-        return this.path.split('/')[this.path.split('/').length-1].split('.')[0]
-    }
-}
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -39,7 +22,7 @@ export class PlayableItem {
 export class ViewDayScheduleComponent implements OnInit {
 
     public files: PlayableItem[] = [];
-    public FILE_TYPE = FILE_TYPE;
+    public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
 
     private selectedDayName: string;
@@ -51,13 +34,14 @@ export class ViewDayScheduleComponent implements OnInit {
         private zone: NgZone,
         private windowManagementService: WindowManagementService,
         private displayManagementService: DisplayManagementService,
+        private dayFilesManagementService: DayFilesManagementService,
         private activatedRoute: ActivatedRoute
     ) { }
 
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
             this.selectedDayName = params['dayName'];
-            this.loadItems(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, this.files);
+            this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
         });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
     }
@@ -71,16 +55,6 @@ export class ViewDayScheduleComponent implements OnInit {
                 this.addVideosFromFolderOrFile(itemPaths);
             });
         });
-    }
-
-    public openFile(path: string) {
-        shell.openItem(path);
-    }
-
-    public deleteFile(path: string) {
-        const file = this.files.find((file) => file.path === path);
-        this.files.splice(this.files.indexOf(file) , 1);
-        localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, JSON.stringify(this.files));
     }
 
     public openNewScreen(): void {
@@ -117,7 +91,7 @@ export class ViewDayScheduleComponent implements OnInit {
             }
         });
         file.windowIDs.push(windowId);
-        if (file.type === FILE_TYPE.VIDEO) {
+        if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
             const url = '#/fs/video/' + file.path.replace(/\//g, '___');
             this.windowManagementService.addToWindow(windowId, url);
         }
@@ -133,6 +107,10 @@ export class ViewDayScheduleComponent implements OnInit {
             this.files[j].windowIDs = [];
         }
         this.pWindowIds = [];
+    }
+
+    public openFile(path: string) {
+        this.dayFilesManagementService.openFile(path);
     }
 
     private guid(): string {
@@ -154,18 +132,18 @@ export class ViewDayScheduleComponent implements OnInit {
                         this.zone.run(() => {
                             files.forEach(file => {
                                 if (this.isAllowedVideo(file)) {
-                                    this.addFile(itemPath + '/' + file, FILE_TYPE.VIDEO);
+                                    this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath + '/' + file, PLAYABLE_FILE_TYPE.VIDEO);
                                 } else {
-                                    this.addFile(itemPath, FILE_TYPE.DEFAULT);
+                                    this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
                                 }
                             });
                         });
                     })
                 } else {
                     if (this.isAllowedVideo(itemPath)) {
-                        this.addFile(itemPath, FILE_TYPE.VIDEO);
+                        this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.VIDEO);
                     } else {
-                        this.addFile(itemPath, FILE_TYPE.DEFAULT);
+                        this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
                     }
                 }
             });
@@ -177,40 +155,6 @@ export class ViewDayScheduleComponent implements OnInit {
             return true;
         } else {
             console.log('Item with extension not allowed: ', itemPath);
-        }
-    }
-
-    private addFile(path: string, type: FILE_TYPE): void {
-        console.log('ADD PlayableItem:', path);
-
-        if (type === FILE_TYPE.VIDEO) {
-            this.storeFile(path, type);
-        } else {
-            ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
-                this.zone.run(() => {
-                    if (thumbnailPath) {
-                        this.storeFile(path, type, thumbnailPath);
-                    } else {
-                        this.storeFile(path, type);
-                    }
-                });
-            });
-            ipcRenderer.send('save-preview', path);
-
-        }
-    }
-
-    private storeFile(path: string, type: FILE_TYPE, thumbnailPath?: string): void {
-        this.files.push(new PlayableItem(path, type, thumbnailPath));
-        localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + this.selectedDayName, JSON.stringify(this.files));
-    }
-
-    private loadItems(key: string, list: PlayableItem[]): void {
-        const fileList: PlayableItem[] = JSON.parse(localStorage.getItem(key));
-        if (fileList) {
-            fileList.forEach((file: PlayableItem) => {
-                list.push(new PlayableItem(file.path, file.type, file.thumbnailPath));
-            });
         }
     }
 

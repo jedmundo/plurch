@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { WindowManagementService } from './services/window-management.service';
 import { DisplayManagementService } from './services/display-management.service';
 import { YoutubeManagementService } from './services/youtube-management.service';
+import { DayFilesManagementService } from './services/day-files-management.service';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import { YoutubeManagementService } from './services/youtube-management.service'
     providers: [
         WindowManagementService,
         DisplayManagementService,
-        YoutubeManagementService
+        YoutubeManagementService,
+        DayFilesManagementService
     ],
     exports: [
         CommonModule,

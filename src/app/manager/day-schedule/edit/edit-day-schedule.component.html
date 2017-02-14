@@ -11,5 +11,8 @@
 </div>
 
 <div class="current-list">
-
+    <div *ngFor="let item of playableItems">
+        {{ item.title }}
+        <button (click)="addVideoToDay(video)">Add</button>
+    </div>
 </div>
