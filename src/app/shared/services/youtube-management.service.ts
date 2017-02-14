@@ -108,4 +108,8 @@ export class YoutubeManagementService {
             downloading: false
         };
     }
+
+    public get downloadedVideosList(): YouTubeVideo[] {
+        return this.downloadedVideos;
+    }
 }

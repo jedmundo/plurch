@@ -1,4 +1,15 @@
-<p>
+<div class="main-title">
    Edit: {{ selectedDayName }}
-  edit-day-schedule works!
-</p>
+</div>
+
+<div class="pick-list">
+    <div class="title">Choose from downloaded Videos</div>
+    <div *ngFor="let video of availableVideos">
+        {{ video.title }}
+        <button (click)="addVideoToDay(video)">Add</button>
+    </div>
+</div>
+
+<div class="current-list">
+
+</div>
