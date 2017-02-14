@@ -1,0 +1,114 @@
+
+.main-title {
+    padding: 1rem;
+    font-weight: bold;
+}
+
+.link {
+    margin-bottom: 1rem;
+
+    .item {
+        .details {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+    }
+
+    .item-default-controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .md-card-header-text {
+        margin: 0;
+    }
+
+    md-card-title {
+        text-transform: uppercase;
+    }
+
+    md-card-actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
+.pWindows-container {
+    border-top: 1px solid lightgray;
+    padding: 1rem;
+
+    .title {
+        padding-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .pWindows-list {
+        display: flex;
+        flex-direction: row;
+
+        .pWindow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 1rem;
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            .pWindow-thumbnail {
+                width: 2rem;
+                height: 2rem;
+                background: lightblue;
+                border: 1px solid lightseagreen;
+                padding: 1rem;
+
+                .pWindow-number {
+                    display: flex;
+                    justify-content: center;
+                    height: 100%;
+                    align-items: center;
+                }
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+        }
+
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        margin-top: 1rem;
+    }
+
+}
+
+.file-list-container {
+    border-top: 1px solid lightgray;
+    padding: 1rem;
+
+    .pick {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 1rem;
+        justify-content: space-between;
+
+        .title {
+            font-weight: bold;
+        }
+    }
+}
+
+.red-button {
+    color: #ff523a;
+}

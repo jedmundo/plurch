@@ -16,6 +16,8 @@ import { NavigationComponent } from './shared/components/navigation/navigation.c
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
 import { GalleryComponent } from './manager/gallery/gallery.component';
+import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
+import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
 
 @NgModule({
     imports: [
@@ -36,7 +38,9 @@ import { GalleryComponent } from './manager/gallery/gallery.component';
         NavigationComponent,
         ManagerComponent,
         DayListComponent,
-        GalleryComponent
+        GalleryComponent,
+        ViewDayScheduleComponent,
+        EditDayScheduleComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

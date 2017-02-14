@@ -2,8 +2,8 @@ import {
     Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
     SimpleChanges, EventEmitter
 } from '@angular/core';
-import { PlayableItem } from '../day-schedule.component';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
+import { PlayableItem } from '../view/view-day-schedule.component';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;

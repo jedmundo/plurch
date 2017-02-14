@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LOCAL_STORAGE_FILE_LIST_PREFIX } from '../day-schedule/day-schedule.component';
+import { LOCAL_STORAGE_FILE_LIST_PREFIX } from '../day-schedule/view/view-day-schedule.component';
 
 const LOCAL_STORAGE_DAYS_KEY = 'days';
 

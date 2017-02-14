@@ -6,6 +6,8 @@ import { MonitorDisplaysComponent } from './manager/monitor-displays/monitor-dis
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
 import { GalleryComponent } from './manager/gallery/gallery.component';
+import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
+import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
 
 const routes: Routes = [
     {
@@ -24,7 +26,19 @@ const routes: Routes = [
             { path: 'gallery', component: GalleryComponent},
             { path: 'displays', component: MonitorDisplaysComponent},
             { path: 'day-list', component: DayListComponent},
-            { path: 'day-schedule/:dayName', component: DayScheduleComponent}
+            {
+                path: 'day-schedule/:dayName',
+                component: DayScheduleComponent,
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'view',
+                        pathMatch: 'full'
+                    },
+                    { path: 'view', component: ViewDayScheduleComponent },
+                    { path: 'edit', component: EditDayScheduleComponent }
+                ]
+            }
         ]
     },
     { path: 'fs/empty-window', component: EmptyWindowComponent },
