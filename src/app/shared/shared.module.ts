@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WindowManagementService } from './services/window-management.service';
 import { DisplayManagementService } from './services/display-management.service';
+import { YoutubeManagementService } from './services/youtube-management.service';
 
 @NgModule({
     imports: [
@@ -12,7 +13,8 @@ import { DisplayManagementService } from './services/display-management.service'
     ],
     providers: [
         WindowManagementService,
-        DisplayManagementService
+        DisplayManagementService,
+        YoutubeManagementService
     ],
     exports: [
         CommonModule,
