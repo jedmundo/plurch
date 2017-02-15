@@ -3,7 +3,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
-const filepreview = require('filepreview');
+// const filepreview = require('filepreview');
 const fs = require('fs');
 const expressLib = require('express');
 
@@ -188,10 +188,10 @@ ipcMain.on('save-preview', (event, path) => {
     const thumbnailPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_'
         + pathList[pathList.length-1].split('.')[0] + '.gif';
 
-    if (!filepreview.generateSync(path, thumbnailPath)) {
-        console.log('Oops, something went wrong.');
-        event.sender.send('save-preview-reply', null);
-    } else {
-        event.sender.send('save-preview-reply', thumbnailPath);
-    }
+    // if (!filepreview.generateSync(path, thumbnailPath)) {
+    //     console.log('Oops, something went wrong.');
+    //     event.sender.send('save-preview-reply', null);
+    // } else {
+    //     event.sender.send('save-preview-reply', thumbnailPath);
+    // }
 });

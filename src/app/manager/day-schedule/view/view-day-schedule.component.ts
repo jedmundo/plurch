@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
@@ -9,10 +9,6 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
-const { remote } = electron;
-
-const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
-const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -31,7 +27,6 @@ export class ViewDayScheduleComponent implements OnInit {
     private newFileAddedToWindow = new EventEmitter<void>();
 
     constructor(
-        private zone: NgZone,
         private windowManagementService: WindowManagementService,
         private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
@@ -44,17 +39,6 @@ export class ViewDayScheduleComponent implements OnInit {
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
         });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
-    }
-
-    public openChooseItemDialog() {
-        remote.dialog.showOpenDialog({
-            title:"Select files or a folder",
-            properties: ["openDirectory","openFile","multiSelections"]
-        }, (itemPaths) => {
-            this.zone.run(() => {
-                this.addVideosFromFolderOrFile(itemPaths);
-            });
-        });
     }
 
     public openNewScreen(): void {
@@ -121,41 +105,6 @@ export class ViewDayScheduleComponent implements OnInit {
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
             s4() + '-' + s4() + s4() + s4();
-    }
-
-    private addVideosFromFolderOrFile(itemPaths: string[]): void {
-        if (itemPaths) {
-            itemPaths.forEach((itemPath) => {
-                const isDirectory = fs.lstatSync(itemPath).isDirectory();
-                if (isDirectory) {
-                    fs.readdir(itemPath, (err, files) => {
-                        this.zone.run(() => {
-                            files.forEach(file => {
-                                if (this.isAllowedVideo(file)) {
-                                    this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath + '/' + file, PLAYABLE_FILE_TYPE.VIDEO);
-                                } else {
-                                    this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
-                                }
-                            });
-                        });
-                    })
-                } else {
-                    if (this.isAllowedVideo(itemPath)) {
-                        this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.VIDEO);
-                    } else {
-                        this.dayFilesManagementService.addFile(this.selectedDayName, this.files, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
-                    }
-                }
-            });
-        }
-    }
-
-    private isAllowedVideo(itemPath: string): boolean {
-        if (videoAllowedExtensions.find((extension) => path.extname(itemPath).indexOf('.' + extension) > -1)) {
-            return true;
-        } else {
-            console.log('Item with extension not allowed: ', itemPath);
-        }
     }
 
 }

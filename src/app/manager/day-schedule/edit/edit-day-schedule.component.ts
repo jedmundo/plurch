@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
     YoutubeManagementService, YouTubeVideo,
@@ -8,6 +8,10 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
+import { remote } from 'electron';
+
+const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
+const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
 
 @Component({
     selector: 'app-edit-day-schedule',
@@ -22,6 +26,7 @@ export class EditDayScheduleComponent implements OnInit {
     public PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE;
 
     constructor(
+        private zone: NgZone,
         private activatedRoute: ActivatedRoute,
         private youtubeManagementService: YoutubeManagementService,
         private dayFilesManagementService: DayFilesManagementService
@@ -36,6 +41,17 @@ export class EditDayScheduleComponent implements OnInit {
         this.availableVideos = this.youtubeManagementService.downloadedVideosList;
     }
 
+    public openChooseItemDialog() {
+        remote.dialog.showOpenDialog({
+            title:"Select files or a folder",
+            properties: ["openDirectory","openFile","multiSelections"]
+        }, (itemPaths) => {
+            this.zone.run(() => {
+                this.addVideosFromFolderOrFile(itemPaths);
+            });
+        });
+    }
+
     public addVideoToDay(video: YouTubeVideo): void {
         this.dayFilesManagementService.addFile(this.selectedDayName, this.playableItems,
             YOUTUBE_VIDEOS_FOLDER + '/' + video.id + '.mp4', PLAYABLE_FILE_TYPE.VIDEO, video.id);
@@ -47,6 +63,45 @@ export class EditDayScheduleComponent implements OnInit {
 
     public deleteFile(path: string) {
         this.dayFilesManagementService.deleteFile(this.selectedDayName, path, this.playableItems);
+    }
+
+    private addVideosFromFolderOrFile(itemPaths: string[]): void {
+        if (itemPaths) {
+            itemPaths.forEach((itemPath) => {
+                const isDirectory = fs.lstatSync(itemPath).isDirectory();
+                if (isDirectory) {
+                    fs.readdir(itemPath, (err, files) => {
+                        this.zone.run(() => {
+                            files.forEach(file => {
+                                if (this.isAllowedVideo(file)) {
+                                    this.dayFilesManagementService.addFile(this.selectedDayName,
+                                        this.playableItems, itemPath + '/' + file, PLAYABLE_FILE_TYPE.VIDEO);
+                                } else {
+                                    this.dayFilesManagementService.addFile(this.selectedDayName,
+                                        this.playableItems, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
+                                }
+                            });
+                        });
+                    })
+                } else {
+                    if (this.isAllowedVideo(itemPath)) {
+                        this.dayFilesManagementService.addFile(this.selectedDayName,
+                            this.playableItems, itemPath, PLAYABLE_FILE_TYPE.VIDEO);
+                    } else {
+                        this.dayFilesManagementService.addFile(this.selectedDayName,
+                            this.playableItems, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
+                    }
+                }
+            });
+        }
+    }
+
+    private isAllowedVideo(itemPath: string): boolean {
+        if (videoAllowedExtensions.find((extension) => path.extname(itemPath).indexOf('.' + extension) > -1)) {
+            return true;
+        } else {
+            console.log('Item with extension not allowed: ', itemPath);
+        }
     }
 
 }

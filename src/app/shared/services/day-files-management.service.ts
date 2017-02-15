@@ -56,16 +56,16 @@ export class DayFilesManagementService {
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
             this.storeFile(dayName, files, path, type, id);
         } else {
-            ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
-                this.zone.run(() => {
-                    if (thumbnailPath) {
-                        this.storeFile(dayName, files, path, type, thumbnailPath);
-                    } else {
+            // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
+            //     this.zone.run(() => {
+            //         if (thumbnailPath) {
+            //             this.storeFile(dayName, files, path, type, thumbnailPath);
+            //         } else {
                         this.storeFile(dayName, files, path, type);
-                    }
-                });
-            });
-            ipcRenderer.send('save-preview', path);
+                    // }
+            //     });
+            // });
+            // ipcRenderer.send('save-preview', path);
 
         }
     }

@@ -1,6 +1,8 @@
 <div class="main-title">
-   Edit: {{ selectedDayName }}
+    Edit: {{ selectedDayName }}
 </div>
+
+<button (click)="openChooseItemDialog()">Add Local Files</button>
 
 <div class="pick-list">
     <div class="title">Choose from downloaded Videos</div>
@@ -11,17 +13,20 @@
 </div>
 
 <div class="current-list">
-    <div *ngFor="let item of playableItems">
-        {{ item.getName() }} - {{ item.path }}
+    <div *ngFor="let item of playableItems" class="list-item">
         <div *ngIf="item.type === PLAYABLE_FILE_TYPE.VIDEO">
-            <plurch-video-item [file]="item" ></plurch-video-item>
+            <video height="120" [src]="item.path" controls></video>
         </div>
 
         <div *ngIf="item.type === PLAYABLE_FILE_TYPE.DEFAULT">
             <img [src]="item.thumbnailPath" width="50px" height="50px">
         </div>
 
-        <button (click)="openFile(item.path)" md-button>Open Source</button>
-        <button (click)="deleteFile(item.path)" md-button class="red-button">Delete</button>
+        <div class="details">{{ item.getName() }}</div>
+
+        <div>
+            <button (click)="openFile(item.path)" md-button>Open Source</button>
+            <button (click)="deleteFile(item.path)" md-button class="red-button">Delete</button>
+        </div>
     </div>
 </div>

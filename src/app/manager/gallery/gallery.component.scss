@@ -1,31 +1,4 @@
 
-.search-bar {
-    padding: 2rem;
+.downloaded-videos-list {
+    margin: 1rem;
 }
-
-.youtube-videos-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 2rem;
-
-    .youtube-video-card {
-        width: 20rem;
-        margin: 0.5rem;
-
-        md-card-header {
-            margin-bottom: 1rem;
-            overflow: hidden;
-        }
-
-        iframe {
-            border: 0;
-        }
-
-        .downloaded-label {
-            display: flex;
-            justify-content: center;
-        }
-    }
-}
-

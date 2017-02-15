@@ -7,32 +7,20 @@ import { YouTubeVideo, YoutubeManagementService } from '../../shared/services/yo
     templateUrl: 'gallery.component.html',
     styleUrls: ['gallery.component.scss']
 })
-export class GalleryComponent implements OnInit, AfterViewInit {
+export class GalleryComponent implements OnInit {
 
-    @ViewChild('searchInput') private searchInputRef: ElementRef;
-
-    public results$: Observable<YouTubeVideo>;
+    public downloadedVideos: YouTubeVideo[];
 
     constructor(
         private youtubeManagementService: YoutubeManagementService
     ) { }
 
     public ngOnInit() {
+        this.downloadedVideos = this.youtubeManagementService.downloadedVideosList;
     }
 
-    public ngAfterViewInit(): void {
-        this.results$ = Observable.fromEvent<HTMLInputElement>(this.searchInputRef.nativeElement, 'keyup')
-            .debounceTime(500)
-            .map((ev: any) => ev.target.value)
-            .distinctUntilChanged()
-            // .do(termDebug => console.log(termDebug))
-            .switchMap(term => Observable.fromPromise(this.youtubeManagementService.searchVideo(term)))
-            .map((results) => results.map((video) => this.youtubeManagementService.parseVideo(video)))
-            .do(parsedVideos => console.log('PARSED: ', parsedVideos));
-    }
-
-    public downloadVideo(youtubeVideo: YouTubeVideo): void {
-        this.youtubeManagementService.downloadYoutubeVideo(youtubeVideo);
+    public deleteVideo(video: YouTubeVideo): void {
+        this.youtubeManagementService.deleteVideo(video.id);
     }
 
 }

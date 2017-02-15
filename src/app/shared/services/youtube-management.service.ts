@@ -42,7 +42,7 @@ export class YoutubeManagementService {
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
 
-    private deleteVideo(id: string) {
+    public deleteVideo(id: string) {
         const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
         this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
@@ -58,6 +58,7 @@ export class YoutubeManagementService {
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo): void {
         const video = ytdl(youtubeVideo.link);
         video.pipe(fs.createWriteStream(YOUTUBE_VIDEOS_FOLDER + '/' + youtubeVideo.id + '.mp4'));
+        youtubeVideo.downloading = true;
         video.on('response', (res) => {
             const totalSize = res.headers['content-length'];
             let dataRead = 0;
@@ -67,12 +68,11 @@ export class YoutubeManagementService {
                     const percent = dataRead / totalSize;
                     // console.log((percent * 100).toFixed(2) + '% ');
                     youtubeVideo.percentage = Math.floor(+(percent * 100).toFixed(2));
-                    youtubeVideo.downloading = true;
                 });
             });
             res.on('end', () => {
                 this.zone.run(() => {
-                    console.log('donwload Finished');
+                    console.log('Download Finished');
                     youtubeVideo.downloading = false;
                     youtubeVideo.isDownloaded = true;
                     this.storeVideo(youtubeVideo);

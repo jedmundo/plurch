@@ -13,5 +13,16 @@
 }
 
 .current-list {
+    padding: 1rem;
 
+    .list-item {
+        display: flex;
+        flex-direction: row;
+        margin: 1rem 0;
+        border-bottom: 1px solid lightgray;
+
+        .details {
+            max-width: 10rem;
+        }
+    }
 }

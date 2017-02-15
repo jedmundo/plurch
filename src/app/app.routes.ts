@@ -8,6 +8,7 @@ import { DayListComponent } from './manager/day-list/day-list.component';
 import { GalleryComponent } from './manager/gallery/gallery.component';
 import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
 import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
+import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.component';
 
 const routes: Routes = [
     {
@@ -24,6 +25,7 @@ const routes: Routes = [
                 pathMatch: 'full'
             },
             { path: 'gallery', component: GalleryComponent},
+            { path: 'search', component: SearchYoutubeComponent},
             { path: 'displays', component: MonitorDisplaysComponent},
             { path: 'day-list', component: DayListComponent},
             {
