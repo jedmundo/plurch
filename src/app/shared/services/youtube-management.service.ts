@@ -45,6 +45,7 @@ export class YoutubeManagementService {
     public deleteVideo(id: string) {
         const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
         this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
+        fs.unlinkSync(YOUTUBE_VIDEOS_FOLDER + youtubeVideo.id + '.mp4');
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
 
