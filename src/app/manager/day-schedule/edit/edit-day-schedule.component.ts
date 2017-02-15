@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { YoutubeManagementService, YouTubeVideo } from '../../../shared/services/youtube-management.service';
-import { PlayableItem, DayFilesManagementService } from '../../../shared/services/day-files-management.service';
+import {
+    YoutubeManagementService, YouTubeVideo,
+    YOUTUBE_VIDEOS_FOLDER
+} from '../../../shared/services/youtube-management.service';
+import {
+    PlayableItem, DayFilesManagementService,
+    PLAYABLE_FILE_TYPE
+} from '../../../shared/services/day-files-management.service';
 
 @Component({
     selector: 'app-edit-day-schedule',
@@ -12,7 +18,8 @@ export class EditDayScheduleComponent implements OnInit {
 
     public selectedDayName: string;
     public availableVideos: YouTubeVideo[];
-    public playableItems: PlayableItem[];
+    public playableItems: PlayableItem[] = [];
+    public PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -30,7 +37,16 @@ export class EditDayScheduleComponent implements OnInit {
     }
 
     public addVideoToDay(video: YouTubeVideo): void {
+        this.dayFilesManagementService.addFile(this.selectedDayName, this.playableItems,
+            YOUTUBE_VIDEOS_FOLDER + '/' + video.id + '.mp4', PLAYABLE_FILE_TYPE.VIDEO, video.id);
+    }
 
+    public openFile(path: string) {
+        this.dayFilesManagementService.openFile(path);
+    }
+
+    public deleteFile(path: string) {
+        this.dayFilesManagementService.deleteFile(this.selectedDayName, path, this.playableItems);
     }
 
 }

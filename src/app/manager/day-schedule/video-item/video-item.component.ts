@@ -38,7 +38,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
-    @Input() public newFileAddedToWindow: EventEmitter<void>;
+    @Input() public newFileAddedToWindow?: EventEmitter<void>;
 
     constructor(
         private renderer: Renderer,
@@ -46,20 +46,22 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit() {
-        this.newFileAddedToWindow.subscribe(() => {
-            if (this.isPlayedOnExternalWindow) {
-                console.log('FILE IS ON EXTERNAL WINDOW');
-                const video = this.videoPlayerRef.nativeElement;
-                this.renderer.setElementProperty(video, 'muted', true);
-                setTimeout(() => {
-                    if (!this.isPaused) {
-                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
-                    }
-                    this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                        { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-                }, 2000);
-            }
-        });
+        if (this.newFileAddedToWindow) {
+            this.newFileAddedToWindow.subscribe(() => {
+                if (this.isPlayedOnExternalWindow) {
+                    console.log('FILE IS ON EXTERNAL WINDOW');
+                    const video = this.videoPlayerRef.nativeElement;
+                    this.renderer.setElementProperty(video, 'muted', true);
+                    setTimeout(() => {
+                        if (!this.isPaused) {
+                            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
+                        }
+                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                            { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+                    }, 2000);
+                }
+            });
+        }
     }
 
     public ngAfterViewInit(): void {

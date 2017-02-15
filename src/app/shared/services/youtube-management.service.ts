@@ -3,7 +3,7 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import * as youtubeSearch from "youtube-search";
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
-export const YOUTUBE_VIDEOS_FOLDER = 'youtube-videos';
+export const YOUTUBE_VIDEOS_FOLDER = './youtube-videos';
 
 export interface YouTubeVideo {
     id: string;

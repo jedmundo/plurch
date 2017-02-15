@@ -50,11 +50,11 @@ export class DayFilesManagementService {
         }
     }
 
-    public addFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE): void {
+    public addFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE, id?: string): void {
         console.log('ADD PlayableItem:', path);
 
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
-            this.storeFile(dayName, files, path, type);
+            this.storeFile(dayName, files, path, type, id);
         } else {
             ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
                 this.zone.run(() => {
@@ -70,8 +70,9 @@ export class DayFilesManagementService {
         }
     }
 
-    private storeFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE, thumbnailPath?: string): void {
-        files.push(new PlayableItem(path, type, thumbnailPath));
+    private storeFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE,
+                      thumbnailPath?: string, id?: string): void {
+        files.push(new PlayableItem(path, type, thumbnailPath, id));
         localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + dayName, JSON.stringify(files));
     }
 
