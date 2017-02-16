@@ -3,7 +3,8 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import * as youtubeSearch from "youtube-search";
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
-export const YOUTUBE_VIDEOS_FOLDER = './youtube-videos';
+
+const { ipcRenderer } = electron;
 
 export interface YouTubeVideo {
     id: string;
@@ -25,16 +26,23 @@ const opts: youtubeSearch.YouTubeSearchOptions = {
 @Injectable()
 export class YoutubeManagementService {
 
+    public youtubeVideosFolder: string;
+
     private downloadedVideos: YouTubeVideo[] = [];
 
     constructor(
         private zone: NgZone,
         private sanitizer: DomSanitizer
     ) {
-        if (!fs.existsSync(YOUTUBE_VIDEOS_FOLDER)){
-            fs.mkdirSync(YOUTUBE_VIDEOS_FOLDER);
-        }
-        this.loadItems();
+        ipcRenderer.send('get-youtube-videos-folder');
+
+        ipcRenderer.on('get-youtube-videos-folder-reply', (event, arg) => {
+            if (!fs.existsSync(arg)){
+                fs.mkdirSync(arg);
+            }
+            this.youtubeVideosFolder = arg;
+            this.loadItems();
+        });
     }
 
     private storeVideo(youtubeVideo: YouTubeVideo): void {
@@ -45,7 +53,7 @@ export class YoutubeManagementService {
     public deleteVideo(id: string) {
         const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
         this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
-        fs.unlinkSync(YOUTUBE_VIDEOS_FOLDER + youtubeVideo.id + '.mp4');
+        fs.unlinkSync(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4');
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
 
@@ -58,7 +66,7 @@ export class YoutubeManagementService {
 
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo): void {
         const video = ytdl(youtubeVideo.link);
-        video.pipe(fs.createWriteStream(YOUTUBE_VIDEOS_FOLDER + '/' + youtubeVideo.id + '.mp4'));
+        video.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
         youtubeVideo.downloading = true;
         video.on('response', (res) => {
             const totalSize = res.headers['content-length'];

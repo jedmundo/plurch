@@ -153,6 +153,10 @@ ipcMain.on('get-index-url', (event, arg) => {
     event.sender.send('get-index-url-reply', { indexUrl: `file://${__dirname}/index.html`});
 });
 
+ipcMain.on('get-youtube-videos-folder', (event, arg) => {
+    event.sender.send('get-youtube-videos-folder-reply', `${__dirname}/youtube-videos`);
+});
+
 // ipcMain.on('asynchronous-message', (event, arg) => {
 //     console.log(arg);  // prints "ping"
 //     let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});
