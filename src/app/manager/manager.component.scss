@@ -1,5 +1,14 @@
 
-.content {
-    padding-top: 6rem;
-    overflow: auto;
+.manager-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    app-navigation {
+
+    }
+
+    .content {
+        overflow: auto;
+    }
 }
