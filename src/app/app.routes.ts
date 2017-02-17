@@ -21,7 +21,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'gallery',
+                redirectTo: 'day-list',
                 pathMatch: 'full'
             },
             { path: 'gallery', component: GalleryComponent},

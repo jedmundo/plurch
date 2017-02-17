@@ -31,9 +31,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @ViewChild('seekBar') private seekBar: ElementRef;
     @ViewChild('volumeBar') private volumeBar: ElementRef;
 
-    public currentVideoTime = '???';
-    public currentVideoDuration = '???';
+    public currentVideoTime: number = 0;
+    public currentVideoDuration: number = 0;
     public isMuted: boolean = false;
+    public seekBarValue: number = 0;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
@@ -95,6 +96,16 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: command });
     }
 
+    public playOrPause(): void {
+        const video = this.videoPlayerRef.nativeElement;
+        const isPaused: boolean = (<HTMLVideoElement> video).paused;
+        if (isPaused) {
+            this.renderer.invokeElementMethod(video, 'play');
+        } else {
+            this.renderer.invokeElementMethod(video, 'pause');
+        }
+    }
+
     private videoLoaded(): void {
         // console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
@@ -113,11 +124,18 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             const value = (100 / video.duration) * video.currentTime;
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
-            this.seekBar.nativeElement.value = <any> value;
+            this.seekBarValue = value;
         });
     }
 
-    public videoSeekChange(): void {
+    public changedInput(event): void {
+        console.log('INPUT', event);
+        // const video = this.videoPlayerRef.nativeElement;
+        // this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBarValue / 100));
+    }
+
+    public videoSeekChange(event): void {
+        console.log(event);
         const video = this.videoPlayerRef.nativeElement;
         this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBar.nativeElement.value / 100));
     }

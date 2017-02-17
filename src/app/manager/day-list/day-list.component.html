@@ -7,14 +7,16 @@
         <div>Description: </div>
         <input type="text" [(ngModel)]="newDay.description">
     </div>
-    <button (click)="addDay(newDay.name, newDay.description)">Add</button>
+    <button md-raised-button (click)="addDay(newDay.name, newDay.description)">Add</button>
 </div>
 
 <div class="list-container">
     <div *ngFor="let day of dayList" class="day-item">
         <div>{{ day.name }}</div>
-        <button [routerLink]="['/manager/day-schedule', day.name ]">GO</button>
-        <button (click)="deleteDay(day.name)">Delete</button>
+        <div>
+            <button md-raised-button [routerLink]="['/manager/day-schedule', day.name ]">GO</button>
+            <button md-raised-button (click)="deleteDay(day.name)">Delete</button>
+        </div>
     </div>
 </div>
 
