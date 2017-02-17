@@ -1,6 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import * as youtubeSearch from "youtube-search";
+import { Observable } from 'rxjs';
+import { Http } from '@angular/http';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
 
@@ -16,6 +18,13 @@ export interface YouTubeVideo {
     isDownloaded: boolean;
     downloading: boolean;
     percentage?: number;
+    duration: Observable<YoutubeVideoDetails>
+}
+
+export interface YoutubeVideoDetails {
+    duration: string;
+    dimension: string;
+    definition: string;
 }
 
 const opts: youtubeSearch.YouTubeSearchOptions = {
@@ -31,6 +40,7 @@ export class YoutubeManagementService {
     private downloadedVideos: YouTubeVideo[] = [];
 
     constructor(
+        private http: Http,
         private zone: NgZone,
         private sanitizer: DomSanitizer
     ) {
@@ -114,11 +124,18 @@ export class YoutubeManagementService {
             embeddedLink: this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/' + video.id),
             thumbnailUrl: video.thumbnails.high.url,
             isDownloaded: !!this.downloadedVideos.find((currVideo) => currVideo.id === video.id),
-            downloading: false
+            downloading: false,
+            duration: this.getVideoInformation(video.id)
         };
     }
 
     public get downloadedVideosList(): YouTubeVideo[] {
         return this.downloadedVideos;
+    }
+
+    private getVideoInformation(id: string): Observable<YoutubeVideoDetails> {
+        return this.http
+            .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=${opts.key}`)
+            .map((response) => (<any> response.json()).items[0].contentDetails);
     }
 }

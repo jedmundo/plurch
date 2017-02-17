@@ -13,6 +13,10 @@
             <img *ngIf="!video.link" [src]="video.thumbnailUrl">
 
             <iframe [src]="video.embeddedLink" height="180"></iframe>
+
+            <div class="duration">
+                <b>Duration:</b> {{ (video.duration | async)?.duration }}
+            </div>
         </md-card-content>
 
         <md-card-actions>

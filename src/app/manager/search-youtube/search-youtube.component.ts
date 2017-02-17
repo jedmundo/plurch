@@ -1,13 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { YouTubeVideo, YoutubeManagementService } from '../../shared/services/youtube-management.service';
+import {
+    YouTubeVideo, YoutubeManagementService
+} from '../../shared/services/youtube-management.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-search-youtube',
   templateUrl: 'search-youtube.component.html',
   styleUrls: ['search-youtube.component.scss']
 })
-export class SearchYoutubeComponent implements OnInit {
+export class SearchYoutubeComponent implements OnInit, AfterViewInit {
 
     @ViewChild('searchInput') private searchInputRef: ElementRef;
 
@@ -33,6 +36,10 @@ export class SearchYoutubeComponent implements OnInit {
 
     public downloadVideo(youtubeVideo: YouTubeVideo): void {
         this.youtubeManagementService.downloadYoutubeVideo(youtubeVideo);
+    }
+
+    public formatDate(ISO_8601_date: string): string {
+        return new Date(ISO_8601_date).toDateString();
     }
 
 }
