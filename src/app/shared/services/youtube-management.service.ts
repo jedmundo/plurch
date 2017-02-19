@@ -112,7 +112,7 @@ export class YoutubeManagementService {
     }
 
     public parseVideo(video: any): YouTubeVideo {
-        if (!video) {
+        if (!video || (video && video.link.indexOf('playlist') > -1)) {
             return null;
         }
 
@@ -136,6 +136,13 @@ export class YoutubeManagementService {
     private getVideoInformation(id: string): Observable<YoutubeVideoDetails> {
         return this.http
             .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=${opts.key}`)
-            .map((response) => (<any> response.json()).items[0].contentDetails);
+            .map((response) => {
+            const firstItem = (<any> response.json()).items[0];
+                if (firstItem) {
+                    return firstItem.contentDetails;
+                } else {
+                    return { duration: 'Unknown' };
+                }
+            });
     }
 }

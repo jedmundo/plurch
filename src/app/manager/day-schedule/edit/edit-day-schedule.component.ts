@@ -7,6 +7,7 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 const { remote, ipcRenderer } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
@@ -28,7 +29,8 @@ export class EditDayScheduleComponent implements OnInit {
         private zone: NgZone,
         private activatedRoute: ActivatedRoute,
         private youtubeManagementService: YoutubeManagementService,
-        private dayFilesManagementService: DayFilesManagementService
+        private dayFilesManagementService: DayFilesManagementService,
+        private sanitizer: DomSanitizer
     ) { }
 
     public ngOnInit() {
@@ -62,6 +64,10 @@ export class EditDayScheduleComponent implements OnInit {
 
     public deleteFile(path: string) {
         this.dayFilesManagementService.deleteFile(this.selectedDayName, path, this.playableItems);
+    }
+
+    public sanitizeUrl(url: string): SafeUrl {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

@@ -15,11 +15,11 @@
 <div class="current-list">
     <div *ngFor="let item of playableItems" class="list-item">
         <div *ngIf="item.type === PLAYABLE_FILE_TYPE.VIDEO">
-            <video height="120" [src]="item.path" controls></video>
+            <video height="120" [src]="sanitizeUrl(item.path)" controls></video>
         </div>
 
         <div *ngIf="item.type === PLAYABLE_FILE_TYPE.DEFAULT">
-            <img [src]="item.thumbnailPath" width="50px" height="50px">
+            <img [src]="sanitizeUrl(item.thumbnailPath)" width="50px" height="50px">
         </div>
 
         <div class="details">{{ item.getName() }}</div>

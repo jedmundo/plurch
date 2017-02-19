@@ -31,6 +31,7 @@ export class SearchYoutubeComponent implements OnInit, AfterViewInit {
             // .do(termDebug => console.log(termDebug))
             .switchMap(term => Observable.fromPromise(this.youtubeManagementService.searchVideo(term)))
             .map((results) => results.map((video) => this.youtubeManagementService.parseVideo(video)))
+            .map((results) => results.filter((video) => !!video))
             .do(parsedVideos => console.log('PARSED: ', parsedVideos));
     }
 

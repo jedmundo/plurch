@@ -1,8 +1,23 @@
-<md-toolbar class="top-bar">
-    <div>Plurch</div>
+<div class="side-bar">
+    <div class="logo">IASD</div>
 
-    <button [routerLink]="['gallery']">Gallery</button>
-    <button [routerLink]="['search']">Search</button>
-    <button [routerLink]="['displays']">Displays</button>
-    <button [routerLink]="['day-list']">Day List</button>
-</md-toolbar>
+    <div [routerLink]="['gallery']" routerLinkActive="active-link" class="side-nav-item">
+        <div class="icon"><i class="fa fa-list-alt" aria-hidden="true"></i></div>
+        <div>Gallery</div>
+    </div>
+
+    <div [routerLink]="['search']" routerLinkActive="active-link" class="side-nav-item">
+        <div class="icon"><i class="fa fa-search" aria-hidden="true"></i></div>
+        <div>Search</div>
+    </div>
+
+    <div [routerLink]="['displays']" routerLinkActive="active-link" class="side-nav-item">
+        <div class="icon"><i class="fa fa-tv" aria-hidden="true"></i></div>
+        <div>Displays</div>
+    </div>
+
+    <div [routerLink]="['day-list']" routerLinkActive="active-link" class="side-nav-item">
+        <div class="icon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+        <div>Day List</div>
+    </div>
+</div>

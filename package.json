@@ -10,7 +10,9 @@
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "build-electron": "ng build && cp src/electron/* dist/",
-    "electron": "npm run build-electron && electron dist/"
+    "electron": "npm run build-electron && electron dist/",
+    "pkg.mac": "electron-packager dist/ plurch --platform=mas --electron-version=1.4.15 --overwrite",
+    "pkg.win": "electron-packager dist/ plurch --platform=win32 --electron-version=1.4.15 --overwrite"
   },
   "private": true,
   "dependencies": {

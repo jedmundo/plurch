@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
+import {SafeUrl, DomSanitizer} from "@angular/platform-browser";
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -43,7 +44,9 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
     constructor(
         private renderer: Renderer,
-        private windowManagementService: WindowManagementService) {
+        private windowManagementService: WindowManagementService,
+        private sanitizer: DomSanitizer
+    ) {
     }
 
     public ngOnInit() {
@@ -104,6 +107,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         } else {
             this.renderer.invokeElementMethod(video, 'pause');
         }
+    }
+
+    public sanitizeUrl(url: string): SafeUrl {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 
     private videoLoaded(): void {

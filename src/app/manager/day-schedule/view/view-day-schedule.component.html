@@ -44,7 +44,7 @@
             </div>
 
             <div *ngIf="file.type === FILE_TYPE.DEFAULT">
-                <img [src]="file.thumbnailPath" width="50px" height="50px">
+                <img [src]="sanitizeUrl(file.thumbnailPath)" width="50px" height="50px">
             </div>
         </md-card-content>
         <md-card-actions>
