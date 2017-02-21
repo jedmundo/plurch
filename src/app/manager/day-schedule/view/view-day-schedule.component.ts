@@ -99,10 +99,6 @@ export class ViewDayScheduleComponent implements OnInit {
         this.dayFilesManagementService.openFile(path);
     }
 
-    public sanitizeUrl(url: string): SafeUrl {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-
     private guid(): string {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)

@@ -1,5 +1,5 @@
 <div class="video-item">
-    <video (click)="playOrPause()" height="240" [src]="sanitizeUrl(file.path)" #videoPlayer></video>
+    <video (click)="playOrPause()" height="240" [src]="file.sanitizedPath" #videoPlayer></video>
 
     <div class="item-video-controls">
         <div class="time-controls">

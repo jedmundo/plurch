@@ -1,10 +1,9 @@
 import {
     Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
-    SimpleChanges, EventEmitter
+    EventEmitter
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
-import {SafeUrl, DomSanitizer} from "@angular/platform-browser";
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -44,8 +43,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
     constructor(
         private renderer: Renderer,
-        private windowManagementService: WindowManagementService,
-        private sanitizer: DomSanitizer
+        private windowManagementService: WindowManagementService
     ) {
     }
 
@@ -109,10 +107,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public sanitizeUrl(url: string): SafeUrl {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-
     private videoLoaded(): void {
         // console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
@@ -134,15 +128,14 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             this.seekBarValue = value;
         });
     }
-
-    public changedInput(event): void {
-        console.log('INPUT', event);
-        // const video = this.videoPlayerRef.nativeElement;
-        // this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBarValue / 100));
-    }
+    //
+    // public changedInput(event): void {
+    //     console.log('INPUT', event);
+    //     // const video = this.videoPlayerRef.nativeElement;
+    //     // this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBarValue / 100));
+    // }
 
     public videoSeekChange(event): void {
-        console.log(event);
         const video = this.videoPlayerRef.nativeElement;
         this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBar.nativeElement.value / 100));
     }

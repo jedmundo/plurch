@@ -34,7 +34,7 @@
     <md-card *ngFor="let file of files; let i = index" class="link">
         <md-card-header>
             <!--<div md-card-avatar class="example-header-image"></div>-->
-            <md-card-title><b> {{i+1}} - {{ file.getName() }} </b></md-card-title>
+            <md-card-title><b> {{i+1}} - {{ file.name }} </b></md-card-title>
             <md-card-subtitle> {{ file.path }} </md-card-subtitle>
         </md-card-header>
 
@@ -44,7 +44,7 @@
             </div>
 
             <div *ngIf="file.type === FILE_TYPE.DEFAULT">
-                <img [src]="sanitizeUrl(file.thumbnailPath)" width="50px" height="50px">
+                <img [src]="file.thumbnailPath" width="50px" height="50px">
             </div>
         </md-card-content>
         <md-card-actions>
