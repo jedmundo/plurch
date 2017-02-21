@@ -13,20 +13,27 @@
 </div>
 
 <div class="current-list">
-    <div *ngFor="let item of playableItems" class="list-item">
-        <div *ngIf="item.type === PLAYABLE_FILE_TYPE.VIDEO">
-            <video height="120" [src]="item.sanitizedPath" controls></video>
-        </div>
 
-        <div *ngIf="item.type === PLAYABLE_FILE_TYPE.DEFAULT">
-            <img [src]="item.thumbnailPath" width="50px" height="50px">
-        </div>
+    <md-card *ngFor="let item of playableItems; let i = index" class="edit-item">
+        <md-card-header>
+            <!--<div md-card-avatar class="example-header-image"></div>-->
+            <md-card-title><b> {{i+1}} - {{ item.name }} </b></md-card-title>
+            <md-card-subtitle> {{ item.path }} </md-card-subtitle>
+        </md-card-header>
 
-        <div class="details">{{ item.name }}</div>
+        <md-card-content>
+            <div *ngIf="item.type === PLAYABLE_FILE_TYPE.VIDEO">
+                <video width="100%" [src]="item.sanitizedPath" controls></video>
+            </div>
 
-        <div>
+            <div *ngIf="item.type === PLAYABLE_FILE_TYPE.DEFAULT">
+                <img [src]="item.thumbnailPath" width="50px" height="50px">
+            </div>
+        </md-card-content>
+        <md-card-actions>
             <button (click)="openFile(item.path)" md-button>Open Source</button>
             <button (click)="deleteFile(item.path)" md-button class="red-button">Delete</button>
-        </div>
-    </div>
+        </md-card-actions>
+    </md-card>
+
 </div>

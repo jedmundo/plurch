@@ -7,7 +7,6 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 const { remote, ipcRenderer } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];

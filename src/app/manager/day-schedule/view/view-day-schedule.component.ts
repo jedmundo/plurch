@@ -9,7 +9,6 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
-import {SafeUrl, DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -31,8 +30,7 @@ export class ViewDayScheduleComponent implements OnInit {
         private windowManagementService: WindowManagementService,
         private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
-        private activatedRoute: ActivatedRoute,
-        private sanitizer: DomSanitizer
+        private activatedRoute: ActivatedRoute
     ) { }
 
     public ngOnInit() {

@@ -3,7 +3,7 @@
     padding: 1rem;
     font-weight: bold;
     text-align: center;
-    color: #0f4e86;
+    color: #343A3E;
     text-transform: capitalize;
 }
 
@@ -16,16 +16,23 @@
 }
 
 .current-list {
-    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
-    .list-item {
+    .edit-item {
         display: flex;
-        flex-direction: row;
-        margin: 1rem 0;
-        border-bottom: 1px solid lightgray;
-
-        .details {
-            max-width: 10rem;
-        }
+        flex-direction: column;
+        flex-wrap: wrap;
+        max-width: 20rem;
+        margin: 1rem;
     }
+
+    md-card-actions {
+        text-align: right;
+    }
+}
+
+.red-button {
+    color: #ff523a;
 }

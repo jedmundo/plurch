@@ -19,15 +19,16 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        opacity: 0.7;
         cursor: pointer;
 
         &:hover {
-            opacity: 0.9;
+            background: #6f7d81;
+            color: #343A3E;
         }
 
         &.active-link {
-            opacity: 1;
+            background: white;
+            color: #343A3E;
         }
 
         .icon {
