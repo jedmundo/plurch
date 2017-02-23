@@ -59,7 +59,8 @@
                     </div>
                 </div>
                 <button *ngIf="!fileIsPlayingOnWindow(file, pWindow)" (click)="addToWindow(file, pWindow)" md-button>
-                    Send To Window: {{i+1}}
+                    <span *ngIf="!isSendingItem">Send To Window: {{i+1}}</span>
+                    <span *ngIf="isSendingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
                 </button>
             </div>
             <button (click)="openFile(file.path)" md-button>Open Source</button>

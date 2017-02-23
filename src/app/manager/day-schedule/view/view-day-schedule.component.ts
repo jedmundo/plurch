@@ -26,12 +26,14 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public files: PlayableItem[] = [];
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
+    public isSendingItem: boolean = false;
 
     private selectedDayName: string;
     private displays: PlurchDisplay[];
     private pWindows: Observable<PlurchWindow[]>;
     private newFileAddedToWindow = new EventEmitter<void>();
     private syncVideo = new EventEmitter<any>();
+
     private itemsPlayingSubscription: Subscription;
 
     constructor(
@@ -51,6 +53,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
             this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
                 // console.log('NOVOS ITEMS PLAYING', itemsPlaying);
+                this.isSendingItem = false;
                 this.files.forEach((file) => {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
                 });
@@ -85,6 +88,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     public addToWindow(file: PlayableItem, pWindow: PlurchWindow): void {
+        this.isSendingItem = true;
         this.windowManagementService.addToWindow(pWindow.id, file);
         this.newFileAddedToWindow.emit();
     }
