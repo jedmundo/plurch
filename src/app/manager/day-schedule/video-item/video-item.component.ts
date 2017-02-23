@@ -34,13 +34,15 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public currentVideoTime: number = 0;
     public currentVideoDuration: number = 0;
     public isMuted: boolean = false;
-    // public seekBarValue: number = 0;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
     @Input() public newFileAddedToWindow?: EventEmitter<void>;
     @Input() public syncVideo?: EventEmitter<number>;
+
+    // TODO: Ugly fix
+    private isSyncing: boolean = false;
 
     constructor(
         private renderer: Renderer,
@@ -68,15 +70,21 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
         this.syncVideo.subscribe((response) => {
             if (response.id == this.file.id) {
+                this.isSyncing = true;
                 const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
                 this.renderer.setElementProperty(video, 'currentTime', response.time);
                 const value = (100 / video.duration) * response.time;
                 this.currentVideoTime = response.time;
                 this.seekBar.nativeElement.value = value;
                 this.isMuted = response.isMuted;
+                this.renderer.setElementProperty(video, 'muted', true);
                 if (!response.isPaused) {
                     this.renderer.invokeElementMethod(video, 'play');
                 }
+
+                setTimeout(() => {
+                    this.isSyncing = false;
+                }, 500);
             }
         });
     }
@@ -126,20 +134,25 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         const video = this.videoPlayerRef.nativeElement;
 
         this.renderer.listen(video, 'seeking', () => {
-            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            // console.log('seeking', this.isSyncing);
+            if (!this.isSyncing) {
+                this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                    { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            }
         });
 
         this.renderer.listen(video, 'seeked', () => {
-            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+            // console.log('seeked', this.isSyncing);
+            if (!this.isSyncing) {
+                this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                    {type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime});
+            }
         });
 
         this.renderer.listen(video, 'timeupdate', () => {
             const value = (100 / video.duration) * video.currentTime;
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
-            // this.seekBarValue = value;
         });
     }
 
