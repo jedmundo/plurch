@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { guid } from '../../util/util-functions';
 const { shell, ipcRenderer } = electron;
 
 export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
@@ -11,12 +12,12 @@ export enum PLAYABLE_FILE_TYPE {
 
 export class PlayableItem {
     constructor(
+        public id: string,
         public path: string,
         public sanitizedPath: SafeUrl,
         public name: string,
         public type: PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE.DEFAULT,
         public thumbnailPath?: string,
-        public id?: string,
         public windowIDs: string[] = []
     ) {}
 }
@@ -45,26 +46,28 @@ export class DayFilesManagementService {
         if (fileList) {
             fileList.forEach((file: any) => {
                 list.push(new PlayableItem(
+                    file.id,
                     file.path,
                     this.sanitizer.bypassSecurityTrustResourceUrl(file.path),
                     this.generateName(file.path),
-                    file.type, file.thumbnailPath, file.id));
+                    file.type,
+                    file.thumbnailPath));
             });
         }
     }
 
-    public addFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE, id?: string): void {
+    public addFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE): void {
         console.log('ADD PlayableItem:', path);
 
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
-            this.storeFile(dayName, files, path, type, id);
+            this.storeFile(dayName, files, id, path, type);
         } else {
             // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
             //     this.zone.run(() => {
             //         if (thumbnailPath) {
             //             this.storeFile(dayName, files, path, type, thumbnailPath);
             //         } else {
-            this.storeFile(dayName, files, path, type);
+            this.storeFile(dayName, files, id, path, type);
             // }
             //     });
             // });
@@ -73,10 +76,10 @@ export class DayFilesManagementService {
         }
     }
 
-    private storeFile(dayName: string, files: PlayableItem[], path: string, type: PLAYABLE_FILE_TYPE,
-                      thumbnailPath?: string, id?: string): void {
-        files.push(new PlayableItem(path, this.sanitizer.bypassSecurityTrustResourceUrl(path),
-            this.generateName(path), type, thumbnailPath, id));
+    private storeFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE,
+                      thumbnailPath?: string): void {
+        files.push(new PlayableItem(id, path, this.sanitizer.bypassSecurityTrustResourceUrl(path),
+            this.generateName(path), type, thumbnailPath));
         localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + dayName, JSON.stringify(files));
     }
 

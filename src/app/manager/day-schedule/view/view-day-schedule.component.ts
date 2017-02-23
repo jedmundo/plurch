@@ -9,6 +9,7 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
+import { guid } from '../../../util/util-functions';
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -37,6 +38,8 @@ export class ViewDayScheduleComponent implements OnInit {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
             this.selectedDayName = params['dayName'];
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
+
+            this.pWindowIds = this.windowManagementService.getAvailableWindows().map((pWindow) => pWindow.id);
         });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
     }
@@ -47,7 +50,7 @@ export class ViewDayScheduleComponent implements OnInit {
             externalDisplay = this.displays[0];
         }
 
-        const windowID = this.guid();
+        const windowID = guid();
         this.pWindowIds.push(windowID);
         this.windowManagementService.openWindow(windowID, '#/fs/empty-window', externalDisplay.electronDisplay, 'Plurch Video Preview');
 
@@ -75,10 +78,7 @@ export class ViewDayScheduleComponent implements OnInit {
             }
         });
         file.windowIDs.push(windowId);
-        if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
-            const url = '#/fs/video/' + file.path.replace(/\//g, '___');
-            this.windowManagementService.addToWindow(windowId, url);
-        }
+        this.windowManagementService.addToWindow(windowId, file);
         this.newFileAddedToWindow.emit();
     }
 
@@ -95,16 +95,6 @@ export class ViewDayScheduleComponent implements OnInit {
 
     public openFile(path: string) {
         this.dayFilesManagementService.openFile(path);
-    }
-
-    private guid(): string {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
     }
 
 }

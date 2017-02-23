@@ -1,9 +1,11 @@
 import {
     Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
-    EventEmitter
+    EventEmitter, OnDestroy
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
+import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
+import { Subscription } from 'rxjs';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -25,7 +27,7 @@ export enum VIDEO_COMMAND_TYPE {
     templateUrl: 'video-item.component.html',
     styleUrls: ['video-item.component.scss']
 })
-export class VideoItemComponent implements OnInit, AfterViewInit {
+export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
     @ViewChild('seekBar') private seekBar: ElementRef;
@@ -41,9 +43,12 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @Input() public file: PlayableItem;
     @Input() public newFileAddedToWindow?: EventEmitter<void>;
 
+    private itemsPlayingSubscription: Subscription;
+
     constructor(
         private renderer: Renderer,
-        private windowManagementService: WindowManagementService
+        private windowManagementService: WindowManagementService,
+        private itemsPlayingManagementService: ItemsPlayingManagementService
     ) {
     }
 
@@ -64,6 +69,19 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 }
             });
         }
+
+        this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
+            console.log('NOVOS ITEMS', itemsPlaying);
+            const firstItemPlaying = itemsPlaying.find((itemPlaying) => itemPlaying.id === this.file.id);
+            if (firstItemPlaying) {
+                const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
+                this.renderer.setElementProperty(video, 'currentTime', firstItemPlaying.videoElement.duration);
+            }
+        });
+    }
+
+    public ngOnDestroy(): void {
+        this.itemsPlayingSubscription.unsubscribe();
     }
 
     public ngAfterViewInit(): void {
@@ -101,14 +119,13 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         const video = this.videoPlayerRef.nativeElement;
         const isPaused: boolean = (<HTMLVideoElement> video).paused;
         if (isPaused) {
-            this.renderer.invokeElementMethod(video, 'play');
+            this.sendVideoControls(VIDEO_COMMAND_TYPE.PLAY);
         } else {
-            this.renderer.invokeElementMethod(video, 'pause');
+            this.sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE);
         }
     }
 
     private videoLoaded(): void {
-        // console.log('LISTENERS ADDED TO VIDEO');
         const video = this.videoPlayerRef.nativeElement;
 
         this.renderer.listen(video, 'seeking', () => {
@@ -128,12 +145,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             this.seekBarValue = value;
         });
     }
-    //
-    // public changedInput(event): void {
-    //     console.log('INPUT', event);
-    //     // const video = this.videoPlayerRef.nativeElement;
-    //     // this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBarValue / 100));
-    // }
 
     public videoSeekChange(event): void {
         const video = this.videoPlayerRef.nativeElement;

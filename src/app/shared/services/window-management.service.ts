@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 const { ipcRenderer, remote } = electron;
 import BrowserWindow = Electron.BrowserWindow;
 import Display = Electron.Display;
-import { PlayableItem } from './day-files-management.service';
+import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
 
 export class PlurchWindow {
+
+    public playableItem: PlayableItem;
 
     constructor(
         public id: string,
@@ -82,7 +84,6 @@ export class WindowManagementService {
 
         this.availableWindows.push(new PlurchWindow(id, previewWindow, finalLoadUrl, title));
         console.log(this.availableWindows);
-
     }
 
     public closeWindow(id: string): void {
@@ -97,9 +98,16 @@ export class WindowManagementService {
         return this.availableWindows.find((pWindow) => pWindow.id === id);
     }
 
-    public addToWindow(id: string, loadUrl: string): void {
-        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
-        pWindow.electronWindow.loadURL(this.indexUrl + loadUrl);
+    public addToWindow(windowId: string, file: PlayableItem): void {
+        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowId);
+        pWindow.playableItem = file;
+        if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
+            const url = '#/fs/video/' + file.path.replace(/\//g, '___') + '/' + pWindow.id;
+            pWindow.electronWindow.loadURL(this.indexUrl + url);
+        } else {
+            // TODO: OPEN OTHER FILES ON FULL SCREEN
+            pWindow.electronWindow.loadURL(this.indexUrl + file.path);
+        }
     }
 
     public sendMessageToWindow(id: string, messageTitle: string, message: any): void {

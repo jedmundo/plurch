@@ -4,6 +4,7 @@ import { WindowManagementService } from './services/window-management.service';
 import { DisplayManagementService } from './services/display-management.service';
 import { YoutubeManagementService } from './services/youtube-management.service';
 import { DayFilesManagementService } from './services/day-files-management.service';
+import { ItemsPlayingManagementService } from './services/items-playing-management.service';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { DayFilesManagementService } from './services/day-files-management.servi
         WindowManagementService,
         DisplayManagementService,
         YoutubeManagementService,
-        DayFilesManagementService
+        DayFilesManagementService,
+        ItemsPlayingManagementService
     ],
     exports: [
         CommonModule,

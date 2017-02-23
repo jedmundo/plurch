@@ -7,6 +7,7 @@ import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
+import { guid } from '../../../util/util-functions';
 const { remote, ipcRenderer } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
@@ -52,8 +53,12 @@ export class EditDayScheduleComponent implements OnInit {
     }
 
     public addVideoToDay(video: YouTubeVideo): void {
-        this.dayFilesManagementService.addFile(this.selectedDayName, this.playableItems,
-            this.youtubeManagementService.youtubeVideosFolder + '/' + video.id + '.mp4', PLAYABLE_FILE_TYPE.VIDEO, video.id);
+        this.dayFilesManagementService.addFile(
+            this.selectedDayName,
+            this.playableItems,
+            video.id,
+            this.youtubeManagementService.youtubeVideosFolder + '/' + video.id + '.mp4',
+            PLAYABLE_FILE_TYPE.VIDEO);
     }
 
     public openFile(path: string) {
@@ -74,10 +79,10 @@ export class EditDayScheduleComponent implements OnInit {
                             files.forEach(file => {
                                 if (this.isAllowedVideo(file)) {
                                     this.dayFilesManagementService.addFile(this.selectedDayName,
-                                        this.playableItems, itemPath + '/' + file, PLAYABLE_FILE_TYPE.VIDEO);
+                                        this.playableItems, guid(), itemPath + '/' + file, PLAYABLE_FILE_TYPE.VIDEO);
                                 } else {
                                     this.dayFilesManagementService.addFile(this.selectedDayName,
-                                        this.playableItems, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
+                                        this.playableItems, guid(), itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
                                 }
                             });
                         });
@@ -85,10 +90,10 @@ export class EditDayScheduleComponent implements OnInit {
                 } else {
                     if (this.isAllowedVideo(itemPath)) {
                         this.dayFilesManagementService.addFile(this.selectedDayName,
-                            this.playableItems, itemPath, PLAYABLE_FILE_TYPE.VIDEO);
+                            this.playableItems, guid(), itemPath, PLAYABLE_FILE_TYPE.VIDEO);
                     } else {
                         this.dayFilesManagementService.addFile(this.selectedDayName,
-                            this.playableItems, itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
+                            this.playableItems, guid(), itemPath, PLAYABLE_FILE_TYPE.DEFAULT);
                     }
                 }
             });

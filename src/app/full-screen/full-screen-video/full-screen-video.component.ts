@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Renderer } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ItemsPlayingManagementService, ItemPlaying } from '../../shared/services/items-playing-management.service';
+import { guid } from '../../util/util-functions';
 
 const { ipcRenderer } = electron;
 
@@ -9,21 +12,26 @@ const { ipcRenderer } = electron;
     templateUrl: 'full-screen-video.component.html',
     styleUrls: ['full-screen-video.component.scss']
 })
-export class FullScreenVideoComponent implements OnInit, AfterViewInit {
+export class FullScreenVideoComponent implements OnInit, OnDestroy {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
 
-    public videoPath: string;
+    public videoPath: SafeUrl;
+
+    private itemId: string;
 
     constructor(
         private route: ActivatedRoute,
+        private itemsPlayingManagementService: ItemsPlayingManagementService,
+        private sanitizer: DomSanitizer,
         private renderer: Renderer) {
     }
 
     public ngOnInit(): void {
         this.route.params
             .subscribe((params: Params) => {
-                this.videoPath = params['id'].replace(/___/g, '/');
+                this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(params['path'].replace(/___/g, '/'));
+                this.itemId = params['id'];
             });
 
         ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
@@ -46,9 +54,13 @@ export class FullScreenVideoComponent implements OnInit, AfterViewInit {
                     break;
             }
         });
+
+        const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
+        this.itemsPlayingManagementService.addItem(new ItemPlaying(this.itemId, video))
     }
 
-    public ngAfterViewInit(): void {
+    public ngOnDestroy(): void {
+        this.itemsPlayingManagementService.removeItem(this.itemId);
     }
 
 }
