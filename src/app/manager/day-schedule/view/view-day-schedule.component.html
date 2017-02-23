@@ -6,7 +6,7 @@
     <div class="title">Windows</div>
 
     <div class="pWindows-list">
-        <div *ngFor="let pWindow of pWindowIds; let i = index" class="pWindow-item">
+        <div *ngFor="let pWindow of pWindows | async; let i = index" class="pWindow-item">
             <div class="pWindow-thumbnail">
                 <div class="pWindow-number">{{i+1}}</div>
             </div>
@@ -48,9 +48,9 @@
             </div>
         </md-card-content>
         <md-card-actions>
-            <div *ngFor="let windowId of pWindowIds; let i = index">
-                <div *ngIf="fileIsPlayingOnWindow(file, windowId)" class="">Playing on Window {{i+1}}</div>
-                <button *ngIf="!fileIsPlayingOnWindow(file, windowId)" (click)="addToWindow(file, windowId)" md-button>
+            <div *ngFor="let pWindow of pWindows | async; let i = index">
+                <div *ngIf="fileIsPlayingOnWindow(file, pWindow)" class="">Playing on Window {{i+1}}</div>
+                <button *ngIf="!fileIsPlayingOnWindow(file, pWindow)" (click)="addToWindow(file, pWindow)" md-button>
                     Send To Window: {{i+1}}
                 </button>
             </div>

@@ -3,6 +3,8 @@ const { ipcRenderer, remote } = electron;
 import BrowserWindow = Electron.BrowserWindow;
 import Display = Electron.Display;
 import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
+import { Observable, ReplaySubject } from 'rxjs';
+import { guid } from '../../util/util-functions';
 
 export class PlurchWindow {
 
@@ -30,7 +32,9 @@ export enum WINDOW_COMMAND_TYPE {
 @Injectable()
 export class WindowManagementService {
 
-    private availableWindows: PlurchWindow[] = [];
+    private availableWindowsSubject = new ReplaySubject<PlurchWindow[]>(1);
+    private availableWindows$: Observable<PlurchWindow[]> = this.availableWindowsSubject.asObservable();
+    private pWindows: PlurchWindow[] = [];
     private indexUrl: string;
 
     constructor() {
@@ -41,12 +45,21 @@ export class WindowManagementService {
         });
     }
 
-    public getAvailableWindows(): PlurchWindow[] {
-        return this.availableWindows;
+    public get availableWindows(): Observable<PlurchWindow[]> {
+        return this.availableWindows$;
     }
 
-    public openWindow(id: string,
-                      loadUrl: string,
+    private addWindow(window: PlurchWindow): void {
+        this.pWindows.push(window);
+        this.availableWindowsSubject.next(this.pWindows);
+    }
+
+    private removeWindow(windowId: string): void {
+        this.pWindows.splice(this.pWindows.findIndex((item) => item.id === windowId), 1);
+        this.availableWindowsSubject.next(this.pWindows);
+    }
+
+    public openWindow(loadUrl: string,
                       externalDisplay: Display,
                       title: string,
                       x?: number,
@@ -68,6 +81,8 @@ export class WindowManagementService {
             y: rightExternalMonitorYPosition
         });
 
+        const id = guid();
+
         // and load the index.html of the app.
         const finalLoadUrl = this.indexUrl + loadUrl;
         previewWindow.loadURL(finalLoadUrl);
@@ -82,24 +97,30 @@ export class WindowManagementService {
             this.closeWindow(id);
         });
 
-        this.availableWindows.push(new PlurchWindow(id, previewWindow, finalLoadUrl, title));
-        console.log(this.availableWindows);
+        this.addWindow(new PlurchWindow(id, previewWindow, finalLoadUrl, title));
+        console.log('Available Windows', this.pWindows);
     }
 
     public closeWindow(id: string): void {
         const pWindow = this.getPlurchWindow(id);
         if (pWindow) {
             pWindow.electronWindow.close();
-            this.availableWindows.splice(this.availableWindows.indexOf(pWindow), 1);
+            this.removeWindow(pWindow.id);
         }
     }
 
+    public closeAllWindows(): void {
+        this.pWindows.forEach((pWindow: PlurchWindow) => {
+            this.closeWindow(pWindow.id);
+        })
+    }
+
     public getPlurchWindow(id: string): PlurchWindow {
-        return this.availableWindows.find((pWindow) => pWindow.id === id);
+        return this.pWindows.find((pWindow) => pWindow.id === id);
     }
 
     public addToWindow(windowId: string, file: PlayableItem): void {
-        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowId);
+        const pWindow = this.pWindows.find((pWindow) => pWindow.id === windowId);
         pWindow.playableItem = file;
         if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
             const url = `#/fs/video/${file.path.replace(/\//g, '___')}/${file.id}/${pWindow.id}`;
@@ -111,7 +132,7 @@ export class WindowManagementService {
     }
 
     public sendMessageToWindow(id: string, messageTitle: string, message: any): void {
-        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
+        const pWindow = this.pWindows.find((pWindow) => pWindow.id === id);
         if (pWindow) {
             pWindow.electronWindow.webContents.send(messageTitle, message);
         }
@@ -119,7 +140,7 @@ export class WindowManagementService {
 
     public sendMessageToWindows(file: PlayableItem, messageTitle: string, message: any): void {
         file.itemsPlaying.map((item) => item.windowId).forEach((windowID) => {
-            const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowID);
+            const pWindow = this.pWindows.find((pWindow) => pWindow.id === windowID);
             if (pWindow) {
                 pWindow.electronWindow.webContents.send(messageTitle, message);
             }
@@ -127,7 +148,7 @@ export class WindowManagementService {
     }
 
     public sendCommandToWindow(id: string, command: WINDOW_COMMAND_TYPE): void {
-        const pWindow = this.availableWindows.find((pWindow) => pWindow.id === id);
+        const pWindow = this.pWindows.find((pWindow) => pWindow.id === id);
         if (pWindow) {
             switch (command) {
                 case WINDOW_COMMAND_TYPE.FULL_SCREEN:
