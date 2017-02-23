@@ -118,7 +118,7 @@ export class WindowManagementService {
     }
 
     public sendMessageToWindows(file: PlayableItem, messageTitle: string, message: any): void {
-        file.windowIDs.forEach((windowID) => {
+        file.itemsPlaying.map((item) => item.windowId).forEach((windowID) => {
             const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowID);
             if (pWindow) {
                 pWindow.electronWindow.webContents.send(messageTitle, message);

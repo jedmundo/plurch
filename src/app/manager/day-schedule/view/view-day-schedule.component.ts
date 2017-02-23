@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
@@ -10,13 +10,15 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { guid } from '../../../util/util-functions';
+import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-view-day-schedule',
     templateUrl: 'view-day-schedule.component.html',
     styleUrls: ['view-day-schedule.component.scss']
 })
-export class ViewDayScheduleComponent implements OnInit {
+export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public files: PlayableItem[] = [];
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
@@ -26,8 +28,10 @@ export class ViewDayScheduleComponent implements OnInit {
     private displays: PlurchDisplay[];
     private pWindowIds: string[] = [];
     private newFileAddedToWindow = new EventEmitter<void>();
+    private itemsPlayingSubscription: Subscription;
 
     constructor(
+        private itemsPlayingManagementService: ItemsPlayingManagementService,
         private windowManagementService: WindowManagementService,
         private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
@@ -40,8 +44,19 @@ export class ViewDayScheduleComponent implements OnInit {
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
 
             this.pWindowIds = this.windowManagementService.getAvailableWindows().map((pWindow) => pWindow.id);
+
+            this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
+                // console.log('NOVOS ITEMS PLAYING', itemsPlaying);
+                this.files.forEach((file) => {
+                    file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
+                });
+            });
         });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
+    }
+
+    public ngOnDestroy(): void {
+        this.itemsPlayingSubscription.unsubscribe();
     }
 
     public openNewScreen(): void {
@@ -60,41 +75,34 @@ export class ViewDayScheduleComponent implements OnInit {
     }
 
     public sendCommandToWindow(id: string, command: WINDOW_COMMAND_TYPE) {
-        // TODO: Improve this
         if (command === WINDOW_COMMAND_TYPE.CLOSE) {
             this.pWindowIds.splice(this.pWindowIds.indexOf(id), 1);
-            for (let j = 0; j < this.files.length; j++) {
-                if (this.files[j].windowIDs.indexOf(id) > -1)
-                    this.files[j].windowIDs.splice(this.files[j].windowIDs.indexOf(id), 1);
-            }
         }
         this.windowManagementService.sendCommandToWindow(id, command);
     }
 
     public addToWindow(file: PlayableItem, windowId: string): void {
-        this.files.forEach((file) => {
-            if (file.windowIDs.find((windowIdArg) => windowIdArg === windowId)) {
-                file.windowIDs.splice(file.windowIDs.findIndex((windowIdArg) => windowIdArg === windowId), 1)
-            }
-        });
-        file.windowIDs.push(windowId);
         this.windowManagementService.addToWindow(windowId, file);
         this.newFileAddedToWindow.emit();
     }
 
     public closeAllWindows(): void {
         // TODO: Improve
-        for (let i = 0; i < this.pWindowIds.length; i++) {
-            this.windowManagementService.closeWindow(this.pWindowIds[i]);
-        }
-        for (let j = 0; j < this.files.length; j++) {
-            this.files[j].windowIDs = [];
-        }
+        // for (let i = 0; i < this.pWindowIds.length; i++) {
+        //     this.windowManagementService.closeWindow(this.pWindowIds[i]);
+        // }
+        // for (let j = 0; j < this.files.length; j++) {
+        //     this.files[j].windowIDs = [];
+        // }
         this.pWindowIds = [];
     }
 
     public openFile(path: string) {
         this.dayFilesManagementService.openFile(path);
+    }
+
+    public fileIsPlayingOnWindow(file: PlayableItem, windowId: string): boolean {
+        return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === windowId);
     }
 
 }

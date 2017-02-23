@@ -166,7 +166,8 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public get isPlayedOnExternalWindow(): boolean {
-        return this.file.windowIDs.length > 0;
+        return true;
+        // return this.file.windowIDs.length > 0;
     }
 
 }

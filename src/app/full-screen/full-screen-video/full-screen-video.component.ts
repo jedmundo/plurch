@@ -22,7 +22,6 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private windowManagementService: WindowManagementService,
         private sanitizer: DomSanitizer,
         private renderer: Renderer) {
     }
@@ -57,11 +56,11 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
         });
 
         const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
-        ipcRenderer.send('new-item-playing', { id: this.itemId + this.windowId, videoElement: video });
+        ipcRenderer.send('new-item-playing', { id: this.itemId, windowId: this.windowId, videoElement: video });
     }
 
     public ngOnDestroy(): void {
-        ipcRenderer.send('removed', { id: this.itemId + this.windowId });
+        ipcRenderer.send('removed', { id: this.itemId, windowId: this.windowId });
     }
 
 }

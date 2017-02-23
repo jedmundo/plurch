@@ -6,6 +6,7 @@ export class ItemPlaying {
 
     constructor(
         public id: string,
+        public windowId: string,
         public videoElement?: HTMLMediaElement
     ) {
     }
@@ -21,12 +22,12 @@ export class ItemsPlayingManagementService {
     constructor() {
         ipcRenderer.on('new-item-playing', (event, itemPlaying: ItemPlaying) => {
             console.log('ADDED ITEM');
-            this.addItem(new ItemPlaying(itemPlaying.id, itemPlaying.videoElement));
+            this.addItem(new ItemPlaying(itemPlaying.id, itemPlaying.windowId, itemPlaying.videoElement));
         });
 
-        ipcRenderer.on('removed-item-playing', (event, id: string) => {
+        ipcRenderer.on('removed-item-playing', (event, obj: any) => {
             console.log('REMOVED ITEM');
-            this.removeItem(id);
+            this.removeItem(obj.id, obj.windowId);
         });
     }
 
@@ -35,8 +36,8 @@ export class ItemsPlayingManagementService {
         this.itemsPlayingSubject.next(this.itemsPlayingArray);
     }
 
-    public removeItem(id: string): void {
-        this.itemsPlayingArray.splice(this.itemsPlayingArray.findIndex((item) => item.id === id), 1);
+    public removeItem(id: string, windowId: string): void {
+        this.itemsPlayingArray.splice(this.itemsPlayingArray.findIndex((item) => item.id === id && item.windowId === windowId), 1);
         this.itemsPlayingSubject.next(this.itemsPlayingArray);
     }
 

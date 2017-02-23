@@ -49,8 +49,8 @@
         </md-card-content>
         <md-card-actions>
             <div *ngFor="let windowId of pWindowIds; let i = index">
-                <div *ngIf="file.windowIDs.indexOf(windowId) > -1">Playing on Window {{i+1}}</div>
-                <button *ngIf="file.windowIDs.indexOf(windowId) <= -1" (click)="addToWindow(file, windowId)" md-button>
+                <div *ngIf="fileIsPlayingOnWindow(file, windowId)" class="">Playing on Window {{i+1}}</div>
+                <button *ngIf="!fileIsPlayingOnWindow(file, windowId)" (click)="addToWindow(file, windowId)" md-button>
                     Send To Window: {{i+1}}
                 </button>
             </div>
