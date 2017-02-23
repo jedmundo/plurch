@@ -14,6 +14,7 @@ import {
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
 import { Subscription, Observable } from 'rxjs';
+const { ipcRenderer } = electron;
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -30,6 +31,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     private displays: PlurchDisplay[];
     private pWindows: Observable<PlurchWindow[]>;
     private newFileAddedToWindow = new EventEmitter<void>();
+    private syncVideo = new EventEmitter<any>();
     private itemsPlayingSubscription: Subscription;
 
     constructor(
@@ -55,6 +57,10 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
             });
         });
         this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
+
+        ipcRenderer.on('respond-video-time', (event, response) => {
+            this.syncVideo.emit(response);
+        });
     }
 
     public ngOnDestroy(): void {
@@ -93,6 +99,12 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public fileIsPlayingOnWindow(file: PlayableItem, pWindow: PlurchWindow): boolean {
         return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === pWindow.id);
+    }
+
+    public syncWithWindow(file: PlayableItem, pWindow: PlurchWindow): void {
+        this.windowManagementService
+            .getPlurchWindow(pWindow.id)
+            .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: pWindow.id })
     }
 
 }

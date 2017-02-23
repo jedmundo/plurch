@@ -164,6 +164,10 @@ ipcMain.on('removed-item-playing', (event, arg) => {
     win.webContents.send('removed-item-playing', arg);
 });
 
+ipcMain.on('respond-video-time', (event, arg) => {
+    win.webContents.send('respond-video-time', arg);
+});
+
 // ipcMain.on('asynchronous-message', (event, arg) => {
 //     console.log(arg);  // prints "ping"
 //     let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});

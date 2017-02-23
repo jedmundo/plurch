@@ -3,7 +3,6 @@ import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { WindowManagementService } from '../../shared/services/window-management.service';
 
 const { ipcRenderer } = electron;
 
@@ -52,6 +51,12 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
                 case VIDEO_COMMAND_TYPE.SYNC_TIME:
                     this.renderer.setElementProperty(video, 'currentTime', command.value);
                     break;
+            }
+        });
+
+        ipcRenderer.on('retrieve-video-time', (event, parameters) => {
+            if (parameters.itemId === this.itemId && parameters.windowId === this.windowId) {
+                ipcRenderer.send('respond-video-time', { id: this.itemId, isPaused: video.paused, isMuted: video.muted, time: video.currentTime });
             }
         });
 

@@ -34,12 +34,13 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public currentVideoTime: number = 0;
     public currentVideoDuration: number = 0;
     public isMuted: boolean = false;
-    public seekBarValue: number = 0;
+    // public seekBarValue: number = 0;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
     @Input() public file: PlayableItem;
     @Input() public newFileAddedToWindow?: EventEmitter<void>;
+    @Input() public syncVideo?: EventEmitter<number>;
 
     constructor(
         private renderer: Renderer,
@@ -64,6 +65,20 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 }
             });
         }
+
+        this.syncVideo.subscribe((response) => {
+            if (response.id == this.file.id) {
+                const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
+                this.renderer.setElementProperty(video, 'currentTime', response.time);
+                const value = (100 / video.duration) * response.time;
+                this.currentVideoTime = response.time;
+                this.seekBar.nativeElement.value = value;
+                this.isMuted = response.isMuted;
+                if (!response.isPaused) {
+                    this.renderer.invokeElementMethod(video, 'play');
+                }
+            }
+        });
     }
 
     public ngAfterViewInit(): void {
@@ -107,10 +122,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public syncWithWindow(file: PlayableItem, windowId: string): void {
-
-    }
-
     private videoLoaded(): void {
         const video = this.videoPlayerRef.nativeElement;
 
@@ -128,7 +139,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             const value = (100 / video.duration) * video.currentTime;
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
-            this.seekBarValue = value;
+            // this.seekBarValue = value;
         });
     }
 
