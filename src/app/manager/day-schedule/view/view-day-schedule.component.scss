@@ -115,3 +115,21 @@
 .red-button {
     color: #ff523a;
 }
+
+.item-window-options {
+
+    .label-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .fa {
+            margin-right: 1rem;
+            color: #ff523a;
+        }
+
+        .label {
+            font-size: 0.7rem;
+        }
+    }
+}

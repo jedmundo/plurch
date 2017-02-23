@@ -49,8 +49,11 @@
         </md-card-content>
         <md-card-actions>
             <div *ngFor="let pWindow of pWindows | async; let i = index">
-                <div *ngIf="fileIsPlayingOnWindow(file, pWindow)" class="">
-                    <div>Playing on Window {{ i+1 }}</div>
+                <div *ngIf="fileIsPlayingOnWindow(file, pWindow)" class="item-window-options">
+                    <div class="label-container">
+                        <i class="fa fa-rss" aria-hidden="true"></i>
+                        <div class="label">Live on Window {{ i+1 }}</div>
+                    </div>
                     <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)">
                         Sync
                     </div>
