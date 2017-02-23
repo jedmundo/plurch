@@ -156,6 +156,14 @@ ipcMain.on('get-youtube-videos-folder', (event, arg) => {
     event.sender.send('get-youtube-videos-folder-reply', `${__dirname}/youtube-videos`);
 });
 
+ipcMain.on('new-item-playing', (event, arg) => {
+    win.webContents.send('new-item-playing', arg);
+});
+
+ipcMain.on('removed-item-playing', (event, arg) => {
+    win.webContents.send('removed-item-playing', arg);
+});
+
 // ipcMain.on('asynchronous-message', (event, arg) => {
 //     console.log(arg);  // prints "ping"
 //     let win2 = new BrowserWindow({width: 1280, height: 800, title: 'FS'});

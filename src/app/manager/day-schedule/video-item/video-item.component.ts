@@ -125,6 +125,10 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    public syncWithWindow(file: PlayableItem, windowId: string): void {
+
+    }
+
     private videoLoaded(): void {
         const video = this.videoPlayerRef.nativeElement;
 

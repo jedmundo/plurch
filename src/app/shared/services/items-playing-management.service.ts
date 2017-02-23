@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
+const { ipcRenderer } = electron;
 
 export class ItemPlaying {
 
@@ -18,6 +19,15 @@ export class ItemsPlayingManagementService {
     private itemsPlayingArray: ItemPlaying[] = [];
 
     constructor() {
+        ipcRenderer.on('new-item-playing', (event, itemPlaying: ItemPlaying) => {
+            console.log('ADDED ITEM');
+            this.addItem(new ItemPlaying(itemPlaying.id, itemPlaying.videoElement));
+        });
+
+        ipcRenderer.on('removed-item-playing', (event, id: string) => {
+            console.log('REMOVED ITEM');
+            this.removeItem(id);
+        });
     }
 
     public addItem(item: ItemPlaying): void {

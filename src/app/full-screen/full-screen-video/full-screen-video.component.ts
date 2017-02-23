@@ -3,8 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ItemsPlayingManagementService, ItemPlaying } from '../../shared/services/items-playing-management.service';
-import { guid } from '../../util/util-functions';
+import { WindowManagementService } from '../../shared/services/window-management.service';
 
 const { ipcRenderer } = electron;
 
@@ -19,10 +18,11 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     public videoPath: SafeUrl;
 
     private itemId: string;
+    private windowId: string;
 
     constructor(
         private route: ActivatedRoute,
-        private itemsPlayingManagementService: ItemsPlayingManagementService,
+        private windowManagementService: WindowManagementService,
         private sanitizer: DomSanitizer,
         private renderer: Renderer) {
     }
@@ -32,6 +32,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
             .subscribe((params: Params) => {
                 this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(params['path'].replace(/___/g, '/'));
                 this.itemId = params['id'];
+                this.windowId = params['windowId'];
             });
 
         ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
@@ -56,11 +57,11 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
         });
 
         const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
-        this.itemsPlayingManagementService.addItem(new ItemPlaying(this.itemId, video))
+        ipcRenderer.send('new-item-playing', { id: this.itemId + this.windowId, videoElement: video });
     }
 
     public ngOnDestroy(): void {
-        this.itemsPlayingManagementService.removeItem(this.itemId);
+        ipcRenderer.send('removed', { id: this.itemId + this.windowId });
     }
 
 }

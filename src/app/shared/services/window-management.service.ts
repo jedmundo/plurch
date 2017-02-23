@@ -102,7 +102,7 @@ export class WindowManagementService {
         const pWindow = this.availableWindows.find((pWindow) => pWindow.id === windowId);
         pWindow.playableItem = file;
         if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
-            const url = '#/fs/video/' + file.path.replace(/\//g, '___') + '/' + pWindow.id;
+            const url = `#/fs/video/${file.path.replace(/\//g, '___')}/${file.id}/${pWindow.id}`;
             pWindow.electronWindow.loadURL(this.indexUrl + url);
         } else {
             // TODO: OPEN OTHER FILES ON FULL SCREEN

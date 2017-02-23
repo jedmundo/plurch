@@ -44,7 +44,7 @@ const routes: Routes = [
         ]
     },
     { path: 'fs/empty-window', component: EmptyWindowComponent },
-    { path: 'fs/video/:path/:id', component: FullScreenVideoComponent }
+    { path: 'fs/video/:path/:id/:windowId', component: FullScreenVideoComponent }
 ];
 
 export const ROUTER_MODULE = RouterModule.forRoot(routes, { useHash: true });
