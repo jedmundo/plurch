@@ -1,11 +1,9 @@
 import {
     Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
-    EventEmitter, OnDestroy
+    EventEmitter
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
-import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
-import { Subscription } from 'rxjs';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -27,7 +25,7 @@ export enum VIDEO_COMMAND_TYPE {
     templateUrl: 'video-item.component.html',
     styleUrls: ['video-item.component.scss']
 })
-export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VideoItemComponent implements OnInit, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
     @ViewChild('seekBar') private seekBar: ElementRef;
@@ -43,12 +41,9 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public file: PlayableItem;
     @Input() public newFileAddedToWindow?: EventEmitter<void>;
 
-    private itemsPlayingSubscription: Subscription;
-
     constructor(
         private renderer: Renderer,
-        private windowManagementService: WindowManagementService,
-        private itemsPlayingManagementService: ItemsPlayingManagementService
+        private windowManagementService: WindowManagementService
     ) {
     }
 
@@ -69,19 +64,6 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
         }
-
-        this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
-            console.log('NOVOS ITEMS', itemsPlaying);
-            const firstItemPlaying = itemsPlaying.find((itemPlaying) => itemPlaying.id === this.file.id);
-            if (firstItemPlaying) {
-                const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
-                this.renderer.setElementProperty(video, 'currentTime', firstItemPlaying.videoElement.duration);
-            }
-        });
-    }
-
-    public ngOnDestroy(): void {
-        this.itemsPlayingSubscription.unsubscribe();
     }
 
     public ngAfterViewInit(): void {
