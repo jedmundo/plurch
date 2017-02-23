@@ -153,6 +153,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             const value = (100 / video.duration) * video.currentTime;
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
+            this.seekBar.nativeElement.value = value;
         });
     }
 
