@@ -54,7 +54,7 @@
                         <i class="fa fa-rss" aria-hidden="true"></i>
                         <div class="label">Live on Window {{ i+1 }}</div>
                     </div>
-                    <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)">
+                    <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)" class="sync-button">
                         Sync
                     </div>
                 </div>

@@ -117,6 +117,7 @@
 }
 
 .item-window-options {
+    text-align: center;
 
     .label-container {
         display: flex;
@@ -131,5 +132,11 @@
         .label {
             font-size: 0.7rem;
         }
+    }
+
+    .sync-button {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        font-size: 0.9rem;
     }
 }
