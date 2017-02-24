@@ -117,9 +117,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public volumeChanged(event: MdSliderChange): void {
         const volume = event.value;
-        loudness.setVolume(volume, function (err) {
-           console.log('DONE');
-        });
+        loudness.setVolume(volume, (err) => console.log(err));
     }
 
 }

@@ -12,12 +12,12 @@
             <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)" md-button>
                 <i class="fa fa-repeat" aria-hidden="true"></i>
             </button>
-            <!--<md-slider-->
-                <!--(slide)="videoSeekChange(seekBarValue)"-->
-                <!--[(ngModel)]="seekBarValue">-->
-            <!--</md-slider>-->
-            <!--{{seekBarValue}}-->
-            <input (input)="videoSeekChange()" type="range" value="0" step="1" #seekBar>
+            <md-slider
+                [step]="1"
+                (input)="videoSeekChange($event)"
+                [thumb-label]="true"
+                [value]="timeSeekBarValue">
+            </md-slider>
             <div class="time-info">{{ currentVideoTime | number: '1.0-0' }} / {{ currentVideoDuration | number : '1.0-0'}}</div>
         </div>
         <div class="sound-controls">
@@ -27,7 +27,14 @@
             <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" md-button>
                 <i class="fa fa-bell-slash" aria-hidden="true"></i>
             </button>
-            <input (input)="volumeChange()" type="range" min="0" max="1" step="0.1" value="1" #volumeBar>
+            <md-slider
+                [step]="0.1"
+                (input)="volumeChange($event)"
+                [min]="0"
+                [max]="1"
+                [thumb-label]="true"
+                [value]="volumeSeekBarValue">
+            </md-slider>
         </div>
 
 

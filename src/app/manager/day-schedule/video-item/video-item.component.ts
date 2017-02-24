@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
+import { MdSliderChange } from '@angular/material';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -28,12 +29,12 @@ export enum VIDEO_COMMAND_TYPE {
 export class VideoItemComponent implements OnInit, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
-    @ViewChild('seekBar') private seekBar: ElementRef;
-    @ViewChild('volumeBar') private volumeBar: ElementRef;
 
     public currentVideoTime: number = 0;
     public currentVideoDuration: number = 0;
     public isMuted: boolean = false;
+    public timeSeekBarValue: number = 0;
+    public volumeSeekBarValue: number = 0;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
@@ -75,7 +76,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 this.renderer.setElementProperty(video, 'currentTime', response.time);
                 const value = (100 / video.duration) * response.time;
                 this.currentVideoTime = response.time;
-                this.seekBar.nativeElement.value = value;
+                this.timeSeekBarValue = value;
                 this.isMuted = response.isMuted;
                 this.renderer.setElementProperty(video, 'muted', true);
                 if (!response.isPaused) {
@@ -151,21 +152,21 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             const value = (100 / video.duration) * video.currentTime;
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
-            this.seekBar.nativeElement.value = value;
+            this.timeSeekBarValue = value;
         });
 
         this.renderer.listen(video, 'ended', () => {
-            this.seekBar.nativeElement.value = 0;
+            this.timeSeekBarValue = 0;
         });
     }
 
-    public videoSeekChange(event): void {
+    public videoSeekChange(event: MdSliderChange): void {
         const video = this.videoPlayerRef.nativeElement;
-        this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> this.seekBar.nativeElement.value / 100));
+        this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> event.value / 100));
     }
 
-    public volumeChange(): void {
-        const volumeValue = this.volumeBar.nativeElement.value;
+    public volumeChange(event: MdSliderChange): void {
+        const volumeValue = event.value;
         this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
         this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
     }
