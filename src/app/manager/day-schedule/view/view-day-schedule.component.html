@@ -68,7 +68,8 @@
                         <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)" class="sync-button">
                             Sync
                         </div>
-                        <div class="remove-button" (click)="removeFromWindow(file, pWindow)">Remove</div>
+                        <div *ngIf="!isRemovingItem" class="remove-button" (click)="removeFromWindow(file, pWindow)">Remove</div>
+                        <span *ngIf="isRemovingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
                     </div>
                 </div>
                 <button *ngIf="!fileIsPlayingOnWindow(file, pWindow)" (click)="addToWindow(file, pWindow)" md-button>

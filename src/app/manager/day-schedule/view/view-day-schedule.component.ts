@@ -29,6 +29,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
     public isSendingItem: boolean = false;
+    public isRemovingItem: boolean = false;
     public volumeBarValue: number = 0;
 
     private selectedDayName: string;
@@ -58,6 +59,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
             this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
                 // console.log('NOVOS ITEMS PLAYING', itemsPlaying);
                 this.isSendingItem = false;
+                this.isRemovingItem = false;
                 this.files.forEach((file) => {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
                 });
@@ -100,6 +102,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     public removeFromWindow(file: PlayableItem, pWindow: PlurchWindow): void {
+        this.isRemovingItem = true;
         this.windowManagementService
             .getPlurchWindow(pWindow.id)
             .electronWindow.webContents.send('remove-item', { itemId: file.id, windowId: pWindow.id })
