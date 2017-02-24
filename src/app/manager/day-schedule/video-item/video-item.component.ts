@@ -34,7 +34,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public currentVideoDuration: number = 0;
     public isMuted: boolean = false;
     public timeSeekBarValue: number = 0;
-    public volumeSeekBarValue: number = 0;
+    public volumeSeekBarValue: number = 1;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
@@ -176,8 +176,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     }
 
     public get isPlayedOnExternalWindow(): boolean {
-        return true;
-        // return this.file.windowIDs.length > 0;
+        return this.file.itemsPlaying.length > 0;
     }
 
 }

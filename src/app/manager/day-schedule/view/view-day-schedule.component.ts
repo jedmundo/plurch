@@ -15,6 +15,7 @@ import {
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
 import { Subscription, Observable } from 'rxjs';
 import { MdSliderChange } from '@angular/material';
+import { AppSettingsService } from '../../../shared/services/app-settings.service';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -43,6 +44,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private windowManagementService: WindowManagementService,
         private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
+        private appSettingsService: AppSettingsService,
         private activatedRoute: ActivatedRoute
     ) { }
 
@@ -67,7 +69,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
             this.syncVideo.emit(response);
         });
 
-        loudness.getVolume ((err, vol) => this.volumeBarValue = vol);
+        this.volumeBarValue = this.appSettingsService.overallVolume;
     }
 
     public ngOnDestroy(): void {
@@ -117,7 +119,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public volumeChanged(event: MdSliderChange): void {
         const volume = event.value;
-        loudness.setVolume(volume, (err) => console.log(err));
+        this.appSettingsService.overallVolume = volume;
     }
 
 }

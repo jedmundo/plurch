@@ -15,10 +15,10 @@
             <md-slider
                 [step]="1"
                 (input)="videoSeekChange($event)"
-                [thumb-label]="true"
+                [thumb-label]="false"
                 [value]="timeSeekBarValue">
             </md-slider>
-            <div class="time-info">{{ currentVideoTime | number: '1.0-0' }} / {{ currentVideoDuration | number : '1.0-0'}}</div>
+            <div class="time-info">{{ currentVideoTime | timeFormat }} / {{ currentVideoDuration | timeFormat }}</div>
         </div>
         <div class="sound-controls">
             <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" md-button>
@@ -28,6 +28,7 @@
                 <i class="fa fa-bell-slash" aria-hidden="true"></i>
             </button>
             <md-slider
+                class="sound-slider"
                 [step]="0.1"
                 (input)="volumeChange($event)"
                 [min]="0"

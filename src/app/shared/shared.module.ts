@@ -5,6 +5,7 @@ import { DisplayManagementService } from './services/display-management.service'
 import { YoutubeManagementService } from './services/youtube-management.service';
 import { DayFilesManagementService } from './services/day-files-management.service';
 import { ItemsPlayingManagementService } from './services/items-playing-management.service';
+import { AppSettingsService } from './services/app-settings.service';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { ItemsPlayingManagementService } from './services/items-playing-manageme
         DisplayManagementService,
         YoutubeManagementService,
         DayFilesManagementService,
-        ItemsPlayingManagementService
+        ItemsPlayingManagementService,
+        AppSettingsService
     ],
     exports: [
         CommonModule,
