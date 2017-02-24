@@ -17,17 +17,16 @@ export class TimeFormatPipe implements PipeTransform {
         }
     }
     private hhmmss(secs: number) {
-        let minutes = Math.floor(secs / 60);
-        // secs = secs % 60;
-        const hours = Math.floor(minutes / 60);
-        // minutes = minutes % 60;
+        const minutes = Math.floor(secs / 60);
+        let seconds = Math.floor(secs - minutes * 60);
 
-        secs = Math.floor(secs);
+        const hours = Math.floor(secs / 3600);
+        seconds = seconds - hours * 3600;
 
         if (hours > 0) {
-            return this.pad(hours) + ":" + this.pad(minutes) + ":" + this.pad(secs);
+            return this.pad(hours) + ":" + this.pad(minutes) + ":" + this.pad(seconds);
         } else {
-            return this.pad(minutes) + ":" + this.pad(secs);
+            return this.pad(minutes) + ":" + this.pad(seconds);
         }
     }
 
