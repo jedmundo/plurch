@@ -20,6 +20,7 @@ import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-s
 import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
 import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.component';
 import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
+import { ProgramComponent } from './manager/day-schedule/program/program.component';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
         ViewDayScheduleComponent,
         EditDayScheduleComponent,
         SearchYoutubeComponent,
-        TimeFormatPipe
+        TimeFormatPipe,
+        ProgramComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

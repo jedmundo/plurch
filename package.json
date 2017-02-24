@@ -11,7 +11,7 @@
     "e2e": "protractor",
     "build-electron": "ng build && cp src/electron/* dist/",
     "electron": "npm run build-electron && electron dist/",
-    "pkg.mac": "electron-packager dist/ plurch --platform=mas --electron-version=1.4.15 --overwrite",
+    "pkg.mac": "electron-packager dist/ plurch --platform=mas --electronVersion=1.4.15 --overwrite",
     "pkg.win": "electron-packager dist/ plurch --platform=win32 --electron-version=1.4.15 --overwrite"
   },
   "private": true,
@@ -44,6 +44,7 @@
     "@types/node": "^6.0.42",
     "angular-cli": "1.0.0-beta.20-4",
     "codelyzer": "~1.0.0-beta.4",
+    "electron": "^1.4.15",
     "jasmine-core": "2.4.1",
     "jasmine-spec-reporter": "2.5.0",
     "karma": "1.2.0",
