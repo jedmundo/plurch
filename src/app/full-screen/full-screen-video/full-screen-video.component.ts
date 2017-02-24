@@ -61,6 +61,13 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
             }
         });
 
+        ipcRenderer.on('remove-item', (event, parameters) => {
+            if (parameters.itemId === this.itemId && parameters.windowId === this.windowId) {
+                ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
+                this.router.navigate(['/fs/empty-window']);
+            }
+        });
+
         const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
         ipcRenderer.send('new-item-playing', { id: this.itemId, windowId: this.windowId, videoElement: video });
 
@@ -70,7 +77,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        ipcRenderer.send('removed', { id: this.itemId, windowId: this.windowId });
+        ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
     }
 
 }

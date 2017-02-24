@@ -64,8 +64,11 @@
                         <i class="fa fa-rss" aria-hidden="true"></i>
                         <div class="label">Live on Window {{ i+1 }}</div>
                     </div>
-                    <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)" class="sync-button">
-                        Sync
+                    <div>
+                        <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file, pWindow)" class="sync-button">
+                            Sync
+                        </div>
+                        <div class="remove-button" (click)="removeFromWindow(file, pWindow)">Remove</div>
                     </div>
                 </div>
                 <button *ngIf="!fileIsPlayingOnWindow(file, pWindow)" (click)="addToWindow(file, pWindow)" md-button>

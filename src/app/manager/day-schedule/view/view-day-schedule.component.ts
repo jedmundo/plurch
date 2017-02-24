@@ -99,6 +99,12 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         this.newFileAddedToWindow.emit();
     }
 
+    public removeFromWindow(file: PlayableItem, pWindow: PlurchWindow): void {
+        this.windowManagementService
+            .getPlurchWindow(pWindow.id)
+            .electronWindow.webContents.send('remove-item', { itemId: file.id, windowId: pWindow.id })
+    }
+
     public closeAllWindows(): void {
         this.windowManagementService.closeAllWindows();
     }

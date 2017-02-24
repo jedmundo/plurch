@@ -124,7 +124,9 @@
 }
 
 .item-window-options {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .label-container {
         display: flex;
@@ -142,9 +144,14 @@
         }
     }
 
-    .sync-button {
-        border: 1px solid lightgray;
-        border-radius: 5px;
-        font-size: 0.9rem;
+    .sync-button, .remove-button {
+        cursor: pointer;
+        //border: 1px solid lightgray;
+        //border-radius: 5px;
+        //font-size: 0.8rem;
+    }
+
+    .remove-button {
+        //font-size: 0.8rem;
     }
 }
