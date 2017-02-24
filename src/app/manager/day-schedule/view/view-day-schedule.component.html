@@ -2,6 +2,16 @@
     <div>{{ selectedDayName }}</div>
 </div>
 
+<div>
+    <div>Overall volume</div>
+    <md-slider
+        [step]="1"
+        (input)="volumeChanged($event)"
+        [thumb-label]="true"
+        [value]="volumeBarValue">
+    </md-slider>
+</div>
+
 <div class="pWindows-container">
     <div class="title">Windows</div>
 

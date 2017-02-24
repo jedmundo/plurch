@@ -14,6 +14,7 @@ import {
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
 import { Subscription, Observable } from 'rxjs';
+import { MdSliderChange } from '@angular/material';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -27,6 +28,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
     public isSendingItem: boolean = false;
+    public volumeBarValue: number = 0;
 
     private selectedDayName: string;
     private displays: PlurchDisplay[];
@@ -64,6 +66,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         ipcRenderer.on('respond-video-time', (event, response) => {
             this.syncVideo.emit(response);
         });
+
+        loudness.getVolume ((err, vol) => this.volumeBarValue = vol);
     }
 
     public ngOnDestroy(): void {
@@ -109,6 +113,13 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         this.windowManagementService
             .getPlurchWindow(pWindow.id)
             .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: pWindow.id })
+    }
+
+    public volumeChanged(event: MdSliderChange): void {
+        const volume = event.value;
+        loudness.setVolume(volume, function (err) {
+           console.log('DONE');
+        });
     }
 
 }

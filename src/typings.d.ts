@@ -5,3 +5,4 @@ declare var electron: any;
 declare var fs: any;
 declare var path: any;
 declare var ytdl: any;
+declare var loudness: any;
