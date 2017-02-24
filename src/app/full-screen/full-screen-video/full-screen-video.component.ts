@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     private windowId: string;
 
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer,
         private renderer: Renderer) {
@@ -62,6 +63,10 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
 
         const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
         ipcRenderer.send('new-item-playing', { id: this.itemId, windowId: this.windowId, videoElement: video });
+
+        this.renderer.listen(video, 'ended', () => {
+            this.router.navigate(['/fs/empty-window']);
+        });
     }
 
     public ngOnDestroy(): void {

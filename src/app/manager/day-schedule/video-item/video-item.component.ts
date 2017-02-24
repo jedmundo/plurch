@@ -134,7 +134,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         const video = this.videoPlayerRef.nativeElement;
 
         this.renderer.listen(video, 'seeking', () => {
-            // console.log('seeking', this.isSyncing);
             if (!this.isSyncing) {
                 this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                     { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
@@ -142,7 +141,6 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
         });
 
         this.renderer.listen(video, 'seeked', () => {
-            // console.log('seeked', this.isSyncing);
             if (!this.isSyncing) {
                 this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                     {type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime});
@@ -154,6 +152,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
             this.currentVideoTime = video.currentTime;
             this.currentVideoDuration = video.duration;
             this.seekBar.nativeElement.value = value;
+        });
+
+        this.renderer.listen(video, 'ended', () => {
+            this.seekBar.nativeElement.value = 0;
         });
     }
 
