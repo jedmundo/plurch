@@ -144,14 +144,17 @@
         }
     }
 
-    .sync-button, .remove-button {
-        cursor: pointer;
-        //border: 1px solid lightgray;
-        //border-radius: 5px;
-        //font-size: 0.8rem;
-    }
+    .window-buttons-container {
+        display: flex;
+        flex-direction: row;
 
-    .remove-button {
-        //font-size: 0.8rem;
+        .sync-button {
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .remove-button {
+            cursor: pointer;
+        }
     }
 }
