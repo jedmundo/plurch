@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
     YouTubeVideo, YoutubeManagementService
 } from '../../shared/services/youtube-management.service';
 import * as moment from 'moment';
+const { remote } = electron;
 
 @Component({
   selector: 'app-search-youtube',
@@ -15,17 +16,20 @@ export class SearchYoutubeComponent implements OnInit, AfterViewInit {
     @ViewChild('searchInput') private searchInputRef: ElementRef;
 
     public results$: Observable<YouTubeVideo>;
+    public chosenFolder: string;
 
     constructor(
+        private zone: NgZone,
         private youtubeManagementService: YoutubeManagementService
     ) { }
 
     public ngOnInit() {
+        this.chosenFolder = this.youtubeManagementService.youtubeVideosFolder;
     }
 
     public ngAfterViewInit(): void {
         this.results$ = Observable.fromEvent<HTMLInputElement>(this.searchInputRef.nativeElement, 'keyup')
-            .debounceTime(500)
+            .debounceTime(700)
             .map((ev: any) => ev.target.value)
             .distinctUntilChanged()
             // .do(termDebug => console.log(termDebug))
@@ -41,6 +45,17 @@ export class SearchYoutubeComponent implements OnInit, AfterViewInit {
 
     public formatDate(ISO_8601_date: string): string {
         return new Date(ISO_8601_date).toDateString();
+    }
+
+    public openChooseItemDialog() {
+        remote.dialog.showOpenDialog({
+            title:"Select folder to store videos",
+            properties: [ "openDirectory" ]
+        }, (folder) => {
+            this.zone.run(() => {
+                this.youtubeManagementService.videosFolder = folder;
+            });
+        });
     }
 
 }

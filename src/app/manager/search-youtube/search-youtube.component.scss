@@ -1,6 +1,17 @@
 
+.videos-folder {
+    display: flex;
+    flex-direction: row;
+    margin: 1rem;
+    align-items: center;
+
+    div {
+        font-size: 0.8rem;
+    }
+}
+
 .search-bar {
-    padding: 2rem;
+    padding: 1rem 2rem;
 }
 
 .youtube-videos-container {

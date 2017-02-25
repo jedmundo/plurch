@@ -4,6 +4,7 @@ import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { Http } from '@angular/http';
 
+export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
 
 const { ipcRenderer } = electron;
@@ -44,15 +45,19 @@ export class YoutubeManagementService {
         private zone: NgZone,
         private sanitizer: DomSanitizer
     ) {
-        ipcRenderer.send('get-youtube-videos-folder');
-
-        ipcRenderer.on('get-youtube-videos-folder-reply', (event, arg) => {
-            if (!fs.existsSync(arg)){
-                fs.mkdirSync(arg);
-            }
-            this.youtubeVideosFolder = arg;
+        // ipcRenderer.send('get-youtube-videos-folder');
+        //
+        // ipcRenderer.on('get-youtube-videos-folder-reply', (event, arg) => {
+        //     if (!fs.existsSync(arg)){
+        //         fs.mkdirSync(arg);
+        //     }
+        //     this.youtubeVideosFolder = arg;
+        //     this.loadItems();
+        // });
+        this.youtubeVideosFolder = localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER);
+        if (this.youtubeVideosFolder) {
             this.loadItems();
-        });
+        }
     }
 
     private storeVideo(youtubeVideo: YouTubeVideo): void {
@@ -65,6 +70,11 @@ export class YoutubeManagementService {
         this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
         fs.unlinkSync(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4');
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
+    }
+
+    public set videosFolder(folder: string) {
+        this.youtubeVideosFolder = folder;
+        localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER, folder);
     }
 
     private loadItems(): void {
