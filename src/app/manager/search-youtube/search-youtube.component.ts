@@ -53,6 +53,7 @@ export class SearchYoutubeComponent implements OnInit, AfterViewInit {
             properties: [ "openDirectory" ]
         }, (folder) => {
             this.zone.run(() => {
+                this.chosenFolder = folder;
                 this.youtubeManagementService.videosFolder = folder;
             });
         });

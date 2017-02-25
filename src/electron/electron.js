@@ -152,9 +152,9 @@ ipcMain.on('get-index-url', (event, arg) => {
     event.sender.send('get-index-url-reply', { indexUrl: `file://${__dirname}/index.html`});
 });
 
-ipcMain.on('get-youtube-videos-folder', (event, arg) => {
-    event.sender.send('get-youtube-videos-folder-reply', `${__dirname}/youtube-videos`);
-});
+// ipcMain.on('get-youtube-videos-folder', (event, arg) => {
+//     event.sender.send('get-youtube-videos-folder-reply', `${__dirname}/youtube-videos`);
+// });
 
 ipcMain.on('new-item-playing', (event, arg) => {
     win.webContents.send('new-item-playing', arg);
