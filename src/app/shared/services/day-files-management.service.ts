@@ -57,18 +57,18 @@ export class DayFilesManagementService {
         }
     }
 
-    public addFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE): void {
+    public addFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE, name?: string): void {
         console.log('ADD PlayableItem:', path);
 
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
-            this.storeFile(dayName, files, id, path, type);
+            this.storeFile(dayName, files, id, path, type, name);
         } else {
             // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
             //     this.zone.run(() => {
             //         if (thumbnailPath) {
             //             this.storeFile(dayName, files, path, type, thumbnailPath);
             //         } else {
-            this.storeFile(dayName, files, id, path, type);
+            this.storeFile(dayName, files, id, path, type, name);
             // }
             //     });
             // });
@@ -78,9 +78,16 @@ export class DayFilesManagementService {
     }
 
     private storeFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE,
-                      thumbnailPath?: string): void {
-        files.push(new PlayableItem(id, path, this.sanitizer.bypassSecurityTrustResourceUrl(path),
-            this.generateName(path), type, thumbnailPath));
+                      name?: string, thumbnailPath?: string): void {
+        files.push(
+            new PlayableItem(
+                id,
+                path,
+                this.sanitizer.bypassSecurityTrustResourceUrl(path),
+                name ? name : this.generateName(path),
+                type,
+                thumbnailPath)
+        );
         localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + dayName, JSON.stringify(files));
     }
 

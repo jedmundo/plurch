@@ -49,6 +49,9 @@ import { ProgramComponent } from './manager/day-schedule/program/program.compone
         ProgramComponent
     ],
     providers: [],
+    entryComponents: [
+        ProgramComponent
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

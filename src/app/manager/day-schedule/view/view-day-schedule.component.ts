@@ -14,8 +14,9 @@ import {
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
 import { Subscription, Observable } from 'rxjs';
-import { MdSliderChange } from '@angular/material';
+import { MdSliderChange, MdDialog, MdDialogConfig } from '@angular/material';
 import { AppSettingsService } from '../../../shared/services/app-settings.service';
+import { ProgramComponent } from '../program/program.component';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -46,7 +47,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
         private appSettingsService: AppSettingsService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        public dialog: MdDialog
     ) { }
 
     public ngOnInit() {
@@ -97,6 +99,9 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public addToWindow(file: PlayableItem, pWindow: PlurchWindow): void {
         this.isSendingItem = true;
+        // this.windowManagementService
+        //     .getPlurchWindow(pWindow.id)
+        //     .electronWindow.webContents.send('remove-item', { itemId: file.id });
         this.windowManagementService.addToWindow(pWindow.id, file);
         this.newFileAddedToWindow.emit();
     }
@@ -105,7 +110,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         this.isRemovingItem = true;
         this.windowManagementService
             .getPlurchWindow(pWindow.id)
-            .electronWindow.webContents.send('remove-item', { itemId: file.id, windowId: pWindow.id })
+            .electronWindow.webContents.send('remove-item', { itemId: file.id });
     }
 
     public closeAllWindows(): void {
@@ -129,6 +134,16 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public volumeChanged(event: MdSliderChange): void {
         const volume = event.value;
         this.appSettingsService.overallVolume = volume;
+    }
+
+    public openDialog(): void {
+        const config: MdDialogConfig = {
+            data: { name: this.selectedDayName }
+        };
+        this.dialog.open(ProgramComponent, config);
+        // dialogRef.afterClosed().subscribe(result => {
+        //     // this.selectedOption = result;
+        // });
     }
 
 }

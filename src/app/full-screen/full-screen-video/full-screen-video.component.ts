@@ -62,7 +62,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
         });
 
         ipcRenderer.on('remove-item', (event, parameters) => {
-            if (parameters.itemId === this.itemId && parameters.windowId === this.windowId) {
+            if (parameters.itemId === this.itemId) {
                 ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
                 this.router.navigate(['/fs/empty-window']);
             }

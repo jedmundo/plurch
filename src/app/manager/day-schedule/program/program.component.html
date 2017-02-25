@@ -1,3 +1,8 @@
 <div class="program">
-  program works!
+    Program for : {{ selectedDayName }}
+
+    <button (click)="openChooseFileDialog()">Add File</button>
+    <button (click)="close()">Close</button>
 </div>
+
+<img *ngIf="imgPath" [src]="imgPath" height="100%">

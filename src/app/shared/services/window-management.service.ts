@@ -5,6 +5,7 @@ import Display = Electron.Display;
 import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { guid } from '../../util/util-functions';
+import { IS_DEBUG } from '../../app.component';
 
 export class PlurchWindow {
 
@@ -88,7 +89,9 @@ export class WindowManagementService {
         previewWindow.loadURL(finalLoadUrl);
 
         // Open the DevTools.
-        previewWindow.webContents.openDevTools();
+        if (IS_DEBUG) {
+            previewWindow.webContents.openDevTools();
+        }
 
         // Emitted when the window is closed.
         previewWindow.on('close', (event: Event) => {
