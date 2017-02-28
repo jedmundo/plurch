@@ -1,0 +1,33 @@
+
+.day-container {
+    display: flex;
+    flex-direction: row;
+
+    .item-list-container {
+        flex: 1;
+
+        .controls {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    .program-container {
+        width: 200px;
+    }
+}
+
+.main-title {
+    padding: 1rem;
+    font-weight: bold;
+    text-align: center;
+    text-transform: capitalize;
+    color: #343A3E;
+}
+
+.overall-volume {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}

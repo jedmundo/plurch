@@ -1,0 +1,33 @@
+<div class="day-container">
+
+    <div class="item-list-container">
+
+        <div class="main-title">
+            <div>{{ selectedDayName }}</div>
+        </div>
+
+        <div class="controls">
+            <div *ngFor="let pWindow of pWindows | async; let i = index" class="pWindow-item">
+                <div class="pWindow-thumbnail">
+                    <div class="pWindow-number">{{i+1}}</div>
+                </div>
+                <div class="buttons">
+                    <button [routerLink]="['/manager/playlist/' + selectedDayName + '/' + pWindow.id]">Playlist</button>
+                    <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.FULL_SCREEN)"> FullScreen</button>
+                    <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.STOP_FULL_SCREEN)">Exit FullScreen</button>
+                    <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
+                </div>
+            </div>
+            <div class="overall-volume">
+                <div>Overall volume</div>
+                <md-slider
+                    [step]="1"
+                    (input)="volumeChanged($event)"
+                    [thumb-label]="true"
+                    [value]="volumeBarValue">
+                </md-slider>
+            </div>
+        </div>
+
+    </div>
+</div>
