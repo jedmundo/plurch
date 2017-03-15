@@ -10,6 +10,7 @@ import { ItemsPlayingManagementService } from '../../shared/services/items-playi
 import { Subscription } from 'rxjs';
 import { ProgramComponent } from '../day-schedule/program/program.component';
 import { PlurchWindow, WindowManagementService } from '../../shared/services/window-management.service';
+const { ipcRenderer } = electron;
 
 @Component({
     selector: 'app-window-playlist',
@@ -54,6 +55,10 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
                 });
             });
         });
+
+        ipcRenderer.on('respond-video-time', (event, response) => {
+            this.syncVideo.emit(response);
+        });
     }
 
     public ngOnDestroy(): void {
@@ -66,9 +71,6 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
 
     public addToWindow(file: PlayableItem): void {
         // this.isSendingItem = true;
-        // this.windowManagementService
-        //     .getPlurchWindow(pWindow.id)
-        //     .electronWindow.webContents.send('remove-item', { itemId: file.id });
         this.windowManagementService.addToWindow(this.windowId, file);
         this.newFileAddedToWindow.emit();
     }

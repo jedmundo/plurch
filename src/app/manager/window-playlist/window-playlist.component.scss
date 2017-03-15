@@ -1,7 +1,7 @@
 
 .day-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     .item-list-container {
         flex: 1;
@@ -14,6 +14,47 @@
 
     .program-container {
         width: 200px;
+    }
+
+    .playlist-container {
+        border-top: 1px solid lightgray;
+        padding: 1rem;
+
+        .item-window-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .label-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-bottom: 0.5rem;
+
+                .fa {
+                    margin-right: 0.5rem;
+                    color: #ff523a;
+                }
+
+                .label {
+                    font-size: 0.7rem;
+                }
+            }
+
+            .window-buttons-container {
+                display: flex;
+                flex-direction: row;
+
+                .sync-button {
+                    cursor: pointer;
+                    margin-right: 1rem;
+                }
+
+                .remove-button {
+                    cursor: pointer;
+                }
+            }
+        }
     }
 }
 
