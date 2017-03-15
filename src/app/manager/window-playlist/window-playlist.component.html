@@ -45,7 +45,7 @@
                 <div *ngIf="fileIsPlayingOnWindow(itemPlaying)" class="item-window-options">
                     <div class="label-container">
                         <i class="fa fa-rss" aria-hidden="true"></i>
-                        <div class="label">Live on Window {{ i+1 }}</div>
+                        <div class="label">Live on Window</div>
                     </div>
                     <div class="window-buttons-container">
                         <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(itemPlaying)" class="sync-button">
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
-                    <span *ngIf="!isSendingItem">Send To Window: {{i+1}}</span>
+                    <span *ngIf="!isSendingItem">Send To Window</span>
                     <span *ngIf="isSendingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
                 </button>
                 <button (click)="openFile(itemPlaying.path)" md-button>Open Source</button>

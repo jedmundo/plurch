@@ -21,6 +21,10 @@
         flex-direction: row;
         padding: 1rem;
 
+        @media screen and (max-width: 1000px){
+            flex-direction: column;
+        }
+
         .item-window-options {
             display: flex;
             flex-direction: column;
@@ -60,10 +64,17 @@
         .history-list {
             display: flex;
             flex-direction: column;
+            padding: 1rem;
+            border: 1px solid lightgrey;
 
             .small-item {
                 display: flex;
                 flex-direction: row;
+                cursor: pointer;
+
+                &:hover {
+                    background: lightgrey;
+                }
 
                 .thumbnail {
 

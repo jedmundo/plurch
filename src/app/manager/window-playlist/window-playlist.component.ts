@@ -47,6 +47,7 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
             this.selectedDayName = params['dayName'];
             this.windowId = params['windowId'];
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
+            this.itemPlaying = this.files.length > 0 ? this.files[0] : null;
 
             this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
                 // console.log('NOVOS ITEMS PLAYING', itemsPlaying);
