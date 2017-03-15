@@ -59,7 +59,8 @@ export class EditDayScheduleComponent implements OnInit {
             video.id,
             this.youtubeManagementService.youtubeVideosFolder + '/' + video.id + '.mp4',
             PLAYABLE_FILE_TYPE.VIDEO,
-            video.title);
+            video.title,
+            video.description);
     }
 
     public openFile(path: string) {

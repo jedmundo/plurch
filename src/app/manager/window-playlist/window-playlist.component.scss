@@ -81,7 +81,16 @@
                 }
 
                 .details {
+                    display: flex;
+                    flex-direction: column;
 
+                    .name {
+                        font-weight: bold;
+                    }
+
+                    .description {
+
+                    }
                 }
             }
         }

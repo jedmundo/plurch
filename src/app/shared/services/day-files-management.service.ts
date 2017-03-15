@@ -19,6 +19,7 @@ export class PlayableItem {
         public path: string,
         public sanitizedPath: SafeUrl,
         public name: string,
+        public description?: string,
         public type: PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE.DEFAULT,
         public thumbnailPath?: string,
         public itemsPlaying: ItemPlaying[] = []
@@ -52,25 +53,34 @@ export class DayFilesManagementService {
                     file.id,
                     file.path,
                     this.sanitizer.bypassSecurityTrustResourceUrl(file.path),
-                    this.generateName(file.path),
+                    file.name ? file.name : this.generateName(file.path),
+                    file.description,
                     file.type,
                     file.thumbnailPath));
             });
         }
     }
 
-    public addFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE, name?: string): void {
+    public addFile(
+        dayName: string,
+        files: PlayableItem[],
+        id: string,
+        path: string,
+        type: PLAYABLE_FILE_TYPE,
+        name?: string,
+        description?: string
+    ): void {
         console.log('ADD PlayableItem:', path);
 
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
-            this.storeFile(dayName, files, id, path, type, name);
+            this.storeFile(dayName, files, id, path, type, name, description);
         } else {
             // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
             //     this.zone.run(() => {
             //         if (thumbnailPath) {
             //             this.storeFile(dayName, files, path, type, thumbnailPath);
             //         } else {
-            this.storeFile(dayName, files, id, path, type, name);
+            this.storeFile(dayName, files, id, path, type, name, description);
             // }
             //     });
             // });
@@ -79,14 +89,22 @@ export class DayFilesManagementService {
         }
     }
 
-    private storeFile(dayName: string, files: PlayableItem[], id: string, path: string, type: PLAYABLE_FILE_TYPE,
-                      name?: string, thumbnailPath?: string): void {
+    private storeFile(dayName: string,
+                      files: PlayableItem[],
+                      id: string,
+                      path: string,
+                      type: PLAYABLE_FILE_TYPE,
+                      name?: string,
+                      description?: string,
+                      thumbnailPath?: string
+    ): void {
         files.push(
             new PlayableItem(
                 id,
                 path,
                 this.sanitizer.bypassSecurityTrustResourceUrl(path),
                 name ? name : this.generateName(path),
+                description,
                 type,
                 thumbnailPath)
         );
