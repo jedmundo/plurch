@@ -33,11 +33,12 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public isRemovingItem: boolean = false;
     public volumeBarValue: number = 0;
 
+    public syncVideo = new EventEmitter<any>();
+    public newFileAddedToWindow = new EventEmitter<void>();
+
     private selectedDayName: string;
     private displays: PlurchDisplay[];
     private pWindows: Observable<PlurchWindow[]>;
-    private newFileAddedToWindow = new EventEmitter<void>();
-    private syncVideo = new EventEmitter<any>();
 
     private itemsPlayingSubscription: Subscription;
 
