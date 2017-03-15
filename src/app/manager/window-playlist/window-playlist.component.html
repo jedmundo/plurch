@@ -26,7 +26,7 @@
             <md-card-header>
                 <!--<div md-card-avatar class="example-header-image"></div>-->
                 <md-card-title><b> {{ itemPlaying.name }} </b></md-card-title>
-                <md-card-subtitle> {{ itemPlaying.path }} </md-card-subtitle>
+                <md-card-subtitle> {{ itemPlaying.description }} </md-card-subtitle>
             </md-card-header>
 
             <md-card-content>
@@ -68,9 +68,9 @@
                  class="small-item"
                  [class.selected]="file.id === itemPlaying.id"
                  (click)="selectItem(file)">
-                <div class="thumbnail">
-                    IMAGE
-                </div>
+                <!--<div class="thumbnail">-->
+                    <!--IMAGE-->
+                <!--</div>-->
                 <div class="details">
                     <div class="name">{{i+1}} - {{ file.name }}</div>
                     <div class="description">{{ file.description }}</div>

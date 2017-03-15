@@ -9,7 +9,7 @@ import {
 import { ItemsPlayingManagementService } from '../../shared/services/items-playing-management.service';
 import { Subscription } from 'rxjs';
 import { ProgramComponent } from '../day-schedule/program/program.component';
-import { PlurchWindow, WindowManagementService } from '../../shared/services/window-management.service';
+import { WindowManagementService } from '../../shared/services/window-management.service';
 const { ipcRenderer } = electron;
 
 @Component({
