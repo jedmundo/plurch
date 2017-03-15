@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { guid } from '../../util/util-functions';
 import { ItemPlaying } from './items-playing-management.service';
-const { shell, ipcRenderer } = electron;
+const { shell } = electron;
 
 export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
 
@@ -12,6 +11,9 @@ export enum PLAYABLE_FILE_TYPE {
 }
 
 export class PlayableItem {
+
+    public isPlaying: boolean = false;
+
     constructor(
         public id: string,
         public path: string,

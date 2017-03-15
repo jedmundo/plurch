@@ -17,7 +17,8 @@
     }
 
     .playlist-container {
-        border-top: 1px solid lightgray;
+        display: flex;
+        flex-direction: row;
         padding: 1rem;
 
         .item-window-options {
@@ -52,6 +53,24 @@
 
                 .remove-button {
                     cursor: pointer;
+                }
+            }
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+
+            .small-item {
+                display: flex;
+                flex-direction: row;
+
+                .thumbnail {
+
+                }
+
+                .details {
+
                 }
             }
         }

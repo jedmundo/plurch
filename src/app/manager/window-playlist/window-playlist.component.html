@@ -22,47 +22,57 @@
 
     <div class="playlist-container">
 
-        <div class="pick">
-            <div class="title">File List</div>
-        </div>
-
-        <md-card *ngFor="let file of files; let i = index" class="link">
+        <md-card *ngIf="itemPlaying">
             <md-card-header>
                 <!--<div md-card-avatar class="example-header-image"></div>-->
-                <md-card-title><b> {{i+1}} - {{ file.name }} </b></md-card-title>
-                <md-card-subtitle> {{ file.path }} </md-card-subtitle>
+                <md-card-title><b> {{i+1}} - {{ itemPlaying.name }} </b></md-card-title>
+                <md-card-subtitle> {{ itemPlaying.path }} </md-card-subtitle>
             </md-card-header>
 
             <md-card-content>
-                <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                    <plurch-video-item [file]="file" [newFileAddedToWindow]="newFileAddedToWindow" [syncVideo]="syncVideo"></plurch-video-item>
+                <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
+                    <plurch-video-item [file]="itemPlaying"
+                                       [newFileAddedToWindow]="newFileAddedToWindow"
+                                       [syncVideo]="syncVideo">
+                    </plurch-video-item>
                 </div>
 
-                <div *ngIf="file.type === FILE_TYPE.DEFAULT">
-                    <img [src]="file.sanitizedPath" width="50px" height="50px">
+                <div *ngIf="itemPlaying.type === FILE_TYPE.DEFAULT">
+                    <img [src]="itemPlaying.sanitizedPath" width="50px" height="50px">
                 </div>
             </md-card-content>
             <md-card-actions>
-                <div *ngIf="fileIsPlayingOnWindow(file)" class="item-window-options">
+                <div *ngIf="fileIsPlayingOnWindow(itemPlaying)" class="item-window-options">
                     <div class="label-container">
                         <i class="fa fa-rss" aria-hidden="true"></i>
                         <div class="label">Live on Window {{ i+1 }}</div>
                     </div>
                     <div class="window-buttons-container">
-                        <div *ngIf="file.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(file)" class="sync-button">
+                        <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(itemPlaying)" class="sync-button">
                             Sync
                         </div>
-                        <div *ngIf="!isRemovingItem" class="remove-button" (click)="removeFromWindow(file)">Remove</div>
+                        <div *ngIf="!isRemovingItem" class="remove-button" (click)="removeFromWindow(itemPlaying)">Remove</div>
                         <span *ngIf="isRemovingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
                     </div>
                 </div>
-                <button *ngIf="!fileIsPlayingOnWindow(file)" (click)="addToWindow(file)" md-button>
+                <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
                     <span *ngIf="!isSendingItem">Send To Window: {{i+1}}</span>
                     <span *ngIf="isSendingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
                 </button>
-                <button (click)="openFile(file.path)" md-button>Open Source</button>
+                <button (click)="openFile(itemPlaying.path)" md-button>Open Source</button>
             </md-card-actions>
         </md-card>
+
+        <div class="history-list">
+            <div *ngFor="let file of files; let i = index" class="small-item" (click)="selectItem(file)">
+                <div class="thumbnail">
+                    IMAGE
+                </div>
+                <div class="details">
+                    {{i+1}} - {{ file.name }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

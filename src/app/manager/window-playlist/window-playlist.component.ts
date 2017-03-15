@@ -24,6 +24,8 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
     public volumeBarValue: number = 0;
     public files: PlayableItem[] = [];
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
+    public itemPlaying: PlayableItem;
+
     public newFileAddedToWindow = new EventEmitter<void>();
     public syncVideo = new EventEmitter<any>();
 
@@ -100,6 +102,12 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
 
     public fileIsPlayingOnWindow(file: PlayableItem): boolean {
         return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === this.windowId);
+    }
+
+    public selectItem(file: PlayableItem): void {
+        this.files.map((file) => file.isPlaying = false);
+        file.isPlaying = true;
+        this.itemPlaying = file;
     }
 
 }
