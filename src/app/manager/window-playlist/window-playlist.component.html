@@ -25,7 +25,7 @@
         <md-card *ngIf="itemPlaying">
             <md-card-header>
                 <!--<div md-card-avatar class="example-header-image"></div>-->
-                <md-card-title><b> {{i+1}} - {{ itemPlaying.name }} </b></md-card-title>
+                <md-card-title><b> {{ itemPlaying.name }} </b></md-card-title>
                 <md-card-subtitle> {{ itemPlaying.path }} </md-card-subtitle>
             </md-card-header>
 
@@ -64,7 +64,10 @@
         </md-card>
 
         <div class="history-list">
-            <div *ngFor="let file of files; let i = index" class="small-item" (click)="selectItem(file)">
+            <div *ngFor="let file of files; let i = index"
+                 class="small-item"
+                 [class.selected]="file.id === itemPlaying.id"
+                 (click)="selectItem(file)">
                 <div class="thumbnail">
                     IMAGE
                 </div>

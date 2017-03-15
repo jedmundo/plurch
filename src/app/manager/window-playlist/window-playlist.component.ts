@@ -78,10 +78,10 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
         this.newFileAddedToWindow.emit();
     }
 
-    public removeFromWindow(file: PlayableItem, pWindow: PlurchWindow): void {
+    public removeFromWindow(file: PlayableItem): void {
         // this.isRemovingItem = true;
         this.windowManagementService
-            .getPlurchWindow(pWindow.id)
+            .getPlurchWindow(this.windowId)
             .electronWindow.webContents.send('remove-item', { itemId: file.id });
     }
 
