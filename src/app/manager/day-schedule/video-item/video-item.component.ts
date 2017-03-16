@@ -58,12 +58,13 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 setTimeout(() => {
                     const video = this.videoPlayerRef.nativeElement;
                     console.log('SYNC VIDEO WITH EXTERNAL');
-                    this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                        { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
                     if (!this.isPaused) {
                         console.log('Start playing external video...');
-                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
+                        this.windowManagementService
+                            .sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
                     }
+                    this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                        { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
                 }, 2000);
             });
         }
