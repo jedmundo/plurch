@@ -55,18 +55,16 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     public ngOnInit() {
         if (this.newFileAddedToWindow) {
             this.newFileAddedToWindow.subscribe(() => {
-                if (this.isPlayedOnExternalWindow) {
-                    console.log('FILE IS ON EXTERNAL WINDOW');
+                setTimeout(() => {
                     const video = this.videoPlayerRef.nativeElement;
-                    this.renderer.setElementProperty(video, 'muted', true);
-                    setTimeout(() => {
-                        if (!this.isPaused) {
-                            this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
-                        }
-                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                            { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
-                    }, 2000);
-                }
+                    console.log('SYNC VIDEO WITH EXTERNAL');
+                    this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
+                        { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
+                    if (!this.isPaused) {
+                        console.log('Start playing external video...');
+                        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.PLAY });
+                    }
+                }, 2000);
             });
         }
 
