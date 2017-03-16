@@ -28,6 +28,7 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
 
     public newFileAddedToWindow = new EventEmitter<void>();
     public syncVideo = new EventEmitter<any>();
+    public muteVideo = new EventEmitter<any>();
 
     private itemsPlayingSubscription: Subscription;
 
@@ -55,6 +56,9 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
                 // this.isRemovingItem = false;
                 this.files.forEach((file) => {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
+                    if (file.itemsPlaying.length > 0) {
+                        this.muteVideo.emit({ id: file.id, mute: true });
+                    }
                 });
             });
         });

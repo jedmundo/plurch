@@ -34,6 +34,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public volumeBarValue: number = 0;
 
     public syncVideo = new EventEmitter<any>();
+    public muteVideo = new EventEmitter<any>();
     public newFileAddedToWindow = new EventEmitter<void>();
 
     private selectedDayName: string;
@@ -65,6 +66,9 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
                 this.isRemovingItem = false;
                 this.files.forEach((file) => {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
+                    if (file.itemsPlaying.length > 0) {
+                        this.muteVideo.emit({ id: file.id, mute: true });
+                    }
                 });
             });
         });

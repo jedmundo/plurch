@@ -55,7 +55,11 @@
 
                 <md-card-content>
                     <div *ngIf="file.type === FILE_TYPE.VIDEO">
-                        <plurch-video-item [file]="file" [newFileAddedToWindow]="newFileAddedToWindow" [syncVideo]="syncVideo"></plurch-video-item>
+                        <plurch-video-item [file]="file"
+                                           [newFileAddedToWindow]="newFileAddedToWindow"
+                                           [muteVideo]="muteVideo"
+                                           [syncVideo]="syncVideo">
+                        </plurch-video-item>
                     </div>
 
                     <div *ngIf="file.type === FILE_TYPE.DEFAULT">

@@ -41,6 +41,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @Input() public file: PlayableItem;
     @Input() public newFileAddedToWindow?: EventEmitter<void>;
     @Input() public syncVideo?: EventEmitter<number>;
+    @Input() public muteVideo?: EventEmitter<any>;
 
     // TODO: Ugly fix
     private isSyncing: boolean = false;
@@ -86,6 +87,13 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                 setTimeout(() => {
                     this.isSyncing = false;
                 }, 500);
+            }
+        });
+
+        this.muteVideo.subscribe((response) => {
+            if (response.id == this.file.id) {
+                const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
+                this.renderer.setElementProperty(video, 'muted', response.mute);
             }
         });
     }
