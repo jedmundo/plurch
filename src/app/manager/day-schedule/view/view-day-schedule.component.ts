@@ -55,7 +55,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
-            this.selectedDayName = params['dayName'];
+            this.selectedDayName = decodeURIComponent(params['dayName']);
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
 
             this.pWindows = this.windowManagementService.availableWindows;
@@ -68,6 +68,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
                     if (file.itemsPlaying.length > 0) {
                         this.muteVideo.emit({ id: file.id, mute: true });
+                    } else {
+                        this.muteVideo.emit({ id: file.id, mute: false });
                     }
                 });
             });
@@ -149,6 +151,10 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         // dialogRef.afterClosed().subscribe(result => {
         //     // this.selectedOption = result;
         // });
+    }
+
+    public encodeURIComponent(url: string): string {
+        return encodeURIComponent(url);
     }
 
 }

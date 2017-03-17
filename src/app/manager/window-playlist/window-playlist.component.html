@@ -69,9 +69,9 @@
                  class="small-item"
                  [class.selected]="file.id === itemPlaying.id"
                  (click)="selectItem(file)">
-                <!--<div class="thumbnail">-->
-                    <!--IMAGE-->
-                <!--</div>-->
+                <div class="thumbnail">
+                    <img [src]="file.thumbnailPath" width="50px">
+                </div>
                 <div class="details">
                     <div class="name">{{i+1}} - {{ file.name }}</div>
                     <div class="description">{{ file.description }}</div>

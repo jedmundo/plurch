@@ -25,7 +25,7 @@
                         <div class="pWindow-number">{{i+1}}</div>
                     </div>
                     <div class="buttons">
-                        <button [routerLink]="['/manager/playlist/' + selectedDayName + '/' + pWindow.id]">Playlist</button>
+                        <button [routerLink]="['/manager/playlist/' + encodeURIComponent(selectedDayName) + '/' + pWindow.id]">Playlist</button>
                         <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.FULL_SCREEN)"> FullScreen</button>
                         <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.STOP_FULL_SCREEN)">Exit FullScreen</button>
                         <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>

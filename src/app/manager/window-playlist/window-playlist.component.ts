@@ -45,7 +45,7 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
         this.volumeBarValue = this.appSettingsService.overallVolume;
 
         this.activatedRoute.params.subscribe((params: Params) => {
-            this.selectedDayName = params['dayName'];
+            this.selectedDayName = decodeURIComponent(params['dayName']);
             this.windowId = params['windowId'];
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
             this.itemPlaying = this.files.length > 0 ? this.files[0] : null;

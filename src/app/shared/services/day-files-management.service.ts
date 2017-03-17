@@ -68,19 +68,20 @@ export class DayFilesManagementService {
         path: string,
         type: PLAYABLE_FILE_TYPE,
         name?: string,
-        description?: string
+        description?: string,
+        thumbnailUrl?: string
     ): void {
         console.log('ADD PlayableItem:', path);
 
         if (type === PLAYABLE_FILE_TYPE.VIDEO) {
-            this.storeFile(dayName, files, id, path, type, name, description);
+            this.storeFile(dayName, files, id, path, type, name, description, thumbnailUrl);
         } else {
             // ipcRenderer.on('save-preview-reply', (event, thumbnailPath) => {
             //     this.zone.run(() => {
             //         if (thumbnailPath) {
             //             this.storeFile(dayName, files, path, type, thumbnailPath);
             //         } else {
-            this.storeFile(dayName, files, id, path, type, name, description);
+            this.storeFile(dayName, files, id, path, type, name, description, thumbnailUrl);
             // }
             //     });
             // });

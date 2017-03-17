@@ -47,6 +47,10 @@ export class DayListComponent implements OnInit {
         localStorage.removeItem(LOCAL_STORAGE_PROGRAM_KEY_PREFIX + name);
     }
 
+    public encodeURIComponent(url: string): string {
+        return encodeURIComponent(url);
+    }
+
     private loadItems(list: PlurchDay[]): void {
         const dayList: PlurchDay[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DAYS_KEY));
         if (dayList) {

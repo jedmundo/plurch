@@ -34,7 +34,7 @@ export class EditDayScheduleComponent implements OnInit {
 
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
-            this.selectedDayName = params['dayName'];
+            this.selectedDayName = decodeURIComponent(params['dayName']);
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.playableItems);
         });
 
@@ -60,7 +60,8 @@ export class EditDayScheduleComponent implements OnInit {
             this.youtubeManagementService.youtubeVideosFolder + '/' + video.id + '.mp4',
             PLAYABLE_FILE_TYPE.VIDEO,
             video.title,
-            video.description);
+            video.description,
+            video.thumbnailUrl);
     }
 
     public openFile(path: string) {

@@ -41,6 +41,13 @@
             flex-direction: column;
         }
 
+        .mat-card-content {
+
+            div:first-child {
+                margin-top: 4rem;
+            }
+        }
+
         .item-window-options {
             display: flex;
             flex-direction: column;
@@ -80,17 +87,17 @@
         .history-list {
             display: flex;
             flex-direction: column;
-            padding: 1rem;
-            margin: 0 1rem;
+            margin-left: 1rem;
             border: 1px solid lightgrey;
 
             .small-item {
                 display: flex;
                 flex-direction: row;
                 cursor: pointer;
-                margin: 0.2rem 0;
+                //margin: 0.2rem 0;
                 padding: 1rem;
-                border-radius: 5px;
+                border-bottom: 1px solid lightgrey;
+                //border-radius: 5px;
 
                 &:hover {
                     background: #e7e7e7;
@@ -110,6 +117,7 @@
 
                     .name {
                         font-weight: bold;
+                        margin-bottom: 0.5rem;
                     }
 
                     .description {

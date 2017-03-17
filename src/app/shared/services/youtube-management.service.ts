@@ -7,8 +7,6 @@ import { Http } from '@angular/http';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
 
-const { ipcRenderer } = electron;
-
 export interface YouTubeVideo {
     id: string;
     title: string;
