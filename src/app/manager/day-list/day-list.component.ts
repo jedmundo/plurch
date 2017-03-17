@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LOCAL_STORAGE_FILE_LIST_PREFIX } from '../../shared/services/day-files-management.service';
 import { LOCAL_STORAGE_PROGRAM_KEY_PREFIX } from '../day-schedule/program/program.component';
 
-const LOCAL_STORAGE_DAYS_KEY = 'days';
+export const LOCAL_STORAGE_DAYS_KEY = 'days';
 
 export class PlurchDay {
 

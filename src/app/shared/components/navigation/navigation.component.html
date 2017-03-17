@@ -20,4 +20,11 @@
         <div class="icon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
         <div>Day List</div>
     </div>
+
+    <div *ngFor="let window of pWindows | async; let i = index;"
+         [routerLink]="['/manager/playlist/' + lastCultDayName + '/' + window.id]"
+         routerLinkActive="active-link" class="side-nav-item">
+        <div class="icon open"><i class="fa fa-play" aria-hidden="true"></i></div>
+        <div>Window: {{ i + 1 }}</div>
+    </div>
 </div>
