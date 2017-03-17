@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
     YoutubeManagementService, YouTubeVideo
@@ -9,6 +9,7 @@ import {
 } from '../../../shared/services/day-files-management.service';
 import { guid } from '../../../util/util-functions';
 import { DragulaService } from 'ng2-dragula';
+import { Subscription } from 'rxjs';
 const { remote, ipcRenderer } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
@@ -19,12 +20,14 @@ const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'j
     templateUrl: 'edit-day-schedule.component.html',
     styleUrls: ['edit-day-schedule.component.scss']
 })
-export class EditDayScheduleComponent implements OnInit {
+export class EditDayScheduleComponent implements OnInit, OnDestroy {
 
     public selectedDayName: string;
     public availableVideos: YouTubeVideo[];
     public playableItems: PlayableItem[] = [];
     public PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE;
+
+    private dragulaDropSubscription: Subscription;
 
     constructor(
         private zone: NgZone,
@@ -40,7 +43,8 @@ export class EditDayScheduleComponent implements OnInit {
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.playableItems);
         });
 
-        this.availableVideos = this.youtubeManagementService.downloadedVideosList;
+        this.availableVideos = this.youtubeManagementService.downloadedVideosList
+            .filter((video) => !this.playableItems.find((item) => item.id === video.id));
 
         this.dragulaService.setOptions('items-bag', {
             // moves: function (el, container, handle) {
@@ -52,11 +56,16 @@ export class EditDayScheduleComponent implements OnInit {
             // }
         });
 
-        this.dragulaService.drop.subscribe((value) => {
+        this.dragulaDropSubscription = this.dragulaService.drop.subscribe((value) => {
             // console.log(`drop: ${value[0]}`);
             // console.log(this.playableItems);
             this.dayFilesManagementService.storeReorderedItems(this.selectedDayName, this.playableItems);
         });
+    }
+
+    public ngOnDestroy(): void {
+        this.dragulaService.destroy('items-bag');
+        this.dragulaDropSubscription.unsubscribe();
     }
 
     public openChooseItemDialog() {
@@ -80,14 +89,17 @@ export class EditDayScheduleComponent implements OnInit {
             video.title,
             video.description,
             video.thumbnailUrl);
+        this.availableVideos.splice(this.availableVideos.indexOf(video), 1);
     }
 
     public openFile(path: string) {
         this.dayFilesManagementService.openFile(path);
     }
 
-    public deleteFile(path: string) {
-        this.dayFilesManagementService.deleteFile(this.selectedDayName, path, this.playableItems);
+    public deleteFile(file: PlayableItem) {
+        this.dayFilesManagementService.deleteFile(this.selectedDayName, file.path, this.playableItems);
+        this.availableVideos = this.youtubeManagementService.downloadedVideosList
+            .filter((video) => !this.playableItems.find((item) => item.id === video.id));
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
