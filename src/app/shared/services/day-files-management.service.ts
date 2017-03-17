@@ -90,6 +90,10 @@ export class DayFilesManagementService {
         }
     }
 
+    public storeReorderedItems(dayName: string, items: PlayableItem[]): void {
+        localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + dayName, JSON.stringify(items));
+    }
+
     private storeFile(dayName: string,
                       files: PlayableItem[],
                       id: string,

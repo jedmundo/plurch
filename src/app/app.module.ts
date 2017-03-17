@@ -22,6 +22,7 @@ import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.
 import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
 import { ProgramComponent } from './manager/day-schedule/program/program.component';
 import { WindowPlaylistComponent } from './manager/window-playlist/window-playlist.component';
+import { DragulaModule } from 'ng2-dragula';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { WindowPlaylistComponent } from './manager/window-playlist/window-playli
         HttpModule,
         ROUTER_MODULE,
         SharedModule,
-        MaterialModule.forRoot()
+        MaterialModule.forRoot(),
+        DragulaModule
     ],
     declarations: [
         AppComponent,

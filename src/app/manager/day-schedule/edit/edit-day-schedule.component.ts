@@ -8,6 +8,7 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { guid } from '../../../util/util-functions';
+import { DragulaService } from 'ng2-dragula';
 const { remote, ipcRenderer } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
@@ -29,7 +30,8 @@ export class EditDayScheduleComponent implements OnInit {
         private zone: NgZone,
         private activatedRoute: ActivatedRoute,
         private youtubeManagementService: YoutubeManagementService,
-        private dayFilesManagementService: DayFilesManagementService
+        private dayFilesManagementService: DayFilesManagementService,
+        private dragulaService: DragulaService
     ) { }
 
     public ngOnInit() {
@@ -39,6 +41,22 @@ export class EditDayScheduleComponent implements OnInit {
         });
 
         this.availableVideos = this.youtubeManagementService.downloadedVideosList;
+
+        this.dragulaService.setOptions('items-bag', {
+            // moves: function (el, container, handle) {
+            //     console.log(handle.className);
+            //     return handle.className.indexOf('drag-button') > -1;
+            // },
+            // isContainer(el) {
+            //     return el.classList.contains('edit-item');
+            // }
+        });
+
+        this.dragulaService.drop.subscribe((value) => {
+            // console.log(`drop: ${value[0]}`);
+            // console.log(this.playableItems);
+            this.dayFilesManagementService.storeReorderedItems(this.selectedDayName, this.playableItems);
+        });
     }
 
     public openChooseItemDialog() {

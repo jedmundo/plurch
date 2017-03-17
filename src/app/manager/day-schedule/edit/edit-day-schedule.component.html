@@ -14,13 +14,14 @@
     </div>
 </div>
 
-<div class="current-list">
+<div class="current-list" [dragula]='"items-bag"' [dragulaModel]='playableItems'>
 
     <md-card *ngFor="let item of playableItems; let i = index" class="edit-item">
         <md-card-header>
             <!--<div md-card-avatar class="example-header-image"></div>-->
             <md-card-title><b> {{i+1}} - {{ item.name }} </b></md-card-title>
             <md-card-subtitle> {{ item.path }} </md-card-subtitle>
+            <i class="fa fa-arrows drag-button" aria-hidden="true"></i>
         </md-card-header>
 
         <md-card-content>
