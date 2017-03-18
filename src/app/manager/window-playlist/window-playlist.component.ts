@@ -52,12 +52,15 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
 
             this.itemsPlayingSubscription = this.itemsPlayingManagementService.itemsPlaying.subscribe((itemsPlaying) => {
                 // console.log('NOVOS ITEMS PLAYING', itemsPlaying);
-                // this.isSendingItem = false;
-                // this.isRemovingItem = false;
                 this.files.forEach((file) => {
                     file.itemsPlaying = itemsPlaying.filter((itemPlaying) => itemPlaying.id === file.id);
                     if (file.itemsPlaying.length > 0) {
                         this.muteVideo.emit({ id: file.id, mute: true });
+                        file.isSendingToWindow = false;
+                    }
+
+                    if (file.itemsPlaying.length === 0) {
+                        file.isRemovingFromWindow = false;
                     }
                 });
             });
@@ -77,13 +80,16 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
     }
 
     public addToWindow(file: PlayableItem): void {
-        // this.isSendingItem = true;
+        file.isSendingToWindow = true;
+        // this.files.forEach((file) => {
+        //     file.itemsPlaying = [];
+        // });
         this.windowManagementService.addToWindow(this.windowId, file);
         this.newFileAddedToWindow.emit();
     }
 
     public removeFromWindow(file: PlayableItem): void {
-        // this.isRemovingItem = true;
+        file.isRemovingFromWindow = true;
         this.windowManagementService
             .getPlurchWindow(this.windowId)
             .electronWindow.webContents.send('remove-item', { itemId: file.id });
@@ -117,6 +123,10 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
 
     public fileIsPlaying(file: PlayableItem): boolean {
         return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === this.windowId);
+    }
+
+    public openFile(path: string) {
+        this.dayFilesManagementService.openFile(path);
     }
 
 }

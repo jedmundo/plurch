@@ -52,16 +52,17 @@
                         <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(itemPlaying)" class="sync-button">
                             Sync
                         </div>
-                        <div *ngIf="!isRemovingItem" class="remove-button" (click)="removeFromWindow(itemPlaying)">Remove</div>
-                        <span *ngIf="isRemovingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
+                        <div *ngIf="!itemPlaying.isRemovingFromWindow" class="remove-button" (click)="removeFromWindow(itemPlaying)">Remove</div>
+                        <span *ngIf="itemPlaying.isRemovingFromWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
                     </div>
                 </div>
                 <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
-                    <span *ngIf="!isSendingItem">Send To Window</span>
-                    <span *ngIf="isSendingItem"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
+                    <span *ngIf="!itemPlaying.isSendingToWindow">Send To Window</span>
+                    <span *ngIf="itemPlaying.isSendingToWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
                 </button>
-                <button (click)="openFile(itemPlaying.path)" md-button>Open Source</button>
             </md-card-actions>
+
+            <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
         </md-card>
 
         <div class="history-list">

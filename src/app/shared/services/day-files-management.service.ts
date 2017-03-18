@@ -13,6 +13,8 @@ export enum PLAYABLE_FILE_TYPE {
 export class PlayableItem {
 
     public isPlaying: boolean = false;
+    public isSendingToWindow: boolean = false;
+    public isRemovingFromWindow: boolean = false;
 
     constructor(
         public id: string,
