@@ -115,4 +115,8 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
         this.itemPlaying = file;
     }
 
+    public fileIsPlaying(file: PlayableItem): boolean {
+        return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === this.windowId);
+    }
+
 }
