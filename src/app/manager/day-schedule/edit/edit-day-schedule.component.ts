@@ -46,16 +46,6 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         this.availableVideos = this.youtubeManagementService.downloadedVideosList
             .filter((video) => !this.playableItems.find((item) => item.id === video.id));
 
-        this.dragulaService.setOptions('items-bag', {
-            // moves: function (el, container, handle) {
-            //     console.log(handle.className);
-            //     return handle.className.indexOf('drag-button') > -1;
-            // },
-            // isContainer(el) {
-            //     return el.classList.contains('edit-item');
-            // }
-        });
-
         this.dragulaDropSubscription = this.dragulaService.drop.subscribe((value) => {
             // console.log(`drop: ${value[0]}`);
             // console.log(this.playableItems);
