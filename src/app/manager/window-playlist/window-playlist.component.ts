@@ -22,7 +22,7 @@ const { ipcRenderer } = electron;
 })
 export class WindowPlaylistComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    @ViewChild('historyList') historyList: ElementRef;
+    // @ViewChild('historyList') historyList: ElementRef;
 
     public selectedDayName: string;
     public windowId: string;
