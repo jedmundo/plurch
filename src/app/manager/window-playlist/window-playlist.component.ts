@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import {
+    Component, OnInit, OnDestroy, EventEmitter, ViewChildren, QueryList, ViewChild,
+    ElementRef, AfterViewInit
+} from '@angular/core';
 import { MdSliderChange, MdDialog, MdDialogConfig } from '@angular/material';
 import { AppSettingsService } from '../../shared/services/app-settings.service';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -17,7 +20,9 @@ const { ipcRenderer } = electron;
     templateUrl: 'window-playlist.component.html',
     styleUrls: ['window-playlist.component.scss']
 })
-export class WindowPlaylistComponent implements OnInit, OnDestroy {
+export class WindowPlaylistComponent implements OnInit, OnDestroy, AfterViewInit {
+
+    @ViewChild('historyList') historyList: ElementRef;
 
     public selectedDayName: string;
     public windowId: string;
@@ -71,6 +76,18 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
         });
     }
 
+    public ngAfterViewInit(): void {
+        // On init scroll and sync already playing item
+        this.files.forEach((file) => {
+            if (this.fileIsPlayingOnWindow(file)) {
+                // console.log(this.historyList.nativeElement.get);
+                this.itemPlaying = file;
+                document.getElementById('historyItem-' + file.id).scrollIntoView();
+                this.syncWithWindow(file);
+            }
+        });
+    }
+
     public ngOnDestroy(): void {
         this.itemsPlayingSubscription.unsubscribe();
     }
@@ -119,10 +136,6 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy {
         this.files.map((file) => file.isPlaying = false);
         file.isPlaying = true;
         this.itemPlaying = file;
-    }
-
-    public fileIsPlaying(file: PlayableItem): boolean {
-        return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === this.windowId);
     }
 
     public openFile(path: string) {

@@ -65,9 +65,10 @@
             <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
         </md-card>
 
-        <div class="history-list">
+        <div class="history-list" #historyList>
             <div *ngFor="let file of files; let i = index"
                  class="small-item"
+                 [id]="'historyItem-' + file.id"
                  [class.selected]="file.id === itemPlaying.id"
                  (click)="selectItem(file)">
                 <div class="thumbnail">
@@ -77,7 +78,7 @@
                     <div class="name">{{i+1}} - {{ file.name }}</div>
                     <div class="description">{{ file.description }}</div>
                 </div>
-                <div *ngIf="fileIsPlaying(file)" class="playing-icon">
+                <div *ngIf="fileIsPlayingOnWindow(file)" class="playing-icon">
                     <i class="fa fa-rss"></i>
                 </div>
             </div>
