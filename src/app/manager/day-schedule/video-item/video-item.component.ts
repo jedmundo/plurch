@@ -85,7 +85,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
                 setTimeout(() => {
                     this.isSyncing = false;
-                }, 500);
+                }, 800);
             }
         });
 
