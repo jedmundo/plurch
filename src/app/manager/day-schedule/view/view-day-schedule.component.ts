@@ -36,11 +36,10 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public syncVideo = new EventEmitter<any>();
     public muteVideo = new EventEmitter<any>();
     public newFileAddedToWindow = new EventEmitter<void>();
+    public pWindows: Observable<PlurchWindow[]>;
+    public selectedDayName: string;
 
-    private selectedDayName: string;
     private displays: PlurchDisplay[];
-    private pWindows: Observable<PlurchWindow[]>;
-
     private itemsPlayingSubscription: Subscription;
 
     constructor(

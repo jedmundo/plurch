@@ -10,8 +10,10 @@
     "test": "ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
-    "build-electron": "ng build && cp src/electron/* dist/",
-    "electron": "npm run build-electron && electron dist/",
+    "build-electron.dev": "ng build && cp src/electron/* dist/",
+    "build-electron.prod": "ng build --prod -aot --no-sourcemap && cp src/electron/* dist/",
+    "electron.dev": "npm run build-electron.dev && electron dist/",
+    "electron.prod": "npm run build-electron.prod && electron dist/",
     "pkg.mac": "electron-packager dist/ plurch --platform=mas --electronVersion=1.4.15 --overwrite",
     "pkg.win": "electron-packager dist/ plurch --platform=win32 --electron-version=1.4.15 --overwrite"
   },
