@@ -23,6 +23,7 @@ import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
 import { ProgramComponent } from './manager/day-schedule/program/program.component';
 import { WindowPlaylistComponent } from './manager/window-playlist/window-playlist.component';
 import { DragulaModule } from 'ng2-dragula';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { DragulaModule } from 'ng2-dragula';
         MdSliderModule,
         MdButtonModule,
         MdCardModule,
+        BrowserAnimationsModule,
         DragulaModule
     ],
     declarations: [
