@@ -1,6 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
-const { remote } = electron;
+import { Component, OnInit, NgZone, Inject } from '@angular/core';
+import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+const {remote} = electron;
 
 export const LOCAL_STORAGE_PROGRAM_KEY_PREFIX = 'PROGRAM-';
 
@@ -14,20 +14,20 @@ export class ProgramComponent implements OnInit {
     public selectedDayName: string;
     public imgPath: string;
 
-    constructor(
-        private zone: NgZone,
-        public dialogRef: MdDialogRef<ProgramComponent>
-    ) { }
+    constructor(private zone: NgZone,
+                @Inject(MD_DIALOG_DATA) private data: any,
+                public dialogRef: MdDialogRef<ProgramComponent>) {
+    }
 
     public ngOnInit(): void {
-        this.selectedDayName = this.dialogRef.config.data.name;
+        this.selectedDayName = this.data.name;
         this.imgPath = this.loadProgramFilePath(this.selectedDayName);
     }
 
     public openChooseFileDialog() {
         remote.dialog.showOpenDialog({
-            title:"Select image of program file",
-            properties: [ "openFile" ]
+            title: "Select image of program file",
+            properties: ["openFile"]
         }, (imagePath) => {
             this.zone.run(() => {
                 this.imgPath = imagePath;

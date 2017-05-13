@@ -11,7 +11,7 @@ import { DayScheduleComponent } from './manager/day-schedule/day-schedule.compon
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
-import { MaterialModule } from '@angular/material';
+import { MdButtonModule, MdCardModule, MdDialogModule, MdProgressBarModule, MdSliderModule } from '@angular/material';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
@@ -31,7 +31,11 @@ import { DragulaModule } from 'ng2-dragula';
         HttpModule,
         ROUTER_MODULE,
         SharedModule,
-        MaterialModule.forRoot(),
+        MdDialogModule,
+        MdProgressBarModule,
+        MdSliderModule,
+        MdButtonModule,
+        MdCardModule,
         DragulaModule
     ],
     declarations: [
