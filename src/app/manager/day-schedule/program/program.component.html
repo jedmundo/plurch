@@ -1,8 +1,10 @@
-<div class="program">
-    Program for : {{ selectedDayName }}
+<div class="program-container">
+    <div class="program">
+        Program for : {{ selectedDayName }}
 
-    <button (click)="openChooseFileDialog()">Add File</button>
-    <button (click)="close()">Close</button>
+        <button (click)="openChooseFileDialog()">Add File</button>
+        <button (click)="close()">Close</button>
+    </div>
+
+    <img *ngIf="imgPath" [src]="imgPath" height="100%">
 </div>
-
-<img *ngIf="imgPath" [src]="imgPath" height="100%">

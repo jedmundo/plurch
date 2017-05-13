@@ -65,7 +65,7 @@
             <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
         </md-card>
 
-        <div class="history-list" #historyList>
+        <div class="history-list">
             <div *ngFor="let file of files; let i = index"
                  class="small-item"
                  [id]="'historyItem-' + file.id"
