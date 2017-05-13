@@ -14,8 +14,9 @@
     "build-electron.prod": "ng build --prod -aot --no-sourcemap && cp src/electron/* dist/",
     "electron.dev": "npm run build-electron.dev && electron dist/",
     "electron.prod": "npm run build-electron.prod && electron dist/",
-    "pkg.mac": "electron-packager dist/ plurch --platform=mas --electronVersion=1.4.15 --overwrite",
-    "pkg.win": "electron-packager dist/ plurch --platform=win32 --electron-version=1.4.15 --overwrite"
+    "install.node.modules": "cd dist/ && npm i",
+    "pkg.mac": "npm run install.node.modules && electron-packager dist/ plurch --platform=mas --electronVersion=1.4.15 --overwrite",
+    "pkg.win": "npm run install.node.modules && electron-packager dist/ plurch --platform=win32 --electron-version=1.4.15 --overwrite"
   },
   "private": true,
   "dependencies": {
