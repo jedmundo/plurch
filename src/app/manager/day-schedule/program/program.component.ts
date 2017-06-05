@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, Inject } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 const {remote} = electron;
 
 export const LOCAL_STORAGE_PROGRAM_KEY_PREFIX = 'PROGRAM-';
@@ -12,9 +13,11 @@ export const LOCAL_STORAGE_PROGRAM_KEY_PREFIX = 'PROGRAM-';
 export class ProgramComponent implements OnInit {
 
     public selectedDayName: string;
-    public imgPath: string;
+    public imgPath: SafeUrl;
 
-    constructor(private zone: NgZone,
+    constructor(
+        private sanitizer: DomSanitizer,
+        private zone: NgZone,
                 @Inject(MD_DIALOG_DATA) private data: any,
                 public dialogRef: MdDialogRef<ProgramComponent>) {
     }
@@ -40,8 +43,9 @@ export class ProgramComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    private loadProgramFilePath(dayName: string): string {
-        return localStorage.getItem(LOCAL_STORAGE_PROGRAM_KEY_PREFIX + this.selectedDayName);
+    private loadProgramFilePath(dayName: string): SafeUrl {
+        const programPath: string = localStorage.getItem(LOCAL_STORAGE_PROGRAM_KEY_PREFIX + this.selectedDayName);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(programPath);
     }
 
     private storeProgramFile(programFilePath: string): void {
