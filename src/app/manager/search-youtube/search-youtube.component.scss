@@ -15,7 +15,44 @@
 }
 
 .search-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 1rem 2rem;
+
+
+    .input-container {
+        width: 20rem;
+        margin: 0 1rem;
+        position: relative;
+
+        input {
+            width: 100%;
+            line-height: 2rem;
+            font-size: 1.3rem;
+            position: relative;
+        }
+
+        .auto-suggest-list {
+            position: absolute;
+            left: 0;
+            right: 0;
+            border: 1px solid lightgray;
+            height: 8rem;
+            overflow: auto;
+            z-index: 22;
+            background: white;
+
+            .auto-suggest-item {
+                padding: 0.5rem;
+                border-bottom: 1px solid lightgray;
+
+                &:hover {
+                    background: lightgray;
+                }
+            }
+        }
+    }
 }
 
 .youtube-videos-container {

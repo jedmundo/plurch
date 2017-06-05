@@ -4,14 +4,27 @@
     <div *ngIf="!chosenFolder"><b>Please choose a folder before searching for videos!</b></div>
 </div>
 
-<div [class.hidden]="!chosenFolder" >
+<div [class.hidden]="!chosenFolder">
     <div class="search-bar">
-        <b>Search:</b> <input type="text" width="80%" #searchInput>
+        <b>Search:</b>
+        <div class="input-container">
+            <input [formControl]="searchInputControl"
+                   (keyup.enter)="searchVideos()"
+                   (blur)="hideAutoSuggestList()">
+            <div *ngIf="autoSuggestVisible" class="auto-suggest-list">
+                <div *ngFor="let suggestion of youtubeAutoSuggest$ | async"
+                     (click)="pickSuggestion(suggestion)"
+                     class="auto-suggest-item">
+                    {{ suggestion.name }}
+                </div>
+            </div>
+        </div>
+        <button md-raised-button (click)="searchVideos()"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
 </div>
 
 <div class="youtube-videos-container">
-    <md-card *ngFor="let video of results$ | async" class="youtube-video-card">
+    <md-card *ngFor="let video of searchResults" class="youtube-video-card">
         <md-card-header>
             <md-card-title><b>{{ video.title }}</b></md-card-title>
             <md-card-subtitle>{{ video.description }}</md-card-subtitle>
@@ -28,8 +41,11 @@
         </md-card-content>
 
         <md-card-actions>
-            <button *ngIf="!video.isDownloaded && ! video.downloading" (click)="downloadVideo(video)" md-button>Download</button>
-            <md-progress-bar *ngIf="!video.isDownloaded && video.downloading" [value]="video.percentage" mode="determinate"></md-progress-bar>
+            <button *ngIf="!video.isDownloaded && ! video.downloading" (click)="downloadVideo(video)" md-button>
+                Download
+            </button>
+            <md-progress-bar *ngIf="!video.isDownloaded && video.downloading" [value]="video.percentage"
+                             mode="determinate"></md-progress-bar>
             <div *ngIf="video.isDownloaded" class="downloaded-label">Already Downloaded</div>
         </md-card-actions>
     </md-card>

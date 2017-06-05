@@ -26,6 +26,10 @@ export interface YoutubeVideoDetails {
     definition: string;
 }
 
+export interface YoutubeAutoSuggestion {
+    name: string;
+}
+
 const opts: youtubeSearch.YouTubeSearchOptions = {
     maxResults: 10,
     key: "AIzaSyDYHdxUDhQMryYfo19S3QHdXMk_Q2iWAnM"
@@ -41,8 +45,7 @@ export class YoutubeManagementService {
     constructor(
         private http: Http,
         private zone: NgZone,
-        private sanitizer: DomSanitizer
-    ) {
+        private sanitizer: DomSanitizer) {
         // ipcRenderer.send('get-youtube-videos-folder');
         //
         // ipcRenderer.on('get-youtube-videos-folder-reply', (event, arg) => {
@@ -65,7 +68,7 @@ export class YoutubeManagementService {
 
     public deleteVideo(id: string) {
         const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
-        this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo) , 1);
+        this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo), 1);
         fs.unlinkSync(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4');
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
@@ -111,7 +114,7 @@ export class YoutubeManagementService {
     public searchVideo(input: string): Promise<any> {
         return new Promise((resolve, reject) => {
             youtubeSearch(input, opts, (err, results) => {
-                if(err) return console.log(err);
+                if (err) return console.log(err);
 
                 console.dir(results);
                 resolve(results);
@@ -120,7 +123,7 @@ export class YoutubeManagementService {
     }
 
     public parseVideo(video: any): YouTubeVideo {
-        if (!video || (video && video.link.indexOf('playlist') > -1)) {
+        if (!video || (video && video.link && video.link.indexOf('playlist') > -1)) {
             return null;
         }
 
@@ -141,11 +144,25 @@ export class YoutubeManagementService {
         return this.downloadedVideos;
     }
 
+    public getSuggestions(text: string): Observable<YoutubeAutoSuggestion[]> {
+        return this.http
+            .get(`http://suggestqueries.google.com/complete/search?client=youtube&hjson=t&cp=1&q=${text}&format=5&alt=json&callback=?`)
+            .map((response) => {
+                const resultsArray: { name: string, index: number }[] = (<any> response.json())[1];
+                if (resultsArray.length > 0) {
+                    return resultsArray.map((result) => ({ name: result[0] }));
+                } else {
+                    return [];
+                }
+            })
+            .catch((error) => []);
+    }
+
     private getVideoInformation(id: string): Observable<YoutubeVideoDetails> {
         return this.http
             .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=${opts.key}`)
             .map((response) => {
-            const firstItem = (<any> response.json()).items[0];
+                const firstItem = (<any> response.json()).items[0];
                 if (firstItem) {
                     return firstItem.contentDetails;
                 } else {
