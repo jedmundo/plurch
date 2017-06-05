@@ -1,7 +1,7 @@
 <div class="videos-folder">
-    <button md-button (click)="openChooseItemDialog()">Choose Videos Folder</button>
+    <button md-button (click)="openChooseItemDialog()">Click here to choose Videos Folder</button>
     <div>{{ chosenFolder }}</div>
-    <div *ngIf="!chosenFolder">Please choose a folder before searching for videos!</div>
+    <div *ngIf="!chosenFolder"><b>Please choose a folder before searching for videos!</b></div>
 </div>
 
 <div [class.hidden]="!chosenFolder" >

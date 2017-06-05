@@ -17,6 +17,7 @@ import { Subscription, Observable } from 'rxjs';
 import { MdSliderChange, MdDialog, MdDialogConfig } from '@angular/material';
 import { AppSettingsService } from '../../../shared/services/app-settings.service';
 import { ProgramComponent } from '../program/program.component';
+import { USE_LOUDNESS } from '../../../app.component';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -38,6 +39,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public newFileAddedToWindow = new EventEmitter<void>();
     public pWindows: Observable<PlurchWindow[]>;
     public selectedDayName: string;
+
+    public loudnessAvailable = USE_LOUDNESS;
 
     private displays: PlurchDisplay[];
     private itemsPlayingSubscription: Subscription;

@@ -13,6 +13,7 @@ import { ItemsPlayingManagementService } from '../../shared/services/items-playi
 import { Subscription } from 'rxjs';
 import { ProgramComponent } from '../day-schedule/program/program.component';
 import { WindowManagementService, PlurchWindow } from '../../shared/services/window-management.service';
+import { USE_LOUDNESS } from '../../app.component';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -30,6 +31,8 @@ export class WindowPlaylistComponent implements OnInit, OnDestroy, AfterViewInit
     public files: PlayableItem[] = [];
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public itemPlaying: PlayableItem;
+
+    public loudnessAvailable = USE_LOUDNESS;
 
     public newFileAddedToWindow = new EventEmitter<void>();
     public syncVideo = new EventEmitter<any>();

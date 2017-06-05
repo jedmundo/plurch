@@ -7,7 +7,7 @@
         </div>
 
         <div class="controls">
-            <div class="overall-volume">
+            <div *ngIf="loudnessAvailable" class="overall-volume">
                 <div>Overall volume</div>
                 <md-slider
                     [step]="1"
