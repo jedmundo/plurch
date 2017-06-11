@@ -1,4 +1,25 @@
 
+.folder-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    input {
+        line-height: 2rem;
+        margin: 0 1rem;
+    }
+}
+
+.folder-list {
+    margin: 1rem 0;
+
+    .folder-item {
+        margin: 1rem;
+        border: 1px solid lightgray;
+    }
+}
+
 .downloaded-videos-list {
     margin: 1rem;
 }

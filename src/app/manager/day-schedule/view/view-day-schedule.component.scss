@@ -1,17 +1,3 @@
-.day-container {
-    display: flex;
-    flex-direction: row;
-
-    .item-list-container {
-        flex: 1;
-    }
-
-    .program-container {
-        width: 200px;
-    }
-}
-
-
 .main-title {
     padding: 1rem;
     font-weight: bold;
@@ -176,4 +162,144 @@
     position: absolute;
     right: 20px;
     bottom: 10px;
+}
+
+
+.day-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .item-list-container {
+        flex: 1;
+
+        .controls {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+
+    .program-container {
+        width: 200px;
+    }
+
+    .playlist-container {
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+
+        @media screen and (max-width: 1000px){
+            flex-direction: column;
+        }
+
+        md-card {
+            flex: 0.5;
+
+            .mat-card-content {
+
+                div:first-child {
+                    margin-top: 4rem;
+                }
+            }
+
+            md-card-actions {
+                justify-content: center;
+                display: flex;
+            }
+
+            .item-window-options {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .label-container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    margin-bottom: 0.5rem;
+
+                    .fa {
+                        margin-right: 0.5rem;
+                        color: #ff523a;
+                    }
+
+                    .label {
+                        font-size: 0.7rem;
+                    }
+                }
+
+                .window-buttons-container {
+                    display: flex;
+                    flex-direction: row;
+
+                    .sync-button {
+                        cursor: pointer;
+                        margin-right: 1rem;
+                    }
+
+                    .remove-button {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .open-source-button {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                margin: 0.5rem;
+            }
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            margin-left: 1rem;
+            border: 1px solid lightgrey;
+            overflow: auto;
+            flex: 0.5;
+
+            .small-item {
+                display: flex;
+                flex-direction: row;
+                cursor: pointer;
+                //margin: 0.2rem 0;
+                padding: 0.5rem;
+                border-bottom: 1px solid lightgrey;
+                min-height: 5rem;
+
+                &:hover {
+                    background: #e7e7e7;
+                }
+
+                &.selected {
+                    background: lightgrey;
+                }
+
+                .thumbnail {
+                    margin-right: 0.5rem;
+                }
+
+                .details {
+                    display: flex;
+                    flex-direction: column;
+
+                    .name {
+                        font-weight: bold;
+                        font-size: 0.9rem;
+                        margin-bottom: 0.5rem;
+                    }
+
+                    .description {
+                        font-size: 0.8rem;
+                        overflow: hidden;
+                    }
+                }
+
+                .playing-icon {
+                    color: #ff5d56;
+                }
+            }
+        }
+    }
 }

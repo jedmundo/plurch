@@ -1,16 +1,18 @@
 // src/electron.js
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const url = require('url');
 // const filepreview = require('filepreview');
 const fs = require('fs');
 
+require('dotenv').config();
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-function createWindow () {
+function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({
         title: 'Plurch',
@@ -23,8 +25,10 @@ function createWindow () {
     // win.loadURL('http://localhost:9527/index.html');
     win.loadURL(`file://${__dirname}/index.html`);
 
+    win.maximize();
+
     // Open the DevTools.
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -149,7 +153,7 @@ ipcMain.on('get-index-url', (event, arg) => {
     //     this.previewWindow = null;
     // });
 
-    event.sender.send('get-index-url-reply', { indexUrl: `file://${__dirname}/index.html`});
+    event.sender.send('get-index-url-reply', {indexUrl: `file://${__dirname}/index.html`});
 });
 
 // ipcMain.on('get-youtube-videos-folder', (event, arg) => {
@@ -201,7 +205,7 @@ ipcMain.on('save-preview', (event, path) => {
 
     const pathList = path.split('/');
     const thumbnailPath = '/Users/jedmundo/Desktop/plurch/thumbnails/preview_'
-        + pathList[pathList.length-1].split('.')[0] + '.gif';
+        + pathList[pathList.length - 1].split('.')[0] + '.gif';
 
     // if (!filepreview.generateSync(path, thumbnailPath)) {
     //     console.log('Oops, something went wrong.');

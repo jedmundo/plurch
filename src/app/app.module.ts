@@ -11,7 +11,11 @@ import { DayScheduleComponent } from './manager/day-schedule/day-schedule.compon
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
-import { MdButtonModule, MdCardModule, MdDialogModule, MdProgressBarModule, MdSliderModule } from '@angular/material';
+import {
+    MdButtonModule, MdCardModule, MdDialogModule,
+    MdProgressBarModule, MdSliderModule,
+    MdSnackBarModule
+} from '@angular/material';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
@@ -38,6 +42,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MdSliderModule,
         MdButtonModule,
         MdCardModule,
+        MdSnackBarModule,
         BrowserAnimationsModule,
         DragulaModule
     ],

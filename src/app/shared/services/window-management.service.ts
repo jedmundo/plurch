@@ -34,7 +34,7 @@ export enum WINDOW_COMMAND_TYPE {
 export class WindowManagementService {
 
     private availableWindowsSubject = new ReplaySubject<PlurchWindow[]>(1);
-    private availableWindows$: Observable<PlurchWindow[]> = this.availableWindowsSubject.asObservable();
+    private _availableWindows$: Observable<PlurchWindow[]> = this.availableWindowsSubject.asObservable();
     private pWindows: PlurchWindow[] = [];
     private indexUrl: string;
 
@@ -46,8 +46,12 @@ export class WindowManagementService {
         });
     }
 
-    public get availableWindows(): Observable<PlurchWindow[]> {
-        return this.availableWindows$;
+    public get availableWindows$(): Observable<PlurchWindow[]> {
+        return this._availableWindows$;
+    }
+
+    public get windowList(): PlurchWindow[] {
+        return this.pWindows;
     }
 
     private addWindow(window: PlurchWindow): void {

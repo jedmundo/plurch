@@ -17,7 +17,7 @@ export class NavigationComponent implements OnInit {
     ) { }
 
     public ngOnInit(): void {
-        this.pWindows = this.windowManagementService.availableWindows;
+        this.pWindows = this.windowManagementService.availableWindows$;
     }
 
     public get lastCultDayName(): string {
