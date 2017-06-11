@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { USE_LOUDNESS } from '../../app.component';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable } from 'rxjs/Observable';
+import { PlurchDay } from '../../manager/day-list/day-list.component';
 
 const OVERALL_VOLUME_KEY = 'overall-volume';
+const ITEMS_ADDED_TO_MENU = 'items-added-to-menu';
 
 @Injectable()
 export class AppSettingsService {
 
     private mainVolume: number;
+
+    private menuItemsSubject = new ReplaySubject<string[]>(1);
+    private _menuItems: string[] = [];
+    private _menuItems$: Observable<string[]> = this.menuItemsSubject.asObservable();
 
     constructor() {
         if (!USE_LOUDNESS) {
@@ -19,6 +27,13 @@ export class AppSettingsService {
         } else {
             this.overallVolume = +mainVol;
         }
+
+        const itemsAddedList = localStorage.getItem(ITEMS_ADDED_TO_MENU);
+        if (itemsAddedList) {
+            const itemsList = JSON.parse(itemsAddedList);
+            this._menuItems = (itemsList);
+            this.menuItemsSubject.next(itemsList);
+        }
     }
 
     public set overallVolume(volume: number) {
@@ -28,7 +43,7 @@ export class AppSettingsService {
 
         this.mainVolume = volume;
         loudness.setVolume(volume, (err) => {
-            if(err) {
+            if (err) {
                 console.log(err)
             }
         });
@@ -41,6 +56,26 @@ export class AppSettingsService {
         }
 
         return this.mainVolume;
+    }
+
+    public get menuItems$(): Observable<string[]> {
+        return this._menuItems$;
+    }
+
+    public isItemAlreadyAddedToMenu(dayName: string): boolean {
+        return !!this._menuItems.find(item => item === dayName);
+    }
+
+    public addMenuItem(dayName: string): void {
+        this._menuItems.push(dayName);
+        this.menuItemsSubject.next(this._menuItems);
+        localStorage.setItem(ITEMS_ADDED_TO_MENU, JSON.stringify(this._menuItems));
+    }
+
+    public removeMenuItem(dayName: string): void {
+        this._menuItems.splice(this._menuItems.findIndex(item => item === dayName), 1);
+        this.menuItemsSubject.next(this._menuItems);
+        localStorage.setItem(ITEMS_ADDED_TO_MENU, JSON.stringify(this._menuItems));
     }
 
 }

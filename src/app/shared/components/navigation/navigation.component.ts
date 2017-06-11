@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PlurchWindow, WindowManagementService } from '../../services/window-management.service';
 import { Observable } from 'rxjs';
-import { PlurchDay, LOCAL_STORAGE_DAYS_KEY } from '../../../manager/day-list/day-list.component';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
     selector: 'app-navigation',
@@ -10,30 +9,18 @@ import { PlurchDay, LOCAL_STORAGE_DAYS_KEY } from '../../../manager/day-list/day
 })
 export class NavigationComponent implements OnInit {
 
-    public pWindows: Observable<PlurchWindow[]>;
+    public menuItems$: Observable<string[]>;
 
     constructor(
-        private windowManagementService: WindowManagementService
+        private appSettingsService: AppSettingsService
     ) { }
 
     public ngOnInit(): void {
-        this.pWindows = this.windowManagementService.availableWindows$;
+        this.menuItems$ = this.appSettingsService.menuItems$;
     }
 
-    public get lastCultDayName(): string {
-        const results = this.loadDayItems();
-        return encodeURIComponent(results[results.length-1].name);
-    }
-
-    private loadDayItems(): PlurchDay[] {
-        let result = [];
-        const dayList: PlurchDay[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DAYS_KEY));
-        if (dayList) {
-            dayList.forEach((pDay: PlurchDay) => {
-                result.push(new PlurchDay(pDay.name, pDay.description));
-            });
-        }
-        return result;
+    public encodeURIComponent(url: string): string {
+        return encodeURIComponent(url);
     }
 
 }

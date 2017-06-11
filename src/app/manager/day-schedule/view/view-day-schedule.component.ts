@@ -39,7 +39,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public selectedDayName: string;
     public isEditMode: boolean = false;
-    public isAddedToMenu: boolean = false;
 
     public loudnessAvailable = USE_LOUDNESS;
 
@@ -60,6 +59,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
             this.selectedDayName = decodeURIComponent(params['dayName']);
+            this.files = [];
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
 
             this.itemPlaying = this.files.length > 0 ? this.files[0] : null;
@@ -155,12 +155,16 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         // });
     }
 
-    public encodeURIComponent(url: string): string {
-        return encodeURIComponent(url);
+    public get isItemAlreadyAddedToMenu(): boolean {
+        return this.appSettingsService.isItemAlreadyAddedToMenu(this.selectedDayName);
     }
 
     public addToMenu(): void {
-        this.isAddedToMenu = true
+        this.appSettingsService.addMenuItem(this.selectedDayName)
+    }
+
+    public removeFromMenu(): void {
+        this.appSettingsService.removeMenuItem(this.selectedDayName)
     }
 
 }

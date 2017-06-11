@@ -24,10 +24,10 @@
                 <button *ngIf="isEditMode" md-icon-button title="View Mode">
                     <i class="fa fa-list"></i>
                 </button>
-                <button *ngIf="!isAddedToMenu" md-icon-button title="Add To Menu">
+                <button *ngIf="!isItemAlreadyAddedToMenu" md-icon-button title="Add To Menu" (click)="addToMenu()">
                     <i class="fa fa-plus"></i>
                 </button>
-                <button *ngIf="isAddedToMenu" md-icon-button title="Remove From Menu">
+                <button *ngIf="isItemAlreadyAddedToMenu" md-icon-button title="Remove From Menu" (click)="removeFromMenu()">
                     <i class="fa fa-minus"></i>
                 </button>
             </div>

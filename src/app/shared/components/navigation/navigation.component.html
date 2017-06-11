@@ -21,10 +21,10 @@
         <div>Day List</div>
     </div>
 
-    <div *ngFor="let window of pWindows | async; let i = index;"
-         [routerLink]="['/manager/playlist/' + lastCultDayName + '/' + window.id]"
+    <div *ngFor="let menuItem of menuItems$ | async; let i = index;"
+         [routerLink]="['/manager/day-schedule', encodeURIComponent(menuItem) ]"
          routerLinkActive="active-link" class="side-nav-item">
         <div class="icon open"><i class="fa fa-play" aria-hidden="true"></i></div>
-        <div>Window: {{ i + 1 }}</div>
+        <div class="label">{{ menuItem}}</div>
     </div>
 </div>
