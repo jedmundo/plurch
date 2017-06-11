@@ -12,7 +12,7 @@ import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
 import {
-    MdButtonModule, MdCardModule, MdDialogModule,
+    MdButtonModule, MdCardModule, MdDialogModule, MdInputModule,
     MdProgressBarModule, MdSliderModule,
     MdSnackBarModule
 } from '@angular/material';
@@ -43,6 +43,7 @@ import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-titl
         MdButtonModule,
         MdCardModule,
         MdSnackBarModule,
+        MdInputModule,
         BrowserAnimationsModule,
         DragulaModule
     ],
