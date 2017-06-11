@@ -117,15 +117,13 @@
             flex-direction: column;
         }
 
+        .playing-content {
+            margin-top: 4rem;
+            flex-shrink: 0;
+        }
+
         md-card {
             flex: 0.5;
-
-            .mat-card-content {
-
-                div:first-child {
-                    margin-top: 4rem;
-                }
-            }
 
             md-card-actions {
                 justify-content: center;
@@ -183,15 +181,19 @@
             border: 1px solid lightgrey;
             overflow: auto;
             flex: 0.5;
+            padding: 1rem 0 0 0;
 
             .small-item {
                 display: flex;
                 flex-direction: row;
                 cursor: pointer;
-                //margin: 0.2rem 0;
                 padding: 0.5rem;
                 border-bottom: 1px solid lightgrey;
                 min-height: 5rem;
+
+                &:last-child {
+                    border-bottom: 0;
+                }
 
                 &:hover {
                     background: #e7e7e7;

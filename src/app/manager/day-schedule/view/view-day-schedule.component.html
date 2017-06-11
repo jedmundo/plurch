@@ -9,7 +9,7 @@
                 <md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>
             </md-card-header>
 
-            <md-card-content>
+            <md-card-content class="playing-content">
                 <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
                     <plurch-video-item [file]="itemPlaying"
                                        [newFileAddedToWindow]="newFileAddedToWindow"
@@ -49,24 +49,26 @@
             <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
         </md-card>
 
-        <div class="history-list">
-            <div *ngFor="let file of files; let i = index"
-                 class="small-item"
-                 [id]="'historyItem-' + file.id"
-                 [class.selected]="file.id === itemPlaying.id"
-                 (click)="selectItem(file)">
-                <div class="thumbnail">
-                    <img [src]="file.thumbnailPath" width="100px">
+        <md-card class="history-list">
+            <md-card-content>
+                <div *ngFor="let file of files; let i = index"
+                     class="small-item"
+                     [id]="'historyItem-' + file.id"
+                     [class.selected]="file.id === itemPlaying.id"
+                     (click)="selectItem(file)">
+                    <div class="thumbnail">
+                        <img [src]="file.thumbnailPath" width="100px">
+                    </div>
+                    <div class="details">
+                        <div class="name">{{i+1}} - {{ file.name }}</div>
+                        <div class="description">{{ file.description }}</div>
+                    </div>
+                    <div *ngIf="fileIsPlayingOnWindow(file)" class="playing-icon">
+                        <i class="fa fa-rss"></i>
+                    </div>
                 </div>
-                <div class="details">
-                    <div class="name">{{i+1}} - {{ file.name }}</div>
-                    <div class="description">{{ file.description }}</div>
-                </div>
-                <div *ngIf="fileIsPlayingOnWindow(file)" class="playing-icon">
-                    <i class="fa fa-rss"></i>
-                </div>
-            </div>
-        </div>
+            </md-card-content>
+        </md-card>
     </div>
 </div>
 
