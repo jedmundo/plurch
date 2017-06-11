@@ -27,6 +27,7 @@ import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
 import { ProgramComponent } from './manager/day-schedule/program/program.component';
 import { DragulaModule } from 'ng2-dragula';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-title.pipe';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         EditDayScheduleComponent,
         SearchYoutubeComponent,
         TimeFormatPipe,
+        SearchedItemsPipe,
         ProgramComponent
     ],
     providers: [],

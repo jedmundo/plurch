@@ -10,10 +10,10 @@ import {
 import { guid } from '../../../util/util-functions';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
-const { remote, ipcRenderer } = electron;
+const { remote } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
-const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
+// const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
 
 @Component({
     selector: 'app-edit-day-schedule',
@@ -25,7 +25,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     public selectedDayName: string;
     public availableVideos: YouTubeVideo[];
     public playableItems: PlayableItem[] = [];
-    public PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE;
+    public searchValue: string;
 
     private dragulaDropSubscription: Subscription;
 

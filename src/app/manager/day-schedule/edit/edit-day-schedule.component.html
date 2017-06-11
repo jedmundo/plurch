@@ -6,13 +6,23 @@
             <!--<md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>-->
         </md-card-header>
 
-        <md-card-content>
-            <div class="add-local-files">
-                <button (click)="openChooseItemDialog()">Add Local Files</button>
+        <md-card-content class="content">
+            <div class="search-bar">
+                <b>Search:</b>
+                <div class="input-container">
+                    <input [(ngModel)]="searchValue">
+                </div>
             </div>
-            <div *ngFor="let video of availableVideos">
-                {{ video.title }}
-                <button (click)="addVideoToDay(video)">Add</button>
+
+            <!--<div class="add-local-files">-->
+            <!--<button (click)="openChooseItemDialog()">Add Local Files</button>-->
+            <!--</div>-->
+            <div class="video-list">
+                <div *ngFor="let video of (availableVideos | searchedItems: searchValue)"
+                     class="video-item">
+                    {{ video.title }}
+                    <button (click)="addVideoToDay(video)">Add</button>
+                </div>
             </div>
         </md-card-content>
     </md-card>
