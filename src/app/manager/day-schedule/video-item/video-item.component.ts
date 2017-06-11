@@ -1,10 +1,11 @@
 import {
     Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
-    EventEmitter
+    EventEmitter, OnDestroy
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
 import { MdSliderChange } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -26,7 +27,7 @@ export enum VIDEO_COMMAND_TYPE {
     templateUrl: 'video-item.component.html',
     styleUrls: ['video-item.component.scss']
 })
-export class VideoItemComponent implements OnInit, AfterViewInit {
+export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
 
@@ -43,6 +44,8 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
     @Input() public syncVideo?: EventEmitter<number>;
     @Input() public muteVideo?: EventEmitter<any>;
 
+    private subscriptions: Subscription[] = [];
+
     // TODO: Ugly fix
     private isSyncing: boolean = false;
 
@@ -54,7 +57,7 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
         if (this.newFileAddedToWindow) {
-            this.newFileAddedToWindow.subscribe(() => {
+            this.subscriptions.push(this.newFileAddedToWindow.subscribe(() => {
                 setTimeout(() => {
                     const video = this.videoPlayerRef.nativeElement;
                     console.log('SYNC VIDEO WITH EXTERNAL');
@@ -66,10 +69,10 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                     this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
                         { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
                 }, 2000);
-            });
+            }));
         }
 
-        this.syncVideo.subscribe((response) => {
+        this.subscriptions.push(this.syncVideo.subscribe((response) => {
             if (response.id == this.file.id) {
                 this.isSyncing = true;
                 const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
@@ -87,14 +90,18 @@ export class VideoItemComponent implements OnInit, AfterViewInit {
                     this.isSyncing = false;
                 }, 800);
             }
-        });
+        }));
 
-        this.muteVideo.subscribe((response) => {
+        this.subscriptions.push(this.muteVideo.subscribe((response) => {
             if (response.id == this.file.id) {
                 const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
                 this.renderer.setElementProperty(video, 'muted', response.mute);
             }
-        });
+        }));
+    }
+
+    public ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     public ngAfterViewInit(): void {
