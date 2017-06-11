@@ -14,7 +14,6 @@ import { ItemsPlayingManagementService } from '../../../shared/services/items-pl
 import { Subscription } from 'rxjs';
 import { MdDialog, MdDialogConfig, MdSnackBar } from '@angular/material';
 import { ProgramComponent } from '../program/program.component';
-import { USE_LOUDNESS } from '../../../app.component';
 const { ipcRenderer } = electron;
 
 @Component({
@@ -33,8 +32,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public newFileAddedToWindow = new EventEmitter<void>();
 
     public selectedDayName: string;
-
-    public loudnessAvailable = USE_LOUDNESS;
 
     private firstWindowId: string;
     private firstWindowSubscription: Subscription;

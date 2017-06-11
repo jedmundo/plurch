@@ -11,7 +11,7 @@
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "build-electron.dev": "ng build && cp src/electron/* dist/",
-    "build-electron.prod": "ng build --prod -aot --no-sourcemap && cp src/electron/* dist/",
+    "build-electron.prod": "ng build --prod --aot --no-sourcemap && cp src/electron/* dist/",
     "electron.dev": "npm run build-electron.dev && electron dist/",
     "electron.prod": "npm run build-electron.prod && electron dist/",
     "install.node.modules": "cd dist/ && npm i",

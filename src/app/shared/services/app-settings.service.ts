@@ -17,6 +17,13 @@ export class AppSettingsService {
     private _menuItems$: Observable<string[]> = this.menuItemsSubject.asObservable();
 
     constructor() {
+        const itemsAddedList = localStorage.getItem(ITEMS_ADDED_TO_MENU);
+        if (itemsAddedList) {
+            const itemsList = JSON.parse(itemsAddedList);
+            this._menuItems = (itemsList);
+            this.menuItemsSubject.next(itemsList);
+        }
+
         if (!USE_LOUDNESS) {
             return;
         }
@@ -26,13 +33,6 @@ export class AppSettingsService {
             loudness.getVolume((err, vol) => this.overallVolume = vol);
         } else {
             this.overallVolume = +mainVol;
-        }
-
-        const itemsAddedList = localStorage.getItem(ITEMS_ADDED_TO_MENU);
-        if (itemsAddedList) {
-            const itemsList = JSON.parse(itemsAddedList);
-            this._menuItems = (itemsList);
-            this.menuItemsSubject.next(itemsList);
         }
     }
 
