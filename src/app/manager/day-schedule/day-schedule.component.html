@@ -1,7 +1,35 @@
+<div class="day-content">
+    <div class="controls">
+        <div class="main-title">
+            <div>{{ selectedDayName }}</div>
+        </div>
 
-<div class="button-container">
-    <button [routerLink]="['edit']">Edit</button>
-    <button [routerLink]="['view']">View</button>
+        <div class="day-options">
+            <div *ngIf="loudnessAvailable" class="overall-volume">
+                <i class="fa fa-bell" title="Overall Volume"></i>
+                <md-slider
+                    [step]="1"
+                    (input)="volumeChanged($event)"
+                    [thumb-label]="true"
+                    [value]="volumeBarValue">
+                </md-slider>
+            </div>
+
+            <button *ngIf="!isEditMode" md-icon-button title="Edit Mode">
+                <i class="fa fa-pencil-square-o"></i>
+            </button>
+            <button *ngIf="isEditMode" md-icon-button title="View Mode">
+                <i class="fa fa-list"></i>
+            </button>
+            <button *ngIf="!isItemAlreadyAddedToMenu" md-icon-button title="Add To Menu" (click)="addToMenu()">
+                <i class="fa fa-plus"></i>
+            </button>
+            <button *ngIf="isItemAlreadyAddedToMenu" md-icon-button title="Remove From Menu" (click)="removeFromMenu()">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+
+    <router-outlet></router-outlet>
+
 </div>
-
-<router-outlet></router-outlet>

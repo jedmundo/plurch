@@ -3,19 +3,16 @@ import Display = Electron.Display;
 import Event = Electron.Event;
 import BrowserWindow = Electron.BrowserWindow;
 import {
-    WindowManagementService, WINDOW_COMMAND_TYPE,
-    PlurchWindow
+    WindowManagementService
 } from '../../../shared/services/window-management.service';
-import { PlurchDisplay, DisplayManagementService } from '../../../shared/services/display-management.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import {
     PlayableItem, DayFilesManagementService,
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
-import { Subscription, Observable } from 'rxjs';
-import { MdSliderChange, MdDialog, MdDialogConfig, MdSnackBar } from '@angular/material';
-import { AppSettingsService } from '../../../shared/services/app-settings.service';
+import { Subscription } from 'rxjs';
+import { MdDialog, MdDialogConfig, MdSnackBar } from '@angular/material';
 import { ProgramComponent } from '../program/program.component';
 import { USE_LOUDNESS } from '../../../app.component';
 const { ipcRenderer } = electron;
@@ -31,14 +28,11 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public itemPlaying: PlayableItem;
 
-    public volumeBarValue: number = 0;
-
     public syncVideo = new EventEmitter<any>();
     public muteVideo = new EventEmitter<any>();
     public newFileAddedToWindow = new EventEmitter<void>();
 
     public selectedDayName: string;
-    public isEditMode: boolean = false;
 
     public loudnessAvailable = USE_LOUDNESS;
 
@@ -50,7 +44,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private itemsPlayingManagementService: ItemsPlayingManagementService,
         private windowManagementService: WindowManagementService,
         private dayFilesManagementService: DayFilesManagementService,
-        private appSettingsService: AppSettingsService,
         private activatedRoute: ActivatedRoute,
         public dialog: MdDialog,
         public snackBar: MdSnackBar) {
@@ -92,8 +85,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         ipcRenderer.on('respond-video-time', (event, response) => {
             this.syncVideo.emit(response);
         });
-
-        this.volumeBarValue = this.appSettingsService.overallVolume;
     }
 
     public ngOnDestroy(): void {
@@ -140,11 +131,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         this.itemPlaying = file;
     }
 
-    public volumeChanged(event: MdSliderChange): void {
-        const volume = event.value;
-        this.appSettingsService.overallVolume = volume;
-    }
-
     public openDialog(): void {
         const config: MdDialogConfig = {
             data: { name: this.selectedDayName }
@@ -153,18 +139,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         // dialogRef.afterClosed().subscribe(result => {
         //     // this.selectedOption = result;
         // });
-    }
-
-    public get isItemAlreadyAddedToMenu(): boolean {
-        return this.appSettingsService.isItemAlreadyAddedToMenu(this.selectedDayName);
-    }
-
-    public addToMenu(): void {
-        this.appSettingsService.addMenuItem(this.selectedDayName)
-    }
-
-    public removeFromMenu(): void {
-        this.appSettingsService.removeMenuItem(this.selectedDayName)
     }
 
 }

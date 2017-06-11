@@ -1,5 +1,37 @@
 
-.button-container {
-    padding: 0.5rem;
-    text-align: right;
+.day-content {
+    display: flex;
+    flex-direction: column;
+    height:100%;
+}
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem 0 1rem;
+    flex-shrink: 0;
+
+    .main-title {
+        font-weight: bold;
+        text-transform: capitalize;
+        color: #343A3E;
+    }
+
+    .day-options {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .overall-volume {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        i {
+            color: #343a3e;
+            font-size: 1.3rem;
+        }
+    }
 }

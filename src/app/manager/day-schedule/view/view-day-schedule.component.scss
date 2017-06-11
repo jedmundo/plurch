@@ -1,3 +1,8 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
 .link {
     margin-bottom: 1rem;
 
@@ -98,42 +103,6 @@
 .day-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
-
-    .item-list-container {
-        flex: 1;
-
-        .controls {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-
-            .main-title {
-                padding: 1rem;
-                font-weight: bold;
-                text-align: center;
-                text-transform: capitalize;
-                color: #343A3E;
-            }
-
-            .day-options {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-
-                .overall-volume {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                }
-
-                i {
-                    color: #343a3e;
-                    font-size: 1.3rem;
-                }
-            }
-        }
-    }
 
     .program-container {
         width: 200px;

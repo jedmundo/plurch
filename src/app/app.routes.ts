@@ -9,7 +9,6 @@ import { GalleryComponent } from './manager/gallery/gallery.component';
 import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
 import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
 import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.component';
-import { WindowPlaylistComponent } from './manager/window-playlist/window-playlist.component';
 
 const routes: Routes = [
     {
@@ -41,10 +40,6 @@ const routes: Routes = [
                     { path: 'view', component: ViewDayScheduleComponent },
                     { path: 'edit', component: EditDayScheduleComponent }
                 ]
-            },
-            {
-                path: 'playlist/:dayName/:windowId',
-                component: WindowPlaylistComponent
             }
         ]
     },
