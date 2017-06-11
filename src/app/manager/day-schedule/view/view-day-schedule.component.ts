@@ -31,24 +31,23 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public FILE_TYPE = PLAYABLE_FILE_TYPE;
     public itemPlaying: PlayableItem;
 
-    public WINDOW_COMMAND_TYPE = WINDOW_COMMAND_TYPE;
     public volumeBarValue: number = 0;
 
     public syncVideo = new EventEmitter<any>();
     public muteVideo = new EventEmitter<any>();
     public newFileAddedToWindow = new EventEmitter<void>();
-    public pWindows: Observable<PlurchWindow[]>;
+
     public selectedDayName: string;
 
     public loudnessAvailable = USE_LOUDNESS;
 
-    private displays: PlurchDisplay[];
+    private firstWindowId: string;
+    private firstWindowSubscription: Subscription;
     private itemsPlayingSubscription: Subscription;
 
     constructor(
         private itemsPlayingManagementService: ItemsPlayingManagementService,
         private windowManagementService: WindowManagementService,
-        private displayManagementService: DisplayManagementService,
         private dayFilesManagementService: DayFilesManagementService,
         private appSettingsService: AppSettingsService,
         private activatedRoute: ActivatedRoute,
@@ -60,8 +59,6 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
             this.selectedDayName = decodeURIComponent(params['dayName']);
             this.dayFilesManagementService.loadItems(this.selectedDayName, this.files);
-
-            this.pWindows = this.windowManagementService.availableWindows$;
 
             this.itemPlaying = this.files.length > 0 ? this.files[0] : null;
 
@@ -79,8 +76,16 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+
+            this.firstWindowSubscription = this.windowManagementService.availableWindows$
+                .subscribe(windows => {
+                    if (windows.length > 0) {
+                        this.firstWindowId = windows[0].id;
+                    } else {
+                        this.firstWindowId = null;
+                    }
+                });
         });
-        this.displayManagementService.display$.subscribe((displays) => this.displays = displays);
 
         ipcRenderer.on('respond-video-time', (event, response) => {
             this.syncVideo.emit(response);
@@ -91,37 +96,17 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.itemsPlayingSubscription.unsubscribe();
-    }
-
-    public openNewScreen(): void {
-        let externalDisplay = this.displays.find((display) => display.external);
-        if (!externalDisplay) {
-            externalDisplay = this.displays[0];
-        }
-
-        this.windowManagementService.openWindow('#/fs/empty-window', externalDisplay.electronDisplay, 'Plurch Video Preview');
-
-        if (!externalDisplay) {
-            return;
-        }
-    }
-
-    public sendCommandToWindow(pWindow: PlurchWindow, command: WINDOW_COMMAND_TYPE) {
-        this.windowManagementService.sendCommandToWindow(pWindow.id, command);
+        this.firstWindowSubscription.unsubscribe();
     }
 
     public addToWindow(file: PlayableItem): void {
-        file.isSendingToWindow = true;
-        // this.windowManagementService
-        //     .getPlurchWindow(pWindow.id)
-        //     .electronWindow.webContents.send('remove-item', { itemId: file.id });
-
-        if (this.windowManagementService.windowList.length <= 0) {
-            this.snackBar.open('No windows available. Please add a window first.', '', {
-                duration: 1000
+        if (!this.firstWindowId) {
+            this.snackBar.open('No windows available. Please add a window first in the "Displays" menu.', 'Ok', {
+                duration: 4000
             });
         } else {
-            this.windowManagementService.addToWindow(this.windowManagementService.windowList[0].id, file);
+            file.isSendingToWindow = true;
+            this.windowManagementService.addToWindow(this.firstWindowId, file);
             this.newFileAddedToWindow.emit();
         }
     }
@@ -129,27 +114,22 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public removeFromWindow(file: PlayableItem): void {
         file.isRemovingFromWindow = true;
         this.windowManagementService
-            .getPlurchWindow(this.windowManagementService.windowList[0].id)
+            .getPlurchWindow(this.firstWindowId)
             .electronWindow.webContents.send('remove-item', { itemId: file.id });
-    }
-
-    public closeAllWindows(): void {
-        this.windowManagementService.closeAllWindows();
     }
 
     public openFile(path: string) {
         this.dayFilesManagementService.openFile(path);
     }
 
-    public fileIsPlayingOnWindow(file: PlayableItem, pWindow: PlurchWindow): boolean {
-        return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === pWindow.id);
+    public fileIsPlayingOnWindow(file: PlayableItem): boolean {
+        return !!file.itemsPlaying.find((itemPlaying) => itemPlaying.windowId === this.firstWindowId);
     }
 
     public syncWithWindow(file: PlayableItem): void {
-        const firstWindow = this.windowManagementService.windowList[0];
         this.windowManagementService
-            .getPlurchWindow(firstWindow.id)
-            .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: firstWindow.id })
+            .getPlurchWindow(this.firstWindowId)
+            .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: this.firstWindowId })
     }
 
     public selectItem(file: PlayableItem): void {

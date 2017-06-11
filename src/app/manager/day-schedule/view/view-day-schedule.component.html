@@ -6,107 +6,89 @@
             <div>{{ selectedDayName }}</div>
         </div>
 
-        <div *ngIf="loudnessAvailable" class="overall-volume">
-            <div>Overall volume</div>
-            <md-slider
-                [step]="1"
-                (input)="volumeChanged($event)"
-                [thumb-label]="true"
-                [value]="volumeBarValue">
-            </md-slider>
-        </div>
-
-        <div class="pWindows-container">
-            <div class="title">Windows</div>
-
-            <div class="pWindows-list">
-                <div *ngFor="let pWindow of pWindows | async; let i = index" class="pWindow-item">
-                    <div class="pWindow-thumbnail">
-                        <div class="pWindow-number">{{i+1}}</div>
-                    </div>
-                    <div class="buttons">
-                        <button [routerLink]="['/manager/playlist/' + encodeURIComponent(selectedDayName) + '/' + pWindow.id]">Playlist</button>
-                        <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.FULL_SCREEN)"> FullScreen</button>
-                        <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.STOP_FULL_SCREEN)">Exit FullScreen</button>
-                        <button (click)="sendCommandToWindow(pWindow, WINDOW_COMMAND_TYPE.CLOSE)">Close</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="buttons">
-                <button (click)="openNewScreen()">Add New Window</button>
-                <button (click)="closeAllWindows()">Close All Windows</button>
-            </div>
-
-        </div>
-
-        <div class="playlist-container">
-
-            <md-card *ngIf="itemPlaying">
-                <md-card-header>
-                    <!--<div md-card-avatar class="example-header-image"></div>-->
-                    <md-card-title><b> {{ itemPlaying.name }} </b></md-card-title>
-                    <md-card-subtitle> {{ itemPlaying.description }} </md-card-subtitle>
-                </md-card-header>
-
-                <md-card-content>
-                    <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
-                        <plurch-video-item [file]="itemPlaying"
-                                           [newFileAddedToWindow]="newFileAddedToWindow"
-                                           [muteVideo]="muteVideo"
-                                           [syncVideo]="syncVideo">
-                        </plurch-video-item>
-                    </div>
-
-                    <div *ngIf="itemPlaying.type === FILE_TYPE.DEFAULT">
-                        <img [src]="itemPlaying.sanitizedPath" width="50px" height="50px">
-                    </div>
-                </md-card-content>
-                <md-card-actions>
-                    <div *ngIf="fileIsPlayingOnWindow(itemPlaying)" class="item-window-options">
-                        <div class="label-container">
-                            <i class="fa fa-rss" aria-hidden="true"></i>
-                            <div class="label">Live on Window</div>
-                        </div>
-                        <div class="window-buttons-container">
-                            <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(itemPlaying)" class="sync-button">
-                                Sync
-                            </div>
-                            <div *ngIf="!itemPlaying.isRemovingFromWindow" class="remove-button" (click)="removeFromWindow(itemPlaying)">Remove</div>
-                            <span *ngIf="itemPlaying.isRemovingFromWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
-                        </div>
-                    </div>
-                    <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
-                        <span *ngIf="!itemPlaying.isSendingToWindow">Send To Window</span>
-                        <span *ngIf="itemPlaying.isSendingToWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
-                    </button>
-                </md-card-actions>
-
-                <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
-            </md-card>
-
-            <div class="history-list">
-                <div *ngFor="let file of files; let i = index"
-                     class="small-item"
-                     [id]="'historyItem-' + file.id"
-                     [class.selected]="file.id === itemPlaying.id"
-                     (click)="selectItem(file)">
-                    <div class="thumbnail">
-                        <img [src]="file.thumbnailPath" width="100px">
-                    </div>
-                    <div class="details">
-                        <div class="name">{{i+1}} - {{ file.name }}</div>
-                        <div class="description">{{ file.description }}</div>
-                    </div>
-                    <div *ngIf="fileIsPlayingOnWindow(file)" class="playing-icon">
-                        <i class="fa fa-rss"></i>
-                    </div>
-                </div>
+        <div class="controls">
+            <div *ngIf="loudnessAvailable" class="overall-volume">
+                <div>Overall volume</div>
+                <md-slider
+                    [step]="1"
+                    (input)="volumeChanged($event)"
+                    [thumb-label]="true"
+                    [value]="volumeBarValue">
+                </md-slider>
             </div>
         </div>
     </div>
 
-    <button md-mini-fab (click)="openDialog()" class="show-program">
-        <i class="fa fa-list" aria-hidden="true"></i>
-    </button>
+    <div class="playlist-container">
+
+        <md-card *ngIf="itemPlaying">
+            <md-card-header>
+                <!--<div md-card-avatar class="example-header-image"></div>-->
+                <md-card-title><b> {{ itemPlaying.name }} </b></md-card-title>
+                <md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>
+            </md-card-header>
+
+            <md-card-content>
+                <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
+                    <plurch-video-item [file]="itemPlaying"
+                                       [newFileAddedToWindow]="newFileAddedToWindow"
+                                       [muteVideo]="muteVideo"
+                                       [syncVideo]="syncVideo">
+                    </plurch-video-item>
+                </div>
+
+                <div *ngIf="itemPlaying.type === FILE_TYPE.DEFAULT">
+                    <img [src]="itemPlaying.sanitizedPath" width="50px" height="50px">
+                </div>
+            </md-card-content>
+            <md-card-actions>
+                <div *ngIf="fileIsPlayingOnWindow(itemPlaying)" class="item-window-options">
+                    <div class="label-container">
+                        <i class="fa fa-rss" aria-hidden="true"></i>
+                        <div class="label">Live on Window</div>
+                    </div>
+                    <div class="window-buttons-container">
+                        <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO" (click)="syncWithWindow(itemPlaying)"
+                             class="sync-button">
+                            Sync
+                        </div>
+                        <div *ngIf="!itemPlaying.isRemovingFromWindow" class="remove-button"
+                             (click)="removeFromWindow(itemPlaying)">Remove
+                        </div>
+                        <span *ngIf="itemPlaying.isRemovingFromWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
+                    </div>
+                </div>
+                <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
+                    <span *ngIf="!itemPlaying.isSendingToWindow">Send To Window</span>
+                    <span *ngIf="itemPlaying.isSendingToWindow"><i
+                        class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
+                </button>
+            </md-card-actions>
+
+            <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
+        </md-card>
+
+        <div class="history-list">
+            <div *ngFor="let file of files; let i = index"
+                 class="small-item"
+                 [id]="'historyItem-' + file.id"
+                 [class.selected]="file.id === itemPlaying.id"
+                 (click)="selectItem(file)">
+                <div class="thumbnail">
+                    <img [src]="file.thumbnailPath" width="100px">
+                </div>
+                <div class="details">
+                    <div class="name">{{i+1}} - {{ file.name }}</div>
+                    <div class="description">{{ file.description }}</div>
+                </div>
+                <div *ngIf="fileIsPlayingOnWindow(file)" class="playing-icon">
+                    <i class="fa fa-rss"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<button md-mini-fab (click)="openDialog()" class="show-program">
+    <i class="fa fa-list" aria-hidden="true"></i>
+</button>

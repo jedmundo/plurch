@@ -24,3 +24,58 @@
 
     }
 }
+
+.pWindows-container {
+    border-top: 1px solid lightgray;
+    padding: 1rem;
+
+    .title {
+        padding-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .pWindows-list {
+        display: flex;
+        flex-direction: row;
+
+        .pWindow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 1rem;
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            .pWindow-thumbnail {
+                width: 2rem;
+                height: 2rem;
+                background: lightblue;
+                border: 1px solid lightseagreen;
+                padding: 1rem;
+
+                .pWindow-number {
+                    display: flex;
+                    justify-content: center;
+                    height: 100%;
+                    align-items: center;
+                }
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+        }
+
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        margin-top: 1rem;
+    }
+
+}
