@@ -30,6 +30,10 @@ export class DayScheduleComponent implements OnInit {
         this.volumeBarValue = this.appSettingsService.overallVolume;
     }
 
+    public toggleEdit(): void {
+        this.isEditMode = !this.isEditMode;
+    }
+
     public volumeChanged(event: MdSliderChange): void {
         const volume = event.value;
         this.appSettingsService.overallVolume = volume;

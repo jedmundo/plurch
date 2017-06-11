@@ -15,10 +15,10 @@
                 </md-slider>
             </div>
 
-            <button *ngIf="!isEditMode" md-icon-button title="Edit Mode">
+            <button *ngIf="!isEditMode" md-icon-button title="Edit Mode" (click)="toggleEdit()" routerLink="edit">
                 <i class="fa fa-pencil-square-o"></i>
             </button>
-            <button *ngIf="isEditMode" md-icon-button title="View Mode">
+            <button *ngIf="isEditMode" md-icon-button title="View Mode" (click)="toggleEdit()" routerLink="view">
                 <i class="fa fa-list"></i>
             </button>
             <button *ngIf="!isItemAlreadyAddedToMenu" md-icon-button title="Add To Menu" (click)="addToMenu()">

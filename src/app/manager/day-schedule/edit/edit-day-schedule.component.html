@@ -1,55 +1,43 @@
-<div class="main-title">
-    Edit: {{ selectedDayName }}
-</div>
+<div class="edit-container">
 
-<div class="add-local-files">
-    <button (click)="openChooseItemDialog()">Add Local Files</button>
-</div>
+    <md-card class="available-list">
+        <md-card-header>
+            <md-card-title><b>Available videos</b></md-card-title>
+            <!--<md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>-->
+        </md-card-header>
 
-<div class="pick-list">
-    <div class="title">Choose from downloaded Videos</div>
-    <div *ngFor="let video of availableVideos">
-        {{ video.title }}
-        <button (click)="addVideoToDay(video)">Add</button>
-    </div>
-</div>
+        <md-card-content>
+            <div class="add-local-files">
+                <button (click)="openChooseItemDialog()">Add Local Files</button>
+            </div>
+            <div *ngFor="let video of availableVideos">
+                {{ video.title }}
+                <button (click)="addVideoToDay(video)">Add</button>
+            </div>
+        </md-card-content>
+    </md-card>
 
-<div class="edit-items-list" [dragula]='"items-bag"' [dragulaModel]='playableItems'>
+    <md-card class="current-list">
+        <md-card-content [dragula]='"items-bag"' [dragulaModel]='playableItems'>
+            <div *ngFor="let file of playableItems; let i = index" class="small-item">
 
-    <!--<md-card *ngFor="let item of playableItems; let i = index" class="edit-item">-->
-    <!--<md-card-header>-->
-    <!--&lt;!&ndash;<div md-card-avatar class="example-header-image"></div>&ndash;&gt;-->
-    <!--<md-card-title><b> {{i+1}} - {{ item.name }} </b></md-card-title>-->
-    <!--<md-card-subtitle> {{ item.path }} </md-card-subtitle>-->
-    <!--<i class="fa fa-arrows drag-button" aria-hidden="true"></i>-->
-    <!--</md-card-header>-->
+                <div class="buttons-container">
+                    <button (click)="openFile(file.path)" md-icon-button title="Open Source">
+                        <i class="fa fa-external-link"></i>
+                    </button>
+                    <button (click)="deleteFile(file)" md-icon-button class="red-button" title="Delete">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
 
-    <!--<md-card-content>-->
-    <!--<div *ngIf="item.type === PLAYABLE_FILE_TYPE.VIDEO">-->
-    <!--<video width="100%" [src]="item.sanitizedPath" controls></video>-->
-    <!--</div>-->
-
-    <!--<div *ngIf="item.type === PLAYABLE_FILE_TYPE.DEFAULT">-->
-    <!--<img [src]="item.sanitizedPath" width="50px" height="50px">-->
-    <!--</div>-->
-    <!--</md-card-content>-->
-    <!--<md-card-actions>-->
-    <!--<button (click)="openFile(item.path)" md-button>Open Source</button>-->
-    <!--<button (click)="deleteFile(item.path)" md-button class="red-button">Delete</button>-->
-    <!--</md-card-actions>-->
-    <!--</md-card>-->
-
-    <div *ngFor="let file of playableItems; let i = index" class="small-item">
-        <div class="thumbnail">
-            <img [src]="file.thumbnailPath" width="100px">
-        </div>
-        <div class="details">
-            <div class="name">{{i+1}} - {{ file.name }}</div>
-            <div class="description">{{ file.description }}</div>
-        </div>
-
-        <button (click)="openFile(file.path)" md-button>Open Source</button>
-        <button (click)="deleteFile(file)" md-button class="red-button">Delete</button>
-    </div>
-
+                <div class="thumbnail">
+                    <img [src]="file.thumbnailPath" width="100px">
+                </div>
+                <div class="details">
+                    <div class="name">{{i+1}} - {{ file.name }}</div>
+                    <div class="description">{{ file.description }}</div>
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
 </div>

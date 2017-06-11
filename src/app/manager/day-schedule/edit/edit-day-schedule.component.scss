@@ -1,96 +1,67 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
 
-.main-title {
+.edit-container {
+    display: flex;
+    flex-direction: row;
     padding: 1rem;
-    font-weight: bold;
-    text-align: center;
-    color: #343A3E;
-    text-transform: capitalize;
-}
 
-.add-local-files {
-    width: 100%;
-    margin: 1rem;
-}
+    .available-list {
+        flex: 0.5;
+        overflow: auto;
+    }
 
-.pick-list {
-    margin: 0 1rem;
+    .current-list {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+        border: 1px solid lightgrey;
+        overflow: auto;
+        flex: 0.5;
+        padding: 1rem 0 0 0;
 
-    .title {
-        font-weight: bold;
-        margin-bottom: 1rem;
+        .small-item {
+            display: flex;
+            flex-direction: row;
+            cursor: pointer;
+            //margin: 0.2rem 0;
+            padding: 0.5rem;
+            min-height: 5rem;
+
+            .thumbnail {
+                margin-right: 0.5rem;
+            }
+
+            .details {
+                display: flex;
+                flex-direction: column;
+
+                .name {
+                    font-weight: bold;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.5rem;
+                }
+
+                .description {
+                    font-size: 0.8rem;
+                    overflow: hidden;
+                }
+            }
+
+            .buttons-container {
+                width: 3rem;
+                display: flex;
+                flex-shrink: 0;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        }
     }
 }
-
-//.current-list {
-//    display: flex;
-//    flex-direction: row;
-//    flex-wrap: wrap;
-//
-//    .edit-item {
-//        display: flex;
-//        flex-direction: column;
-//        flex-wrap: wrap;
-//        max-width: 20rem;
-//        margin: 1rem;
-//    }
-//
-//    .drag-button {
-//        cursor: move;
-//    }
-//
-//    md-card-actions {
-//        text-align: right;
-//    }
-//}
 
 .red-button {
     color: #ff523a;
-}
-
-.edit-items-list {
-    display: flex;
-    flex-direction: column;
-    margin-left: 1rem;
-    border: 1px solid lightgrey;
-    overflow: auto;
-    flex: 0.5;
-    margin-top: 1rem;
-
-    .small-item {
-        display: flex;
-        flex-direction: row;
-        cursor: pointer;
-        //margin: 0.2rem 0;
-        padding: 0.5rem;
-        border-bottom: 1px solid lightgrey;
-        min-height: 5rem;
-
-        &:hover {
-            background: #e7e7e7;
-        }
-
-        &.selected {
-            background: lightgrey;
-        }
-
-        .thumbnail {
-            margin-right: 0.5rem;
-        }
-
-        .details {
-            display: flex;
-            flex-direction: column;
-
-            .name {
-                font-weight: bold;
-                font-size: 0.9rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .description {
-                font-size: 0.8rem;
-                overflow: hidden;
-            }
-        }
-    }
 }
