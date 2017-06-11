@@ -2,19 +2,34 @@
 
     <div class="item-list-container">
 
-        <div class="main-title">
-            <div>{{ selectedDayName }}</div>
-        </div>
-
         <div class="controls">
-            <div *ngIf="loudnessAvailable" class="overall-volume">
-                <div>Overall volume</div>
-                <md-slider
-                    [step]="1"
-                    (input)="volumeChanged($event)"
-                    [thumb-label]="true"
-                    [value]="volumeBarValue">
-                </md-slider>
+            <div class="main-title">
+                <div>{{ selectedDayName }}</div>
+            </div>
+
+            <div class="day-options">
+                <div *ngIf="loudnessAvailable" class="overall-volume">
+                    <i class="fa fa-bell" title="Overall Volume"></i>
+                    <md-slider
+                        [step]="1"
+                        (input)="volumeChanged($event)"
+                        [thumb-label]="true"
+                        [value]="volumeBarValue">
+                    </md-slider>
+                </div>
+
+                <button *ngIf="!isEditMode" md-icon-button title="Edit Mode">
+                    <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button *ngIf="isEditMode" md-icon-button title="View Mode">
+                    <i class="fa fa-list"></i>
+                </button>
+                <button *ngIf="!isAddedToMenu" md-icon-button title="Add To Menu">
+                    <i class="fa fa-plus"></i>
+                </button>
+                <button *ngIf="isAddedToMenu" md-icon-button title="Remove From Menu">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
         </div>
     </div>

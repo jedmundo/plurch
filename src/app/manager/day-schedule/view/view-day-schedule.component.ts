@@ -38,6 +38,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public newFileAddedToWindow = new EventEmitter<void>();
 
     public selectedDayName: string;
+    public isEditMode: boolean = false;
+    public isAddedToMenu: boolean = false;
 
     public loudnessAvailable = USE_LOUDNESS;
 
@@ -52,8 +54,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private appSettingsService: AppSettingsService,
         private activatedRoute: ActivatedRoute,
         public dialog: MdDialog,
-        public snackBar: MdSnackBar
-    ) { }
+        public snackBar: MdSnackBar) {
+    }
 
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
@@ -155,6 +157,10 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
 
     public encodeURIComponent(url: string): string {
         return encodeURIComponent(url);
+    }
+
+    public addToMenu(): void {
+        this.isAddedToMenu = true
     }
 
 }
