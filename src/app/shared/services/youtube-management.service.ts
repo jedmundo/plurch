@@ -106,7 +106,6 @@ export class YoutubeManagementService {
             let dataRead = 0;
             res.on('data', (data) => {
                 this.zone.run(() => {
-                    console.log('asdada')
                     dataRead += data.length;
                     const percent = dataRead / totalSize;
                     // console.log((percent * 100).toFixed(2) + '% ');

@@ -18,39 +18,39 @@ export class DownloadListComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.dlVideos$ = Observable.of([
-            {
-                id: '342523523',
-                title: 'teste cenas',
-                description: '4tgfgdhdfhfdhd',
-                link: '',
-                embeddedLink: null,
-                thumbnailUrl: '',
-                isDownloaded: false,
-                percentage: 34,
-                duration$: Observable.of({
-                    duration: '3',
-                    dimension: '4',
-                    definition: '5'
-                })
-            },
-            {
-                id: '3425235243563463',
-                title: 'teste cenas regeherhe erher eherhehe',
-                description: '4tgfgdhdfhfdhd',
-                link: '',
-                embeddedLink: null,
-                thumbnailUrl: '',
-                isDownloaded: false,
-                percentage: 67,
-                duration$: Observable.of({
-                    duration: '3',
-                    dimension: '4',
-                    definition: '5'
-                })
-            }
-        ]);
-
+        // this.dlVideos$ = Observable.of([
+        //     {
+        //         id: '342523523',
+        //         title: 'teste cenas',
+        //         description: '4tgfgdhdfhfdhd',
+        //         link: '',
+        //         embeddedLink: null,
+        //         thumbnailUrl: '',
+        //         isDownloaded: false,
+        //         percentage: 34,
+        //         duration$: Observable.of({
+        //             duration: '3',
+        //             dimension: '4',
+        //             definition: '5'
+        //         })
+        //     },
+        //     {
+        //         id: '3425235243563463',
+        //         title: 'teste cenas regeherhe erher eherhehe',
+        //         description: '4tgfgdhdfhfdhd',
+        //         link: '',
+        //         embeddedLink: null,
+        //         thumbnailUrl: '',
+        //         isDownloaded: false,
+        //         percentage: 67,
+        //         duration$: Observable.of({
+        //             duration: '3',
+        //             dimension: '4',
+        //             definition: '5'
+        //         })
+        //     }
+        // ]);
+        this.dlVideos$ = this.youtubeManagementService.downloadingVideo$.startWith();
         this.dlVideosExists = this.dlVideos$
             .map(videos => !!videos && videos.length > 0);
     }
