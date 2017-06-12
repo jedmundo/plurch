@@ -24,4 +24,8 @@ export class SearchYoutubeComponent {
         this.searchResults = videos;
     }
 
+    public isDownloading(video: YouTubeVideo): boolean {
+        return this.youtubeManagementService.isDownloading(video);
+    }
+
 }

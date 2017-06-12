@@ -13,7 +13,7 @@
             <iframe [src]="video.embeddedLink" height="180"></iframe>
 
             <div class="duration">
-                <b>Duration:</b> {{ (video.duration | async)?.duration }}
+                <b>Duration:</b> {{ (video.duration$ | async)?.duration }}
             </div>
         </md-card-content>
 
@@ -21,7 +21,7 @@
             <button *ngIf="!video.isDownloaded && ! video.downloading" (click)="downloadVideo(video)" md-button>
                 Download
             </button>
-            <md-progress-bar *ngIf="!video.isDownloaded && video.downloading" [value]="video.percentage"
+            <md-progress-bar *ngIf="isDownloading(video)" [value]="video.percentage"
                              mode="determinate"></md-progress-bar>
             <div *ngIf="video.isDownloaded" class="downloaded-label">Already Downloaded</div>
         </md-card-actions>

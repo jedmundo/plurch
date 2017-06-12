@@ -3,6 +3,7 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { Http } from '@angular/http';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -15,9 +16,8 @@ export interface YouTubeVideo {
     embeddedLink: SafeUrl;
     thumbnailUrl: string;
     isDownloaded: boolean;
-    downloading: boolean;
     percentage?: number;
-    duration: Observable<YoutubeVideoDetails>
+    duration$: Observable<YoutubeVideoDetails>
 }
 
 export interface YoutubeVideoDetails {
@@ -41,6 +41,10 @@ export class YoutubeManagementService {
     public youtubeVideosFolder: string;
 
     private downloadedVideos: YouTubeVideo[] = [];
+
+    private downloadingVideoSubject = new ReplaySubject<YouTubeVideo[]>(1);
+    private _downloadingVideo$ = this.downloadingVideoSubject.asObservable();
+    private downloadingVideosList: YouTubeVideo[] = [];
 
     constructor(
         private http: Http,
@@ -78,6 +82,14 @@ export class YoutubeManagementService {
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER, folder);
     }
 
+    public get downloadingVideo$(): Observable<YouTubeVideo[]> {
+        return this._downloadingVideo$;
+    }
+
+    public isDownloading(video: YouTubeVideo): boolean {
+        return !!this.downloadingVideosList.find(item => item.id === video.id);
+    }
+
     private loadItems(): void {
         const videoList = <YouTubeVideo[]> JSON.parse(localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS));
         if (videoList) {
@@ -88,12 +100,13 @@ export class YoutubeManagementService {
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo, finished?: () => void): void {
         const video = ytdl(youtubeVideo.link);
         video.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
-        youtubeVideo.downloading = true;
+        this.addDownloadingVideo(youtubeVideo);
         video.on('response', (res) => {
             const totalSize = res.headers['content-length'];
             let dataRead = 0;
             res.on('data', (data) => {
                 this.zone.run(() => {
+                    console.log('asdada')
                     dataRead += data.length;
                     const percent = dataRead / totalSize;
                     // console.log((percent * 100).toFixed(2) + '% ');
@@ -102,8 +115,8 @@ export class YoutubeManagementService {
             });
             res.on('end', () => {
                 this.zone.run(() => {
-                    console.log('Download Finished');
-                    youtubeVideo.downloading = false;
+                    // console.log('Download Finished');
+                    this.removeDownloadingVideo(youtubeVideo);
                     youtubeVideo.isDownloaded = true;
                     this.storeVideo(youtubeVideo);
                     if (finished) {
@@ -112,6 +125,11 @@ export class YoutubeManagementService {
                 });
             });
         });
+    }
+
+    public stopVideoDownload(video: YouTubeVideo): void {
+        // TODO
+        // this.removeDownloadingVideo(video);
     }
 
     public searchVideo(input: string): Promise<any> {
@@ -138,8 +156,7 @@ export class YoutubeManagementService {
             embeddedLink: this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube.com/embed/' + video.id),
             thumbnailUrl: video.thumbnails.high.url,
             isDownloaded: !!this.downloadedVideos.find((currVideo) => currVideo.id === video.id),
-            downloading: false,
-            duration: this.getVideoInformation(video.id)
+            duration$: this.getVideoInformation(video.id)
         };
     }
 
@@ -172,5 +189,15 @@ export class YoutubeManagementService {
                     return { duration: 'Unknown' };
                 }
             });
+    }
+
+    private addDownloadingVideo(video: YouTubeVideo): void {
+        this.downloadingVideosList.push(video);
+        this.downloadingVideoSubject.next(this.downloadingVideosList);
+    }
+
+    private removeDownloadingVideo(video: YouTubeVideo): void {
+        this.downloadingVideosList.splice(this.downloadingVideosList.findIndex(item => item.id === video.id), 1);
+        this.downloadingVideoSubject.next(this.downloadingVideosList);
     }
 }

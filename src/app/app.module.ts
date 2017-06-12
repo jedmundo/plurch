@@ -16,7 +16,6 @@ import {
     MdProgressBarModule, MdSliderModule,
     MdSnackBarModule, MdTabsModule
 } from '@angular/material';
-import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
 import { GalleryComponent } from './manager/gallery/gallery.component';
@@ -56,7 +55,6 @@ import { SearchYoutubeInputComponent } from './manager/search-youtube/search-inp
         DayScheduleComponent,
         VideoItemComponent,
         EmptyWindowComponent,
-        NavigationComponent,
         ManagerComponent,
         DayListComponent,
         GalleryComponent,

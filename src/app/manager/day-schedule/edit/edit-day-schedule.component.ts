@@ -107,6 +107,10 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         });
     }
 
+    public isDownloading(video: YouTubeVideo): boolean {
+        return this.youtubeManagementService.isDownloading(video);
+    }
+
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
         if (itemPaths) {
             itemPaths.forEach((itemPath) => {
