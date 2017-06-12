@@ -102,7 +102,9 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     public downloadVideoAndAdd(youtubeVideo: YouTubeVideo): void {
-        this.youtubeManagementService.downloadYoutubeVideo(youtubeVideo, this.addVideoToDay);
+        this.youtubeManagementService.downloadYoutubeVideo(youtubeVideo, () => {
+            this.addVideoToDay(youtubeVideo);
+        });
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
