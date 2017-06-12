@@ -26,6 +26,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     public availableVideos: YouTubeVideo[];
     public playableItems: PlayableItem[] = [];
     public searchValue: string;
+    public searchResults: YouTubeVideo[];
 
     private dragulaDropSubscription: Subscription;
 
@@ -34,8 +35,8 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private youtubeManagementService: YoutubeManagementService,
         private dayFilesManagementService: DayFilesManagementService,
-        private dragulaService: DragulaService
-    ) { }
+        private dragulaService: DragulaService) {
+    }
 
     public ngOnInit() {
         this.activatedRoute.parent.params.subscribe((params: Params) => {
@@ -60,8 +61,8 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
 
     public openChooseItemDialog() {
         remote.dialog.showOpenDialog({
-            title:"Select files or a folder",
-            properties: ["openDirectory","openFile","multiSelections"]
+            title: 'Select files or a folder',
+            properties: ['openDirectory', 'openFile', 'multiSelections']
         }, (itemPaths) => {
             this.zone.run(() => {
                 this.addVideosFromFolderOrFile(itemPaths);
@@ -90,6 +91,18 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         this.dayFilesManagementService.deleteFile(this.selectedDayName, file.path, this.playableItems);
         this.availableVideos = this.youtubeManagementService.downloadedVideosList
             .filter((video) => !this.playableItems.find((item) => item.id === video.id));
+    }
+
+    public isAlreadyAdded(video: YouTubeVideo): boolean {
+        return !!this.playableItems.find((item) => item.id === video.id);
+    }
+
+    public getSearchResults(videos: YouTubeVideo[]): void {
+        this.searchResults = videos;
+    }
+
+    public downloadVideoAndAdd(youtubeVideo: YouTubeVideo): void {
+        this.youtubeManagementService.downloadYoutubeVideo(youtubeVideo, this.addVideoToDay);
     }
 
     private addVideosFromFolderOrFile(itemPaths: string[]): void {

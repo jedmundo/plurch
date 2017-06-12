@@ -85,7 +85,7 @@ export class YoutubeManagementService {
         }
     }
 
-    public downloadYoutubeVideo(youtubeVideo: YouTubeVideo): void {
+    public downloadYoutubeVideo(youtubeVideo: YouTubeVideo, addToDay?: (youtubeVideo: YouTubeVideo) => void): void {
         const video = ytdl(youtubeVideo.link);
         video.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
         youtubeVideo.downloading = true;
@@ -106,6 +106,7 @@ export class YoutubeManagementService {
                     youtubeVideo.downloading = false;
                     youtubeVideo.isDownloaded = true;
                     this.storeVideo(youtubeVideo);
+                    addToDay(youtubeVideo);
                 });
             });
         });

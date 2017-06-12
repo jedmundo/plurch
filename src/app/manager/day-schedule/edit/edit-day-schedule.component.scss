@@ -3,6 +3,10 @@
     flex-direction: column;
 }
 
+md-tab-group {
+    height: 100%;
+}
+
 .edit-container {
     display: flex;
     flex-direction: row;
@@ -17,6 +21,7 @@
         .content {
             display: flex;
             flex-direction: column;
+            min-height: 20rem;
 
             .search-bar {
                 display: flex;
@@ -48,6 +53,44 @@
                     padding: 0.1rem 0;
                 }
             }
+
+            .searched-video-list {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+
+                .youtube-video-card {
+                    width: 13rem;
+                    margin: 0.5rem;
+
+                    .search-result-video-item {
+
+                        .title {
+                            margin-bottom: 0.2rem;
+                        }
+
+                        .duration {
+                            margin-top: 0.2rem;
+                        }
+                    }
+
+                    .youtube-result-buttons {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        margin-top: 1rem;
+
+                        .downloaded-label {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -55,7 +98,6 @@
         display: flex;
         flex-direction: column;
         margin-left: 1rem;
-        border: 1px solid lightgrey;
         overflow: auto;
         flex: 0.5;
         padding: 1rem 0 0 0;

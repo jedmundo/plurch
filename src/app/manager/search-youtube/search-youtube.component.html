@@ -1,27 +1,4 @@
-<div class="videos-folder">
-    <button md-button (click)="openChooseItemDialog()">Click here to choose Videos Folder</button>
-    <div>{{ chosenFolder }}</div>
-    <div *ngIf="!chosenFolder"><b>Please choose a folder before searching for videos!</b></div>
-</div>
-
-<div [class.hidden]="!chosenFolder">
-    <div class="search-bar">
-        <b>Search:</b>
-        <div class="input-container">
-            <input [formControl]="searchInputControl"
-                   (keyup.enter)="searchVideos()"
-                   (blur)="hideAutoSuggestList()">
-            <div *ngIf="autoSuggestVisible" class="auto-suggest-list">
-                <div *ngFor="let suggestion of youtubeAutoSuggest$ | async"
-                     (click)="pickSuggestion(suggestion)"
-                     class="auto-suggest-item">
-                    {{ suggestion.name }}
-                </div>
-            </div>
-        </div>
-        <button md-raised-button (click)="searchVideos()"><i class="fa fa-search" aria-hidden="true"></i></button>
-    </div>
-</div>
+<pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
 
 <div class="youtube-videos-container">
     <md-card *ngFor="let video of searchResults" class="youtube-video-card">

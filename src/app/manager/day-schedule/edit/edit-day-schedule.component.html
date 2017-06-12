@@ -1,30 +1,68 @@
 <div class="edit-container">
 
     <md-card class="available-list">
-        <md-card-header>
-            <md-card-title><b>Available videos</b></md-card-title>
-            <!--<md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>-->
-        </md-card-header>
+        <md-tab-group>
+            <md-tab label="Downloaded videos">
+                <md-card-content class="content">
+                    <div class="search-bar">
+                        <b>Search:</b>
+                        <div class="input-container">
+                            <input [(ngModel)]="searchValue">
+                        </div>
+                    </div>
 
-        <md-card-content class="content">
-            <div class="search-bar">
-                <b>Search:</b>
-                <div class="input-container">
-                    <input [(ngModel)]="searchValue">
-                </div>
-            </div>
+                    <!--<div class="add-local-files">-->
+                    <!--<button (click)="openChooseItemDialog()">Add Local Files</button>-->
+                    <!--</div>-->
+                    <div class="video-list">
+                        <div *ngFor="let video of (availableVideos | searchedItems: searchValue)"
+                             class="video-item">
+                            {{ video.title }}
+                            <button (click)="addVideoToDay(video)">Add</button>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-tab>
+            <md-tab label="Download from Youtube and Add" class="search-tab">
+                <md-card-content class="content">
+                    <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
 
-            <!--<div class="add-local-files">-->
-            <!--<button (click)="openChooseItemDialog()">Add Local Files</button>-->
-            <!--</div>-->
-            <div class="video-list">
-                <div *ngFor="let video of (availableVideos | searchedItems: searchValue)"
-                     class="video-item">
-                    {{ video.title }}
-                    <button (click)="addVideoToDay(video)">Add</button>
-                </div>
-            </div>
-        </md-card-content>
+                    <div class="searched-video-list">
+                        <md-card *ngFor="let video of searchResults" class="youtube-video-card">
+                            <div class="search-result-video-item">
+                                <div class="title">{{video.title}}</div>
+                                <img *ngIf="!video.link" [src]="video.thumbnailUrl">
+
+                                <iframe [src]="video.embeddedLink" height="160" width="200"></iframe>
+
+                                <div class="duration">
+                                    <b>Duration:</b> {{ (video.duration | async)?.duration }}
+                                </div>
+                            </div>
+
+                            <div class="youtube-result-buttons">
+                                <button *ngIf="!video.isDownloaded && ! video.downloading"
+                                        (click)="downloadVideoAndAdd(video)" md-raised-button>
+                                    Download and Add
+                                </button>
+                                <md-progress-bar *ngIf="!video.isDownloaded && video.downloading"
+                                                 [value]="video.percentage"
+                                                 mode="determinate"></md-progress-bar>
+                                <div *ngIf="isAlreadyAdded(video)" class="downloaded-label">Already Downloaded and
+                                    Added
+                                </div>
+                                <div *ngIf="video.isDownloaded && !isAlreadyAdded(video)" class="downloaded-label">
+                                    <div>Already Downloaded</div>
+                                    <button (click)="addVideoToDay(video)" md-raised-button>
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </md-card>
+                    </div>
+                </md-card-content>
+            </md-tab>
+        </md-tab-group>
     </md-card>
 
     <md-card class="current-list">

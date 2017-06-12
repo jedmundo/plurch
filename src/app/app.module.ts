@@ -14,7 +14,7 @@ import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.co
 import {
     MdButtonModule, MdCardModule, MdDialogModule, MdInputModule,
     MdProgressBarModule, MdSliderModule,
-    MdSnackBarModule
+    MdSnackBarModule, MdTabsModule
 } from '@angular/material';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { ManagerComponent } from './manager/manager.component';
@@ -28,6 +28,7 @@ import { ProgramComponent } from './manager/day-schedule/program/program.compone
 import { DragulaModule } from 'ng2-dragula';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-title.pipe';
+import { SearchYoutubeInputComponent } from './manager/search-youtube/search-input/search-input.component';
 
 @NgModule({
     imports: [
@@ -44,6 +45,7 @@ import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-titl
         MdCardModule,
         MdSnackBarModule,
         MdInputModule,
+        MdTabsModule,
         BrowserAnimationsModule,
         DragulaModule
     ],
@@ -63,7 +65,8 @@ import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-titl
         SearchYoutubeComponent,
         TimeFormatPipe,
         SearchedItemsPipe,
-        ProgramComponent
+        ProgramComponent,
+        SearchYoutubeInputComponent
     ],
     providers: [],
     entryComponents: [
