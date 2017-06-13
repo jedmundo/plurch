@@ -1,17 +1,15 @@
 <div class="downloaded-videos-list">
 
-    <!--<div *ngIf="isFolderSet" class="folder-input">-->
-        <!--<div>Folder name: </div>-->
-        <!--<input type="text" [(ngModel)]="folderName">-->
-        <!--<button md-raised-button (click)="createFolder()">Create</button>-->
-    <!--</div>-->
+    <div class="tags-container">
+        <button md-icon-button (click)="addTag()">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
 
-    <!--<div class="folder-list">-->
-        <!--<div *ngFor="let folder of folderList" class="folder-item">-->
-            <!--{{ folder }}-->
-            <!--<button md-raised-button (click)="removeFolder(folder)">Remove</button>-->
-        <!--</div>-->
-    <!--</div>-->
+        <div *ngFor="let tag of tags$ | async">
+            {{ tag.name }}
+
+        </div>
+    </div>
 
     <div *ngFor="let video of downloadedVideos">
         {{ video.title }}

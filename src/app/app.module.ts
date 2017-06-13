@@ -28,6 +28,7 @@ import { DragulaModule } from 'ng2-dragula';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-title.pipe';
 import { SearchYoutubeInputComponent } from './manager/search-youtube/search-input/search-input.component';
+import { CreateTagComponent } from './manager/gallery/create-tag/create-tag.component';
 
 @NgModule({
     imports: [
@@ -64,11 +65,13 @@ import { SearchYoutubeInputComponent } from './manager/search-youtube/search-inp
         TimeFormatPipe,
         SearchedItemsPipe,
         ProgramComponent,
+        CreateTagComponent,
         SearchYoutubeInputComponent
     ],
     providers: [],
     entryComponents: [
-        ProgramComponent
+        ProgramComponent,
+        CreateTagComponent
     ],
     bootstrap: [AppComponent]
 })

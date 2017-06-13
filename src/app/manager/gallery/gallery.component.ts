@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { YouTubeVideo, YoutubeManagementService } from '../../shared/services/youtube-management.service';
+import { FileTag, FileTagManagementService } from '../../shared/services/files-tag-management.service';
+import { Observable } from 'rxjs/Observable';
+import { MdDialog } from '@angular/material';
+import { CreateTagComponent } from './create-tag/create-tag.component';
 
 @Component({
     selector: 'app-gallery',
@@ -13,11 +17,17 @@ export class GalleryComponent implements OnInit {
     public isFolderSet: boolean = false;
     public folderList: string[] = [];
 
+    public tags$: Observable<FileTag[]>;
+
     constructor(
-        private youtubeManagementService: YoutubeManagementService
+        private youtubeManagementService: YoutubeManagementService,
+        private fileTagManagementService: FileTagManagementService,
+        public dialog: MdDialog
     ) { }
 
     public ngOnInit() {
+        this.tags$ = this.fileTagManagementService.fileTag$;
+
         this.downloadedVideos = this.youtubeManagementService.downloadedVideosList;
         this.isFolderSet = !!this.youtubeManagementService.youtubeVideosFolder;
         this.refreshFolderList();
@@ -36,6 +46,17 @@ export class GalleryComponent implements OnInit {
     public removeFolder(name: string): void {
         fs.rmdirSync(this.youtubeManagementService.youtubeVideosFolder + '/' + name);
         this.refreshFolderList();
+    }
+
+    public addTag(name: string): void {
+        // const config: MdDialogConfig = {
+        //     data: { name: this.selectedDayName }
+        // };
+        this.dialog.open(CreateTagComponent);
+    }
+
+    public removeTag(tag: FileTag): void {
+        this.fileTagManagementService.deleteTag(tag);
     }
 
     private refreshFolderList(): void {

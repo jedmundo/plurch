@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { YouTubeVideo } from './youtube-management.service';
 
-import { without } from 'lodash';
+import { without, remove } from 'lodash';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 export const LOCAL_STORAGE_TAGS = 'file-tags';
 
@@ -12,53 +12,95 @@ export interface FileTag {
     files: string[];
 }
 
-@Injectable()
-export class FileTagManagementService {
+export enum ChangeTagAction {
+    CREATE,
+    DELETE,
+    ADD_FILE,
+    REMOVE_FILE
+}
 
-    private fileTagsSubject = new ReplaySubject<FileTag[]>(1);
-    private _fileTag$ = this.fileTagsSubject.asObservable();
-    private _fileTagList: FileTag[] = [];
+export interface ChangeTagContainer {
+    action: ChangeTagAction;
+    payload?: {
+        tag: FileTag;
+        videoId?: string;
+    };
+}
+
+@Injectable()
+export class FileTagManagementService implements OnDestroy {
+
+    private fileTagChangesSubject = new Subject<ChangeTagContainer>();
+    private _fileTags$: Observable<FileTag[]>;
+
+    private storeTagsSubscription: Subscription;
 
     constructor() {
-        const tags = localStorage.getItem(LOCAL_STORAGE_TAGS);
-        if (tags) {
-            this.loadItems(JSON.parse(tags));
-        }
+        let tags = localStorage.getItem(LOCAL_STORAGE_TAGS);
+        const parsedTags = JSON.parse(tags) || [];
+
+        this._fileTags$ = this.fileTagChangesSubject
+            .scan((acc: ChangeTagContainer[], { action, payload }) => {
+                switch (action) {
+                    case ChangeTagAction.CREATE:
+                        return [...acc, payload];
+                    case ChangeTagAction.DELETE:
+                        return remove(acc, (container) => container.payload.tag.name === payload.tag.name);
+                    case ChangeTagAction.ADD_FILE:
+                        payload.tag.files.push(payload.videoId);
+                        return [...acc];
+                    case ChangeTagAction.REMOVE_FILE:
+                        payload.tag.files = without(payload.tag.files, payload.videoId);
+                        return [...acc];
+                }
+            }, [])
+            .startWith(parsedTags)
+            .publishReplay(1)
+            .refCount();
+
+        this.storeTagsSubscription = this._fileTags$
+            .subscribe((fileTagList) => {
+                localStorage.setItem(LOCAL_STORAGE_TAGS, JSON.stringify(fileTagList));
+            });
+    }
+
+    public ngOnDestroy(): void {
+        this.storeTagsSubscription.unsubscribe();
     }
 
     public createTag(name: string): void {
-        this._fileTagList.push({ name: name, files: []});
-        this.storeList();
+        this.fileTagChangesSubject.next({
+            action: ChangeTagAction.CREATE,
+            payload: { tag: { name: name, files: [] } }
+        });
     }
 
-    public deleteTag(name: string): void {
-        this._fileTagList.splice(this._fileTagList.findIndex(item => item.name === name), 1);
-        this.storeList();
+    public deleteTag(tag: FileTag): void {
+        this.fileTagChangesSubject.next({
+            action: ChangeTagAction.DELETE,
+            payload: { tag: tag }
+        });
     }
 
-    public addVideoToTag(name: string, video: YouTubeVideo): void {
-        const tag = this._fileTagList.find(tag => tag.name === name);
-        tag.files.push(video.id);
-        this.storeList();
+    public addVideoToTag(tag: FileTag, videoId: string): void {
+        this.fileTagChangesSubject.next({
+            action: ChangeTagAction.ADD_FILE,
+            payload: { tag, videoId }
+        });
     }
 
-    public removeVideoFromTag(name: string, video: YouTubeVideo): void {
-        const tag = this._fileTagList.find(tag => tag.name === name);
-        tag.files.splice(tag.files.findIndex(id => id === video.id), 1);
-        this.storeList();
+    public removeVideoFromTag(tag: FileTag, videoId: string): void {
+        this.fileTagChangesSubject.next({
+            action: ChangeTagAction.REMOVE_FILE,
+            payload: { tag, videoId }
+        });
+    }
+
+    public get fileTagChanges$(): Observable<ChangeTagContainer> {
+        return this.fileTagChangesSubject;
     }
 
     public get fileTag$(): Observable<FileTag[]> {
-        return this._fileTag$;
-    }
-
-    private loadItems(list: FileTag[]) {
-        this._fileTagList = list;
-        this.fileTagsSubject.next(this._fileTagList);
-    }
-
-    private storeList(): void {
-        this.fileTagsSubject.next(this._fileTagList);
-        localStorage.setItem(LOCAL_STORAGE_TAGS, JSON.stringify(this._fileTagList));
+        return this._fileTags$;
     }
 }
