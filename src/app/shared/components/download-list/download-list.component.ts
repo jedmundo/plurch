@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { YoutubeManagementService, YouTubeVideo } from '../../services/youtube-management.service';
+import {
+    YoutubeManagementService,
+    YouTubeVideoWithStream
+} from '../../services/youtube-management.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'pl-download-list',
     templateUrl: 'download-list.component.html',
     styleUrls: ['download-list.component.scss']
 })
-export class DownloadListComponent implements OnInit {
+export class DownloadListComponent implements OnInit, OnDestroy {
 
     public dlVideosExists: Observable<boolean>;
-    public dlVideos$: Observable<YouTubeVideo[]>;
+    public dlVideos$: Observable<YouTubeVideoWithStream[]>;
+
+    private dlChangeVideoStatusSubscription: Subscription;
 
     constructor(
         private youtubeManagementService: YoutubeManagementService) {
@@ -49,14 +55,24 @@ export class DownloadListComponent implements OnInit {
         //         })
         //     }
         // ]);
-        this.dlVideos$ = this.youtubeManagementService.downloadingVideo$
-            .map((videoWithStreams) => videoWithStreams.map(videoWithStream => videoWithStream.video));
+        this.dlVideos$ = this.youtubeManagementService.downloadingVideo$;
 
         this.dlVideosExists = this.dlVideos$
             .map(videos => !!videos && videos.length > 0);
+
+        this.dlChangeVideoStatusSubscription = this.youtubeManagementService.downloadChanges$
+            .subscribe((videoStatus) => {
+                if (!videoStatus.add) {
+                    videoStatus.object.stream.destroy();
+                }
+            });
     }
 
-    public stopDownload(video: YouTubeVideo): void {
+    public ngOnDestroy(): void {
+        this.dlChangeVideoStatusSubscription.unsubscribe();
+    }
+
+    public stopDownload(video: YouTubeVideoWithStream): void {
         this.youtubeManagementService.stopVideoDownload(video);
     }
 

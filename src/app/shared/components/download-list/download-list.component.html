@@ -1,15 +1,15 @@
 <div class="download-list-container" *ngIf="dlVideosExists | async">
 
-    <div *ngFor="let video of dlVideos$ | async" class="downloading-video-item">
-        <div class="title">{{ video.title }}</div>
+    <div *ngFor="let videoWithStream of dlVideos$ | async" class="downloading-video-item">
+        <div class="title">{{ videoWithStream.video.title }}</div>
 
-        <div *ngIf="!video.percentage" style="margin-left: 1rem;">
+        <div *ngIf="!videoWithStream.video.percentage" style="margin-left: 1rem;">
             Download starting...
         </div>
-        <div *ngIf="video.percentage" class="percentage">
-            <div style="flex-shrink: 0;">{{ video.percentage }} %</div>
-            <md-progress-bar [value]="video.percentage" mode="determinate"></md-progress-bar>
+        <div *ngIf="videoWithStream.video.percentage" class="percentage">
+            <div style="flex-shrink: 0;">{{ videoWithStream.video.percentage }} %</div>
+            <md-progress-bar [value]="videoWithStream.video.percentage" mode="determinate"></md-progress-bar>
         </div>
-        <button md-icon-button (click)="stopDownload(video)" title="Stop download"><i class="fa fa-close"></i></button>
+        <button md-icon-button (click)="stopDownload(videoWithStream)" title="Stop download"><i class="fa fa-close"></i></button>
     </div>
 </div>

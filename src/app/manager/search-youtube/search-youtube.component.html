@@ -18,10 +18,10 @@
         </md-card-content>
 
         <md-card-actions>
-            <button *ngIf="!video.isDownloaded && !isDownloading(video)" (click)="downloadVideo(video)" md-button>
+            <button *ngIf="!video.isDownloaded && !(isDownloading(video) | async)" (click)="downloadVideo(video)" md-button>
                 Download
             </button>
-            <md-progress-bar *ngIf="isDownloading(video)" [value]="video.percentage"
+            <md-progress-bar *ngIf="isDownloading(video) | async" [value]="video.percentage"
                              mode="determinate"></md-progress-bar>
             <div *ngIf="video.isDownloaded" class="downloaded-label">Already Downloaded</div>
         </md-card-actions>

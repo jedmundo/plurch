@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {
     YouTubeVideo, YoutubeManagementService
 } from '../../shared/services/youtube-management.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'app-search-youtube',
@@ -24,7 +25,7 @@ export class SearchYoutubeComponent {
         this.searchResults = videos;
     }
 
-    public isDownloading(video: YouTubeVideo): boolean {
+    public isDownloading(video: YouTubeVideo): Observable<boolean> {
         return this.youtubeManagementService.isDownloading(video);
     }
 

@@ -10,6 +10,7 @@ import {
 import { guid } from '../../../util/util-functions';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 const { remote } = electron;
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
@@ -107,7 +108,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         });
     }
 
-    public isDownloading(video: YouTubeVideo): boolean {
+    public isDownloading(video: YouTubeVideo): Observable<boolean> {
         return this.youtubeManagementService.isDownloading(video);
     }
 

@@ -3,7 +3,9 @@ import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { Http } from '@angular/http';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+import { without } from 'lodash';
+import { Subject } from 'rxjs/Subject';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -35,6 +37,11 @@ export interface YouTubeVideoWithStream {
     stream: any;
 }
 
+export interface ChangeYoutubeVideoStatusAction {
+    add: boolean;
+    object: YouTubeVideoWithStream;
+}
+
 const opts: youtubeSearch.YouTubeSearchOptions = {
     maxResults: 10,
     key: "AIzaSyDYHdxUDhQMryYfo19S3QHdXMk_Q2iWAnM"
@@ -47,27 +54,25 @@ export class YoutubeManagementService {
 
     private downloadedVideos: YouTubeVideo[] = [];
 
-    private downloadingVideoSubject = new ReplaySubject<YouTubeVideoWithStream[]>(1);
-    private _downloadingVideo$ = this.downloadingVideoSubject.asObservable();
-    private downloadingVideosList: YouTubeVideoWithStream[] = [];
+    private downloadChangesSubject = new Subject<ChangeYoutubeVideoStatusAction>();
+    private _downloadingVideo$: Observable<YouTubeVideoWithStream[]>;
 
     constructor(
         private http: Http,
         private zone: NgZone,
         private sanitizer: DomSanitizer) {
-        // ipcRenderer.send('get-youtube-videos-folder');
-        //
-        // ipcRenderer.on('get-youtube-videos-folder-reply', (event, arg) => {
-        //     if (!fs.existsSync(arg)){
-        //         fs.mkdirSync(arg);
-        //     }
-        //     this.youtubeVideosFolder = arg;
-        //     this.loadItems();
-        // });
+
         this.youtubeVideosFolder = localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER);
         if (this.youtubeVideosFolder) {
             this.loadItems();
         }
+
+        this._downloadingVideo$ = this.downloadChangesSubject
+            .scan((acc: YouTubeVideoWithStream[], { add, object }) => {
+                return add ? [...acc, object] : without(acc, object);
+            }, [])
+            .publishReplay(1)
+            .refCount();
     }
 
     private storeVideo(youtubeVideo: YouTubeVideo): void {
@@ -91,8 +96,14 @@ export class YoutubeManagementService {
         return this._downloadingVideo$;
     }
 
-    public isDownloading(video: YouTubeVideo): boolean {
-        return !!this.downloadingVideosList.find(item => item.video.id === video.id);
+    public get downloadChanges$(): Observable<ChangeYoutubeVideoStatusAction> {
+        return this.downloadChangesSubject;
+    }
+
+    public isDownloading(video: YouTubeVideo): Observable<boolean> {
+        return this._downloadingVideo$
+            .find((ysList: YouTubeVideoWithStream[]) => !!ysList.find(item => item.video.id === video.id))
+            .map((item) => !!item);
     }
 
     private loadItems(): void {
@@ -105,8 +116,8 @@ export class YoutubeManagementService {
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo, finished?: () => void): void {
         const videoStream = ytdl(youtubeVideo.link);
         videoStream.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
-
-        this.addDownloadingVideo({ video: youtubeVideo, stream: videoStream });
+        const videoWithStream = { video: youtubeVideo, stream: videoStream };
+        this.addDownloadingVideo(videoWithStream);
         videoStream.on('response', (res) => {
             const totalSize = res.headers['content-length'];
             let dataRead = 0;
@@ -121,7 +132,7 @@ export class YoutubeManagementService {
             res.on('end', () => {
                 this.zone.run(() => {
                     // console.log('Download Finished');
-                    this.removeDownloadingVideo(youtubeVideo);
+                    this.removeDownloadingVideo(videoWithStream);
                     youtubeVideo.isDownloaded = true;
                     this.storeVideo(youtubeVideo);
                     if (finished) {
@@ -132,10 +143,8 @@ export class YoutubeManagementService {
         });
     }
 
-    public stopVideoDownload(video: YouTubeVideo): void {
-        const videoWithStream = this.downloadingVideosList.find(item => item.video.id === video.id);
-        videoWithStream.stream.destroy();
-        this.removeDownloadingVideo(video);
+    public stopVideoDownload(youTubeVideoWithStream: YouTubeVideoWithStream): void {
+        this.removeDownloadingVideo(youTubeVideoWithStream);
     }
 
     public searchVideo(input: string): Promise<any> {
@@ -198,12 +207,10 @@ export class YoutubeManagementService {
     }
 
     private addDownloadingVideo(youTubeVideoWithStream: YouTubeVideoWithStream): void {
-        this.downloadingVideosList.push(youTubeVideoWithStream);
-        this.downloadingVideoSubject.next(this.downloadingVideosList);
+        this.downloadChangesSubject.next({ add: true, object: youTubeVideoWithStream });
     }
 
-    private removeDownloadingVideo(video: YouTubeVideo): void {
-        this.downloadingVideosList.splice(this.downloadingVideosList.findIndex(item => item.video.id === video.id), 1);
-        this.downloadingVideoSubject.next(this.downloadingVideosList);
+    private removeDownloadingVideo(video: YouTubeVideoWithStream): void {
+        this.downloadChangesSubject.next({ add: false, object: video });
     }
 }

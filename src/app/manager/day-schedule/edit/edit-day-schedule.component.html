@@ -41,11 +41,11 @@
                             </div>
 
                             <div class="youtube-result-buttons">
-                                <button *ngIf="!video.isDownloaded && !isDownloading(video)"
+                                <button *ngIf="!video.isDownloaded && !isDownloading(video) | async"
                                         (click)="downloadVideoAndAdd(video)" md-raised-button>
                                     Download and Add
                                 </button>
-                                <md-progress-bar *ngIf="isDownloading(video)"
+                                <md-progress-bar *ngIf="isDownloading(video) | async"
                                                  [value]="video.percentage"
                                                  mode="determinate"></md-progress-bar>
                                 <div *ngIf="isAlreadyAdded(video)" class="downloaded-label">Already Downloaded and
