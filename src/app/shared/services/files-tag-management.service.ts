@@ -53,7 +53,7 @@ export class FileTagManagementService implements OnDestroy {
                         payload.tag.files = without(payload.tag.files, payload.videoId);
                         return [...acc];
                 }
-            }, [])
+            }, parsedTags)
             .startWith(parsedTags)
             .publishReplay(1)
             .refCount();

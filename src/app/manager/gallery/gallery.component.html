@@ -1,20 +1,29 @@
 <div class="downloaded-videos-list">
 
     <div class="tags-container">
-        <button md-icon-button (click)="addTag()">
-            <i class="fa fa-plus" aria-hidden="true"></i>
-        </button>
+        <div class="tag-header">
+            <div class="title">Folders</div>
+            <button md-icon-button (click)="addTag()">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+        </div>
 
-        <div *ngFor="let tag of tags$ | async">
-            {{ tag.name }}
-            <button md-icon-button (click)="deleteTag(tag)" class="create-tag-button">
+        <div *ngFor="let tag of tagList" class="tag-details" [class.selected]="selectedTag === tag">
+            <div md-line (click)="selectTag(tag)">{{ tag.name }}</div>
+            <button md-icon-button (click)="deleteTag(tag)">
                 <i class="fa fa-close"></i>
             </button>
         </div>
     </div>
 
-    <div *ngFor="let video of downloadedVideos">
-        {{ video.title }}
-        <button (click)="deleteVideo(video)">Delete</button>
+    <div class="videos-list">
+        <div class="title">Videos</div>
+        <div class="list">
+            <div *ngFor="let video of downloadedVideos" class="video-item">
+                <div md-line>{{ video.title }}</div>
+                <button (click)="deleteVideo(video)">Delete</button>
+            </div>
+        </div>
     </div>
+
 </div>

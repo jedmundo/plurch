@@ -6,6 +6,7 @@ import { Http } from '@angular/http';
 
 import { without } from 'lodash';
 import { Subject } from 'rxjs/Subject';
+import { FileTag } from './files-tag-management.service';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -177,6 +178,14 @@ export class YoutubeManagementService {
 
     public get downloadedVideosList(): YouTubeVideo[] {
         return this.downloadedVideos;
+    }
+
+    public filterDownloadedVideosList(tag: FileTag): YouTubeVideo[] {
+        if (tag.name === 'Unarchived') {
+            return this.downloadedVideos;
+        } else {
+            return this.downloadedVideos.filter((dlVideo) => !!tag.files.find((tagFile) => tagFile === dlVideo.id));
+        }
     }
 
     public getSuggestions(text: string): Observable<YoutubeAutoSuggestion[]> {

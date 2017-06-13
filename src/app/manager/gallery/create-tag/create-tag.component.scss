@@ -1,11 +1,17 @@
 .create-tag-form {
-    width: 10rem;
-    height: 10rem;
+
+    md-input-container {
+        width: 100%;
+    }
 
     .buttons {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         margin-top: 1rem;
+
+        &:first-child {
+            margin-right: 1rem;
+        }
     }
 }

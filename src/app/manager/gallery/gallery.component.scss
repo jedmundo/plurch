@@ -1,25 +1,76 @@
 
-.folder-input {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 1rem;
-
-    input {
-        line-height: 2rem;
-        margin: 0 1rem;
-    }
-}
-
-.folder-list {
-    margin: 1rem 0;
-
-    .folder-item {
-        margin: 1rem;
-        border: 1px solid lightgray;
-    }
-}
+//.folder-input {
+//    display: flex;
+//    flex-direction: row;
+//    align-items: center;
+//    margin-bottom: 1rem;
+//
+//    input {
+//        line-height: 2rem;
+//        margin: 0 1rem;
+//    }
+//}
+//
+//.folder-list {
+//    margin: 1rem 0;
+//
+//    .folder-item {
+//        margin: 1rem;
+//        border: 1px solid lightgray;
+//    }
+//}
 
 .downloaded-videos-list {
+    display: flex;
+    flex-direction: row;
     margin: 1rem;
+    font-weight: normal;
+    height: 100%;
+
+    .title {
+        margin-bottom: 1rem;
+    }
+
+    .tags-container {
+        width: 10rem;
+
+        .tag-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .tag-details {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            &.selected {
+                background: lightgray;
+            }
+        }
+    }
+
+    .videos-list {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+
+        .list {
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+
+            .video-item {
+                padding: 0.3rem 0;
+                display: flex;
+                flex-direction: row;
+
+                &:first-child {
+                    margin-right: 1rem;
+                }
+            }
+        }
+    }
 }
