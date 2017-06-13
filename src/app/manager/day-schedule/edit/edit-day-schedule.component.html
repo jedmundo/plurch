@@ -41,7 +41,7 @@
                             </div>
 
                             <div class="youtube-result-buttons">
-                                <button *ngIf="!video.isDownloaded && !isDownloading(video) | async"
+                                <button *ngIf="!video.isDownloaded && !(isDownloading(video) | async)"
                                         (click)="downloadVideoAndAdd(video)" md-raised-button>
                                     Download and Add
                                 </button>

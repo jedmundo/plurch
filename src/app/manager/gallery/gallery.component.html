@@ -18,7 +18,7 @@
 
     <div class="videos-list">
         <div class="title">Videos</div>
-        <div class="list">
+        <div class="list" [dragula]='"first-bag"'>
             <div *ngFor="let video of downloadedVideos" class="video-item">
                 <div md-line>{{ video.title }}</div>
                 <button (click)="deleteVideo(video)">Delete</button>

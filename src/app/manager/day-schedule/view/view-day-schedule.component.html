@@ -1,6 +1,10 @@
 <div class="day-container">
 
-    <div class="playlist-container">
+    <div *ngIf="!dayHasFiles()" class="playlist-container">
+        Please edit this day by clicking the icon <i class="fa fa-pencil-square-o"></i> in the top right corner.
+    </div>
+
+    <div *ngIf="dayHasFiles()" class="playlist-container">
 
         <md-card *ngIf="itemPlaying">
             <md-card-header>

@@ -138,4 +138,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         // });
     }
 
+    public dayHasFiles(): boolean {
+        return this.files.length > 0;
+    }
+
 }

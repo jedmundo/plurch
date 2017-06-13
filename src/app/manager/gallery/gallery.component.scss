@@ -1,31 +1,11 @@
 
-//.folder-input {
-//    display: flex;
-//    flex-direction: row;
-//    align-items: center;
-//    margin-bottom: 1rem;
-//
-//    input {
-//        line-height: 2rem;
-//        margin: 0 1rem;
-//    }
-//}
-//
-//.folder-list {
-//    margin: 1rem 0;
-//
-//    .folder-item {
-//        margin: 1rem;
-//        border: 1px solid lightgray;
-//    }
-//}
 
 .downloaded-videos-list {
     display: flex;
     flex-direction: row;
     margin: 1rem;
     font-weight: normal;
-    height: 100%;
+    //height: 100%;
 
     .title {
         margin-bottom: 1rem;
@@ -33,6 +13,7 @@
 
     .tags-container {
         width: 10rem;
+        margin-right: 1rem;
 
         .tag-header {
             display: flex;
@@ -44,6 +25,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content: space-between;
 
             &.selected {
                 background: lightgray;
