@@ -10,6 +10,7 @@ import { DownloadListComponent } from './components/download-list/download-list.
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { RouterModule } from '@angular/router';
 import { MdButtonModule, MdProgressBarModule } from '@angular/material';
+import { FileTagManagementService } from './services/files-tag-management.service';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { MdButtonModule, MdProgressBarModule } from '@angular/material';
         YoutubeManagementService,
         DayFilesManagementService,
         ItemsPlayingManagementService,
-        AppSettingsService
+        AppSettingsService,
+        FileTagManagementService
     ],
     exports: [
         CommonModule,

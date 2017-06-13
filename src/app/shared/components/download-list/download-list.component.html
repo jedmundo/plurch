@@ -10,6 +10,6 @@
             <div style="flex-shrink: 0;">{{ video.percentage }} %</div>
             <md-progress-bar [value]="video.percentage" mode="determinate"></md-progress-bar>
         </div>
-        <button md-icon-button (click)="stopDownload(video)"><i class="fa fa-close"></i></button>
+        <button md-icon-button (click)="stopDownload(video)" title="Stop download"><i class="fa fa-close"></i></button>
     </div>
 </div>

@@ -4,7 +4,6 @@ import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { Http } from '@angular/http';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Stream } from 'stream';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -115,7 +114,7 @@ export class YoutubeManagementService {
                 this.zone.run(() => {
                     dataRead += data.length;
                     const percent = dataRead / totalSize;
-                    console.log((percent * 100).toFixed(2) + '% ');
+                    // console.log((percent * 100).toFixed(2) + '% ');
                     youtubeVideo.percentage = Math.floor(+(percent * 100).toFixed(2));
                 });
             });
@@ -134,10 +133,9 @@ export class YoutubeManagementService {
     }
 
     public stopVideoDownload(video: YouTubeVideo): void {
-        // TODO
-        // this.removeDownloadingVideo(video);
         const videoWithStream = this.downloadingVideosList.find(item => item.video.id === video.id);
         videoWithStream.stream.destroy();
+        this.removeDownloadingVideo(video);
     }
 
     public searchVideo(input: string): Promise<any> {
