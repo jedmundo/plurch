@@ -4,6 +4,7 @@ import * as youtubeSearch from "youtube-search";
 import { Observable } from 'rxjs';
 import { Http } from '@angular/http';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Stream } from 'stream';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -30,6 +31,11 @@ export interface YoutubeAutoSuggestion {
     name: string;
 }
 
+export interface YouTubeVideoWithStream {
+    video: YouTubeVideo;
+    stream: any;
+}
+
 const opts: youtubeSearch.YouTubeSearchOptions = {
     maxResults: 10,
     key: "AIzaSyDYHdxUDhQMryYfo19S3QHdXMk_Q2iWAnM"
@@ -42,9 +48,9 @@ export class YoutubeManagementService {
 
     private downloadedVideos: YouTubeVideo[] = [];
 
-    private downloadingVideoSubject = new ReplaySubject<YouTubeVideo[]>(1);
+    private downloadingVideoSubject = new ReplaySubject<YouTubeVideoWithStream[]>(1);
     private _downloadingVideo$ = this.downloadingVideoSubject.asObservable();
-    private downloadingVideosList: YouTubeVideo[] = [];
+    private downloadingVideosList: YouTubeVideoWithStream[] = [];
 
     constructor(
         private http: Http,
@@ -82,12 +88,12 @@ export class YoutubeManagementService {
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER, folder);
     }
 
-    public get downloadingVideo$(): Observable<YouTubeVideo[]> {
+    public get downloadingVideo$(): Observable<YouTubeVideoWithStream[]> {
         return this._downloadingVideo$;
     }
 
     public isDownloading(video: YouTubeVideo): boolean {
-        return !!this.downloadingVideosList.find(item => item.id === video.id);
+        return !!this.downloadingVideosList.find(item => item.video.id === video.id);
     }
 
     private loadItems(): void {
@@ -98,17 +104,18 @@ export class YoutubeManagementService {
     }
 
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo, finished?: () => void): void {
-        const video = ytdl(youtubeVideo.link);
-        video.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
-        this.addDownloadingVideo(youtubeVideo);
-        video.on('response', (res) => {
+        const videoStream = ytdl(youtubeVideo.link);
+        videoStream.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
+
+        this.addDownloadingVideo({ video: youtubeVideo, stream: videoStream });
+        videoStream.on('response', (res) => {
             const totalSize = res.headers['content-length'];
             let dataRead = 0;
             res.on('data', (data) => {
                 this.zone.run(() => {
                     dataRead += data.length;
                     const percent = dataRead / totalSize;
-                    // console.log((percent * 100).toFixed(2) + '% ');
+                    console.log((percent * 100).toFixed(2) + '% ');
                     youtubeVideo.percentage = Math.floor(+(percent * 100).toFixed(2));
                 });
             });
@@ -129,6 +136,8 @@ export class YoutubeManagementService {
     public stopVideoDownload(video: YouTubeVideo): void {
         // TODO
         // this.removeDownloadingVideo(video);
+        const videoWithStream = this.downloadingVideosList.find(item => item.video.id === video.id);
+        videoWithStream.stream.destroy();
     }
 
     public searchVideo(input: string): Promise<any> {
@@ -190,13 +199,13 @@ export class YoutubeManagementService {
             });
     }
 
-    private addDownloadingVideo(video: YouTubeVideo): void {
-        this.downloadingVideosList.push(video);
+    private addDownloadingVideo(youTubeVideoWithStream: YouTubeVideoWithStream): void {
+        this.downloadingVideosList.push(youTubeVideoWithStream);
         this.downloadingVideoSubject.next(this.downloadingVideosList);
     }
 
     private removeDownloadingVideo(video: YouTubeVideo): void {
-        this.downloadingVideosList.splice(this.downloadingVideosList.findIndex(item => item.id === video.id), 1);
+        this.downloadingVideosList.splice(this.downloadingVideosList.findIndex(item => item.video.id === video.id), 1);
         this.downloadingVideoSubject.next(this.downloadingVideosList);
     }
 }

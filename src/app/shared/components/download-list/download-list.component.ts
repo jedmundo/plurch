@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppSettingsService } from '../../services/app-settings.service';
 import { YoutubeManagementService, YouTubeVideo } from '../../services/youtube-management.service';
 
 @Component({
@@ -50,7 +49,9 @@ export class DownloadListComponent implements OnInit {
         //         })
         //     }
         // ]);
-        this.dlVideos$ = this.youtubeManagementService.downloadingVideo$.startWith();
+        this.dlVideos$ = this.youtubeManagementService.downloadingVideo$
+            .map((videoWithStreams) => videoWithStreams.map(videoWithStream => videoWithStream.video));
+
         this.dlVideosExists = this.dlVideos$
             .map(videos => !!videos && videos.length > 0);
     }
