@@ -19,9 +19,10 @@ export class CreateTagComponent implements OnInit {
     public ngOnInit(): void {
     }
 
-    public create(name: string) {
-        this.fileTagManagementService.createTag(name);
+    public create() {
+        this.fileTagManagementService.createTag(this.tagName);
         this.tagName = null;
+        this.close();
     }
 
     public close(): void {

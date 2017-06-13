@@ -13,10 +13,6 @@ import { CreateTagComponent } from './create-tag/create-tag.component';
 export class GalleryComponent implements OnInit {
 
     public downloadedVideos: YouTubeVideo[];
-    public folderName: string;
-    public isFolderSet: boolean = false;
-    public folderList: string[] = [];
-
     public tags$: Observable<FileTag[]>;
 
     constructor(
@@ -29,42 +25,23 @@ export class GalleryComponent implements OnInit {
         this.tags$ = this.fileTagManagementService.fileTag$;
 
         this.downloadedVideos = this.youtubeManagementService.downloadedVideosList;
-        this.isFolderSet = !!this.youtubeManagementService.youtubeVideosFolder;
-        this.refreshFolderList();
     }
 
     public deleteVideo(video: YouTubeVideo): void {
         this.youtubeManagementService.deleteVideo(video.id);
     }
 
-    public createFolder(): void {
-        fs.mkdirSync(this.youtubeManagementService.youtubeVideosFolder + '/' + this.folderName);
-        this.folderName = null;
-        this.refreshFolderList();
-    }
 
-    public removeFolder(name: string): void {
-        fs.rmdirSync(this.youtubeManagementService.youtubeVideosFolder + '/' + name);
-        this.refreshFolderList();
-    }
-
-    public addTag(name: string): void {
-        // const config: MdDialogConfig = {
-        //     data: { name: this.selectedDayName }
-        // };
+    public addTag(): void {
         this.dialog.open(CreateTagComponent);
+    }
+
+    public deleteTag(tag: FileTag): void {
+        this.fileTagManagementService.deleteTag(tag);
     }
 
     public removeTag(tag: FileTag): void {
         this.fileTagManagementService.deleteTag(tag);
-    }
-
-    private refreshFolderList(): void {
-        if (this.isFolderSet) {
-            const srcPath = this.youtubeManagementService.youtubeVideosFolder;
-            this.folderList = fs.readdirSync(srcPath)
-                .filter(file => fs.lstatSync(path.join(srcPath, file)).isDirectory());
-        }
     }
 
 }

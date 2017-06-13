@@ -1,9 +1,11 @@
-<form class="create-tag-form" (submit)="create()">
+<form class="create-tag-form">
 
     <md-input-container>
         <input mdInput placeholder="Tag name" [(ngModel)]="tagName" name="tagName">
     </md-input-container>
 
-    <button md-raised-button type="submit" class="create-tag-button">Create</button>
-    <button md-raised-button (click)="close()" class="create-tag-button">Close</button>
+    <div class="buttons">
+        <button md-raised-button (click)="create()" class="create-tag-button">Create</button>
+        <button md-raised-button (click)="close()" class="create-tag-button">Close</button>
+    </div>
 </form>

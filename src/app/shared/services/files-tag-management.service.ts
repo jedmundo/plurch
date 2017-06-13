@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { without, remove } from 'lodash';
+import { without } from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -40,12 +40,12 @@ export class FileTagManagementService implements OnDestroy {
         const parsedTags = JSON.parse(tags) || [];
 
         this._fileTags$ = this.fileTagChangesSubject
-            .scan((acc: ChangeTagContainer[], { action, payload }) => {
+            .scan((acc: FileTag[], { action, payload }: ChangeTagContainer) => {
                 switch (action) {
                     case ChangeTagAction.CREATE:
-                        return [...acc, payload];
+                        return [...acc, payload.tag];
                     case ChangeTagAction.DELETE:
-                        return remove(acc, (container) => container.payload.tag.name === payload.tag.name);
+                        return without(acc, payload.tag);
                     case ChangeTagAction.ADD_FILE:
                         payload.tag.files.push(payload.videoId);
                         return [...acc];
