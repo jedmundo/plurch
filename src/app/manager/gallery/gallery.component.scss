@@ -30,6 +30,10 @@
             &.selected {
                 background: lightgray;
             }
+
+            &:hover {
+                background: lightgreen;
+            }
         }
     }
 

@@ -24,7 +24,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     constructor(
         private youtubeManagementService: YoutubeManagementService,
         private fileTagManagementService: FileTagManagementService,
-        public dialog: MdDialog) {
+        private dialog: MdDialog) {
     }
 
     public ngOnInit() {
@@ -35,12 +35,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         });
 
         this.downloadedVideos = this.youtubeManagementService.filterDownloadedVideosList(this.selectedTag);
-
-        // this.dragulaService.drop.subscribe((value) => {
-        //     // console.log(`drop: ${value[0]}`);
-        //     // console.log(this.playableItems);
-        //     this.dayFilesManagementService.storeReorderedItems(this.selectedDayName, this.playableItems);
-        // });
 
         // dragula([document.querySelector('.videos-list .list'), document.querySelector('.tag-details')], {
         //     direction: 'vertical',             // Y axis is considered when determining where an element would be dropped

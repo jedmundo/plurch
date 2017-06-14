@@ -19,8 +19,10 @@ export interface YouTubeVideo {
     embeddedLink: SafeUrl;
     thumbnailUrl: string;
     isDownloaded: boolean;
-    percentage?: number;
     duration$: Observable<YoutubeVideoDetails>
+
+    percentage?: number;
+    selected?: boolean;
 }
 
 export interface YoutubeVideoDetails {
