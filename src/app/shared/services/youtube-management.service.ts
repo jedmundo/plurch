@@ -47,7 +47,7 @@ export interface ChangeYoutubeVideoStatusAction {
 
 const opts: youtubeSearch.YouTubeSearchOptions = {
     maxResults: 10,
-    key: "AIzaSyDYHdxUDhQMryYfo19S3QHdXMk_Q2iWAnM"
+    key: "AIzaSyCt3VblWH9CheXDpX1E1HOxuIabEP97A0M"
 };
 
 @Injectable()

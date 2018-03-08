@@ -10,7 +10,7 @@ import {
     YoutubeAutoSuggestion, YoutubeManagementService,
     YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
-const { remote } = electron;
+import { remote } from 'electron';
 
 @Component({
     selector: 'pl-search-youtube-input',
@@ -76,8 +76,8 @@ export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
             properties: ["openDirectory"]
         }, (folder) => {
             this.zone.run(() => {
-                this.chosenFolder = folder;
-                this.youtubeManagementService.videosFolder = folder;
+                this.chosenFolder = folder[0];
+                this.youtubeManagementService.videosFolder = folder[0];
             });
         });
     }

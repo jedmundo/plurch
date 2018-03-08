@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
 import { FileTagManagementService } from '../../../shared/services/files-tag-management.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class CreateTagComponent implements OnInit {
 
     constructor(
         private fileTagManagementService: FileTagManagementService,
-        public dialogRef: MdDialogRef<CreateTagComponent>) {
+        public dialogRef: MatDialogRef<CreateTagComponent>) {
     }
 
     public ngOnInit(): void {

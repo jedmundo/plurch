@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 export const IS_DEBUG = false;
-export const USE_LOUDNESS = false;
+export const USE_LOUDNESS = true;
 
 @Component({
     selector: 'app-root',

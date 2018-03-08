@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
-const { ipcRenderer } = electron;
+import { ipcRenderer } from 'electron';
 
 @Component({
     templateUrl: 'full-screen-video.component.html',

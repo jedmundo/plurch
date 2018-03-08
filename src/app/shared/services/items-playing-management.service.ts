@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-const { ipcRenderer } = electron;
+import { ipcRenderer } from 'electron';
 
 export class ItemPlaying {
 

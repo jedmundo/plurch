@@ -12,11 +12,12 @@ let win;
 
 function createWindow() {
     // Create the browser window.
+    console.log('PATH', path.join(__dirname, 'assets/logo_512x512.icns'));
     win = new BrowserWindow({
         title: 'Plurch',
-        icon: 'assets/icon.png',
+        icon: path.join(__dirname, 'assets/logo_512x512.icns'),
         width: 1280,
-        height: 800
+        height: 800,
     });
 
     // and load the index.html of the app.

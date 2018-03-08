@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
-import { MdSliderChange } from '@angular/material';
+import { MatSliderChange } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 
 export interface VideoCommand {
@@ -174,12 +174,12 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    public videoSeekChange(event: MdSliderChange): void {
+    public videoSeekChange(event: MatSliderChange): void {
         const video = this.videoPlayerRef.nativeElement;
         this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> event.value / 100));
     }
 
-    public volumeChange(event: MdSliderChange): void {
+    public volumeChange(event: MatSliderChange): void {
         const volumeValue = event.value;
         this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
         this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });

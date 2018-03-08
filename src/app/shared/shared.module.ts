@@ -9,15 +9,15 @@ import { AppSettingsService } from './services/app-settings.service';
 import { DownloadListComponent } from './components/download-list/download-list.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { RouterModule } from '@angular/router';
-import { MdButtonModule, MdProgressBarModule } from '@angular/material';
+import { MatButtonModule, MatProgressBarModule } from '@angular/material';
 import { FileTagManagementService } from './services/files-tag-management.service';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
-        MdProgressBarModule,
-        MdButtonModule
+        MatProgressBarModule,
+        MatButtonModule
     ],
     declarations: [
         DownloadListComponent,

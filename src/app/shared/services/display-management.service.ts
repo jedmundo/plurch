@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import Display = Electron.Display;
+import { screen } from 'electron';
 import { Observable, Observer } from 'rxjs';
 
 export class PlurchDisplay {
@@ -33,7 +34,7 @@ export class DisplayManagementService {
     public display$: Observable<PlurchDisplay[]>;
 
     constructor(private zone: NgZone) {
-        const electronScreen = electron.screen;
+        const electronScreen = screen;
 
         const displayEvents = ['display-added', 'display-removed'];
 

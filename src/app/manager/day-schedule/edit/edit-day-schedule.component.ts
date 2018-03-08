@@ -11,7 +11,7 @@ import { guid } from '../../../util/util-functions';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-const { remote } = electron;
+import { remote } from 'electron';
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 // const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
