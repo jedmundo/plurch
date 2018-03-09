@@ -1,8 +1,7 @@
 {
   "name": "plurch",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
-  "angular-cli": {},
   "scripts": {
     "start": "electron dist/",
     "start.ng2": "ng serve",
