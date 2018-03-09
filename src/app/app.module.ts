@@ -12,9 +12,14 @@ import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
 import {
-    MdButtonModule, MdCardModule, MdDialogModule, MdInputModule,
-    MdProgressBarModule, MdSliderModule,
-    MdSnackBarModule, MdTabsModule
+    MatButtonModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatSliderModule,
+    MatCardModule,
+    MatSnackBarModule,
+    MatInputModule,
+    MatTabsModule
 } from '@angular/material';
 import { ManagerComponent } from './manager/manager.component';
 import { DayListComponent } from './manager/day-list/day-list.component';
@@ -25,10 +30,10 @@ import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.
 import { TimeFormatPipe } from './shared/pipes/time-format.pipe';
 import { ProgramComponent } from './manager/day-schedule/program/program.component';
 import { DragulaModule } from 'ng2-dragula';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchedItemsPipe } from './manager/day-schedule/edit/filter-video-title.pipe';
 import { SearchYoutubeInputComponent } from './manager/search-youtube/search-input/search-input.component';
 import { CreateTagComponent } from './manager/gallery/create-tag/create-tag.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
@@ -38,14 +43,14 @@ import { CreateTagComponent } from './manager/gallery/create-tag/create-tag.comp
         HttpModule,
         ROUTER_MODULE,
         SharedModule,
-        MdDialogModule,
-        MdProgressBarModule,
-        MdSliderModule,
-        MdButtonModule,
-        MdCardModule,
-        MdSnackBarModule,
-        MdInputModule,
-        MdTabsModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatSliderModule,
+        MatButtonModule,
+        MatCardModule,
+        MatSnackBarModule,
+        MatInputModule,
+        MatTabsModule,
         BrowserAnimationsModule,
         DragulaModule
     ],

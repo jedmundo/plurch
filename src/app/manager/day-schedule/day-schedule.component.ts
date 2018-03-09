@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AppSettingsService } from '../../shared/services/app-settings.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { USE_LOUDNESS } from '../../app.component';
-import { MdSliderChange } from '@angular/material';
+import { MatSliderChange } from '@angular/material';
 
 @Component({
     selector: 'app-day-schedule',
@@ -34,7 +34,7 @@ export class DayScheduleComponent implements OnInit {
         this.isEditMode = !this.isEditMode;
     }
 
-    public volumeChanged(event: MdSliderChange): void {
+    public volumeChanged(event: MatSliderChange): void {
         const volume = event.value;
         this.appSettingsService.overallVolume = volume;
     }

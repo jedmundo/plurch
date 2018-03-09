@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-const { ipcRenderer, remote } = electron;
-import BrowserWindow = Electron.BrowserWindow;
-import Display = Electron.Display;
+import { ipcRenderer, remote, BrowserWindow } from 'electron';
 import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { guid } from '../../util/util-functions';
@@ -13,7 +11,7 @@ export class PlurchWindow {
 
     constructor(
         public id: string,
-        public electronWindow: BrowserWindow,
+        public electronWindow: any,
         public loadUrl: string,
         public title: string,
         public x?: number,
@@ -65,7 +63,7 @@ export class WindowManagementService {
     }
 
     public openWindow(loadUrl: string,
-                      externalDisplay: Display,
+                      externalDisplay: any,
                       title: string,
                       x?: number,
                       y?: number,

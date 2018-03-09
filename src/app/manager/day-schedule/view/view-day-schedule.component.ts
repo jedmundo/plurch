@@ -12,9 +12,9 @@ import {
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
 import { Subscription } from 'rxjs';
-import { MdDialog, MdDialogConfig, MdSnackBar } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { ProgramComponent } from '../program/program.component';
-const { ipcRenderer } = electron;
+import { ipcRenderer } from 'electron';
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -42,8 +42,8 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private windowManagementService: WindowManagementService,
         private dayFilesManagementService: DayFilesManagementService,
         private activatedRoute: ActivatedRoute,
-        public dialog: MdDialog,
-        public snackBar: MdSnackBar) {
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar) {
     }
 
     public ngOnInit() {
@@ -129,7 +129,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     public openDialog(): void {
-        const config: MdDialogConfig = {
+        const config: MatDialogConfig = {
             data: { name: this.selectedDayName }
         };
         this.dialog.open(ProgramComponent, config);

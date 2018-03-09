@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ItemPlaying } from './items-playing-management.service';
-const { shell } = electron;
+import { shell } from 'electron';
 
 export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
 

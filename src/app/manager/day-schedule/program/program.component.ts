@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone, Inject } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-const {remote} = electron;
+import { remote } from 'electron';
 
 export const LOCAL_STORAGE_PROGRAM_KEY_PREFIX = 'PROGRAM-';
 
@@ -18,8 +18,8 @@ export class ProgramComponent implements OnInit {
     constructor(
         private sanitizer: DomSanitizer,
         private zone: NgZone,
-                @Inject(MD_DIALOG_DATA) private data: any,
-                public dialogRef: MdDialogRef<ProgramComponent>) {
+        @Inject(MAT_DIALOG_DATA) private data: any,
+        public dialogRef: MatDialogRef<ProgramComponent>) {
     }
 
     public ngOnInit(): void {
@@ -34,7 +34,7 @@ export class ProgramComponent implements OnInit {
         }, (imagePath) => {
             this.zone.run(() => {
                 this.imgPath = imagePath;
-                this.storeProgramFile(imagePath);
+                this.storeProgramFile(imagePath[0]);
             });
         });
     }
