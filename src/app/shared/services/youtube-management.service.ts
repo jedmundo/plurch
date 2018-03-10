@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { without } from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { FileTag } from './files-tag-management.service';
-import { scan, publishReplay, refCount, find, map } from 'rxjs/operators';
+import { scan, publishReplay, refCount, find, map, catchError } from 'rxjs/operators';
 import { ElectronService } from './electron.service';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
@@ -76,11 +76,11 @@ export class YoutubeManagementService {
         // TODO: fix any used in this scan
         this._downloadingVideo$ = this.downloadChangesSubject
             .pipe(
-                scan((acc: YouTubeVideoWithStream[], { add, object }) => {
-                    return add ? [...acc, object] : without(acc, object);
-                }, <any>[]),
-                publishReplay(1),
-                refCount()
+            scan((acc: YouTubeVideoWithStream[], { add, object }) => {
+                return add ? [...acc, object] : without(acc, object);
+            }, <any>[]),
+            publishReplay(1),
+            refCount()
             );
     }
 
@@ -112,8 +112,8 @@ export class YoutubeManagementService {
     public isDownloading(video: YouTubeVideo): Observable<boolean> {
         return this._downloadingVideo$
             .pipe(
-                find((ysList: YouTubeVideoWithStream[]) => !!ysList.find(item => item.video.id === video.id)),
-                map((item) => !!item)
+            find((ysList: YouTubeVideoWithStream[]) => !!ysList.find(item => item.video.id === video.id)),
+            map((item) => !!item)
             );
     }
 
@@ -211,7 +211,8 @@ export class YoutubeManagementService {
                     } else {
                         return [];
                     }
-                })
+                }),
+                catchError(() => [])
             );
     }
 

@@ -52,10 +52,12 @@ import { DayScheduleComponent } from './manager/day-schedule/day-schedule.compon
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
+import 'hammerjs';
 
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
@@ -78,7 +80,6 @@ import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.co
         MatSnackBarModule,
         MatInputModule,
         MatTabsModule,
-        BrowserAnimationsModule,
         DragulaModule
     ],
     declarations: [

@@ -182,7 +182,8 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
     public volumeChange(event: MatSliderChange): void {
         const volumeValue = event.value;
         this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
-        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
+        this.windowManagementService
+            .sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
     }
 
     public get isPaused(): boolean {
