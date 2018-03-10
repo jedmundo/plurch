@@ -12,8 +12,8 @@ import { MatSliderChange } from '@angular/material';
 export class DayScheduleComponent implements OnInit {
 
     public selectedDayName: string;
-    public isEditMode: boolean = false;
-    public volumeBarValue: number = 0;
+    public isEditMode = false;
+    public volumeBarValue = 0;
 
     public loudnessAvailable = USE_LOUDNESS;
 

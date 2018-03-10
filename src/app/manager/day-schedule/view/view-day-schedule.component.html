@@ -6,14 +6,14 @@
 
     <div *ngIf="dayHasFiles()" class="playlist-container">
 
-        <md-card *ngIf="itemPlaying">
-            <md-card-header>
-                <!--<div md-card-avatar class="example-header-image"></div>-->
-                <md-card-title><b> {{ itemPlaying.name }} </b></md-card-title>
-                <md-card-subtitle> {{ itemPlaying.description }}</md-card-subtitle>
-            </md-card-header>
+        <mat-card *ngIf="itemPlaying">
+            <mat-card-header>
+                <!--<div mat-card-avatar class="example-header-image"></div>-->
+                <mat-card-title><b> {{ itemPlaying.name }} </b></mat-card-title>
+                <mat-card-subtitle> {{ itemPlaying.description }}</mat-card-subtitle>
+            </mat-card-header>
 
-            <md-card-content class="playing-content">
+            <mat-card-content class="playing-content">
                 <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
                     <plurch-video-item [file]="itemPlaying"
                                        [newFileAddedToWindow]="newFileAddedToWindow"
@@ -25,8 +25,8 @@
                 <div *ngIf="itemPlaying.type === FILE_TYPE.DEFAULT">
                     <img [src]="itemPlaying.sanitizedPath" width="50px" height="50px">
                 </div>
-            </md-card-content>
-            <md-card-actions>
+            </mat-card-content>
+            <mat-card-actions>
                 <div *ngIf="fileIsPlayingOnWindow(itemPlaying)" class="item-window-options">
                     <div class="label-container">
                         <i class="fa fa-rss" aria-hidden="true"></i>
@@ -43,18 +43,18 @@
                         <span *ngIf="itemPlaying.isRemovingFromWindow"><i class="fa fa-refresh fa-spin fa-fw"></i> Removing...</span>
                     </div>
                 </div>
-                <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" md-button>
+                <button *ngIf="!fileIsPlayingOnWindow(itemPlaying)" (click)="addToWindow(itemPlaying)" mat-button>
                     <span *ngIf="!itemPlaying.isSendingToWindow">Send To Window</span>
                     <span *ngIf="itemPlaying.isSendingToWindow"><i
                         class="fa fa-refresh fa-spin fa-fw"></i> Sending...</span>
                 </button>
-            </md-card-actions>
+            </mat-card-actions>
 
-            <button (click)="openFile(itemPlaying.path)" md-button class="open-source-button">Open Source</button>
-        </md-card>
+            <button (click)="openFile(itemPlaying.path)" mat-button class="open-source-button">Open Source</button>
+        </mat-card>
 
-        <md-card class="history-list">
-            <md-card-content>
+        <mat-card class="history-list">
+            <mat-card-content>
                 <div *ngFor="let file of files; let i = index"
                      class="small-item"
                      [id]="'historyItem-' + file.id"
@@ -71,11 +71,11 @@
                         <i class="fa fa-rss"></i>
                     </div>
                 </div>
-            </md-card-content>
-        </md-card>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>
 
-<button md-mini-fab (click)="openDialog()" class="show-program">
+<button mat-mini-fab (click)="openDialog()" class="show-program">
     <i class="fa fa-list" aria-hidden="true"></i>
 </button>

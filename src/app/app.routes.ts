@@ -1,14 +1,15 @@
-import { Routes, RouterModule }  from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { FullScreenVideoComponent } from './full-screen/full-screen-video/full-screen-video.component';
-import { DayScheduleComponent } from './manager/day-schedule/day-schedule.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
-import { MonitorDisplaysComponent } from './manager/monitor-displays/monitor-displays.component';
 import { ManagerComponent } from './manager/manager.component';
-import { DayListComponent } from './manager/day-list/day-list.component';
 import { GalleryComponent } from './manager/gallery/gallery.component';
-import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
-import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
 import { SearchYoutubeComponent } from './manager/search-youtube/search-youtube.component';
+import { MonitorDisplaysComponent } from './manager/monitor-displays/monitor-displays.component';
+import { DayListComponent } from './manager/day-list/day-list.component';
+import { DayScheduleComponent } from './manager/day-schedule/day-schedule.component';
+import { ViewDayScheduleComponent } from './manager/day-schedule/view/view-day-schedule.component';
+import { EditDayScheduleComponent } from './manager/day-schedule/edit/edit-day-schedule.component';
+
 
 const routes: Routes = [
     {

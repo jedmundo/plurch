@@ -13,7 +13,7 @@ export class TimeFormatPipe implements PipeTransform {
         if (num < 10) {
             return '0' + num;
         } else {
-            return ''+ num;
+            return '' + num;
         }
     }
     private hhmmss(secs: number) {
@@ -24,9 +24,9 @@ export class TimeFormatPipe implements PipeTransform {
         seconds = seconds - hours * 3600;
 
         if (hours > 0) {
-            return this.pad(hours) + ":" + this.pad(minutes) + ":" + this.pad(seconds);
+            return this.pad(hours) + ':' + this.pad(minutes) + ':' + this.pad(seconds);
         } else {
-            return this.pad(minutes) + ":" + this.pad(seconds);
+            return this.pad(minutes) + ':' + this.pad(seconds);
         }
     }
 

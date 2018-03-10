@@ -40,7 +40,7 @@ export class DayListComponent implements OnInit {
     }
 
     public deleteDay(name: string) {
-        const file = this.dayList.find((file) => file.name === name);
+        const file = this.dayList.find((plurchDay) => plurchDay.name === name);
         this.dayList.splice(this.dayList.indexOf(file) , 1);
         localStorage.setItem(LOCAL_STORAGE_DAYS_KEY, JSON.stringify(this.dayList));
         localStorage.removeItem(LOCAL_STORAGE_FILE_LIST_PREFIX + name);

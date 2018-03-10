@@ -1,9 +1,0 @@
-{
-    "name": "plurch",
-    "version": "0.0.1",
-    "main": "electron.js",
-    "dependencies": {
-        "loudness": "^0.2.2",
-        "ytdl-core": "^0.9.0"
-    }
-}

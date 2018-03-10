@@ -11,10 +11,10 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { ProgramComponent } from '../program/program.component';
-import { ipcRenderer } from 'electron';
+import { ElectronService } from '../../../shared/services/electron.service';
 
 @Component({
     selector: 'app-view-day-schedule',
@@ -42,6 +42,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
         private windowManagementService: WindowManagementService,
         private dayFilesManagementService: DayFilesManagementService,
         private activatedRoute: ActivatedRoute,
+        private electronService: ElectronService,
         public dialog: MatDialog,
         public snackBar: MatSnackBar) {
     }
@@ -79,7 +80,7 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
                 });
         });
 
-        ipcRenderer.on('respond-video-time', (event, response) => {
+        this.electronService.ipcRenderer.on('respond-video-time', (event, response) => {
             this.syncVideo.emit(response);
         });
     }
@@ -119,11 +120,11 @@ export class ViewDayScheduleComponent implements OnInit, OnDestroy {
     public syncWithWindow(file: PlayableItem): void {
         this.windowManagementService
             .getPlurchWindow(this.firstWindowId)
-            .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: this.firstWindowId })
+            .electronWindow.webContents.send('retrieve-video-time', { itemId: file.id, windowId: this.firstWindowId });
     }
 
     public selectItem(file: PlayableItem): void {
-        this.files.map((file) => file.isPlaying = false);
+        this.files.map((playableItem) => playableItem.isPlaying = false);
         file.isPlaying = true;
         this.itemPlaying = file;
     }

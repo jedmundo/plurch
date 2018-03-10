@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { without } from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { scan, startWith, refCount, publishReplay } from 'rxjs/operators';
 
 export const LOCAL_STORAGE_TAGS = 'file-tags';
 
@@ -36,27 +37,29 @@ export class FileTagManagementService implements OnDestroy {
     private storeTagsSubscription: Subscription;
 
     constructor() {
-        let tags = localStorage.getItem(LOCAL_STORAGE_TAGS);
+        const tags = localStorage.getItem(LOCAL_STORAGE_TAGS);
         const parsedTags = JSON.parse(tags) || [];
 
-        this._fileTags$ = this.fileTagChangesSubject
-            .scan((acc: FileTag[], { action, payload }: ChangeTagContainer) => {
-                switch (action) {
-                    case ChangeTagAction.CREATE:
-                        return [...acc, payload.tag];
-                    case ChangeTagAction.DELETE:
-                        return without(acc, payload.tag);
-                    case ChangeTagAction.ADD_FILE:
-                        payload.tag.files.push(payload.videoId);
-                        return [...acc];
-                    case ChangeTagAction.REMOVE_FILE:
-                        payload.tag.files = without(payload.tag.files, payload.videoId);
-                        return [...acc];
-                }
-            }, parsedTags)
-            .startWith(parsedTags)
-            .publishReplay(1)
-            .refCount();
+        this._fileTags$ = this.fileTagChangesSubject.asObservable()
+            .pipe(
+                scan((acc: FileTag[], { action, payload }: ChangeTagContainer) => {
+                    switch (action) {
+                        case ChangeTagAction.CREATE:
+                            return [...acc, payload.tag];
+                        case ChangeTagAction.DELETE:
+                            return without(acc, payload.tag);
+                        case ChangeTagAction.ADD_FILE:
+                            payload.tag.files.push(payload.videoId);
+                            return [...acc];
+                        case ChangeTagAction.REMOVE_FILE:
+                            payload.tag.files = without(payload.tag.files, payload.videoId);
+                            return [...acc];
+                    }
+                }, parsedTags),
+                startWith(parsedTags),
+                publishReplay(1),
+                refCount()
+            );
 
         this.storeTagsSubscription = this._fileTags$
             .subscribe((fileTagList) => {

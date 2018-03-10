@@ -2,7 +2,7 @@ import {
     Component, OnInit, NgZone, OnDestroy, Output,
     EventEmitter
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { setTimeout } from 'timers';
@@ -10,7 +10,8 @@ import {
     YoutubeAutoSuggestion, YoutubeManagementService,
     YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
-import { remote } from 'electron';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
+import { ElectronService } from '../../../shared/services/electron.service';
 
 @Component({
     selector: 'pl-search-youtube-input',
@@ -27,12 +28,13 @@ export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
     public searchValue: string;
     public chosenFolder: string;
 
-    public autoSuggestVisible: boolean = false;
+    public autoSuggestVisible = false;
 
     private searchSubscription: Subscription;
 
     constructor(
         private zone: NgZone,
+        private electronService: ElectronService,
         private youtubeManagementService: YoutubeManagementService) {
     }
 
@@ -45,9 +47,11 @@ export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
             });
 
         this.youtubeAutoSuggest$ = this.searchInputControl.valueChanges
-            .debounceTime(700)
-            .distinctUntilChanged()
-            .switchMap(term => this.youtubeManagementService.getSuggestions(term));
+            .pipe(
+                debounceTime(700),
+                distinctUntilChanged(),
+                switchMap(term => this.youtubeManagementService.getSuggestions(term))
+            );
     }
 
     public ngOnDestroy(): void {
@@ -57,23 +61,23 @@ export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
     public pickSuggestion(suggestion: YoutubeAutoSuggestion): void {
         this.searchValue = suggestion.name;
         this.searchInputControl.setValue(this.searchValue, { emitEvent: false });
-        this.searchVideos()
+        this.searchVideos();
     }
 
     public searchVideos(): void {
         this.youtubeManagementService.searchVideo(this.searchValue)
             .then((results) => {
                 this.resultsEmitter.emit(results
-                        .map((video) => this.youtubeManagementService.parseVideo(video))
-                        .filter((video) => !!video));
-                }
+                    .map((video) => this.youtubeManagementService.parseVideo(video))
+                    .filter((video) => !!video));
+            }
             );
     }
 
     public openChooseItemDialog() {
-        remote.dialog.showOpenDialog({
-            title: "Select folder to store videos",
-            properties: ["openDirectory"]
+        this.electronService.remote.dialog.showOpenDialog({
+            title: 'Select folder to store videos',
+            properties: ['openDirectory']
         }, (folder) => {
             this.zone.run(() => {
                 this.chosenFolder = folder[0];

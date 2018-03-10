@@ -3,31 +3,31 @@
 
     <div class="item-video-controls">
         <div class="time-controls">
-            <button md-button *ngIf="isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">
+            <button mat-button *ngIf="isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PLAY)">
                 <i class="fa fa-play" aria-hidden="true"></i>
             </button>
-            <button md-button *ngIf="!isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">
+            <button mat-button *ngIf="!isPaused" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.PAUSE)">
                 <i class="fa fa-pause" aria-hidden="true"></i>
             </button>
-            <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)" md-button>
+            <button (click)="sendVideoControls(VIDEO_COMMAND_TYPE.RESTART)" mat-button>
                 <i class="fa fa-repeat" aria-hidden="true"></i>
             </button>
-            <md-slider
+            <mat-slider
                 [step]="1"
                 (input)="videoSeekChange($event)"
                 [thumb-label]="false"
                 [value]="timeSeekBarValue">
-            </md-slider>
+            </mat-slider>
             <div class="time-info">{{ currentVideoTime | timeFormat }} / {{ currentVideoDuration | timeFormat }}</div>
         </div>
         <div class="sound-controls">
-            <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" md-button>
+            <button *ngIf="!isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.MUTE)" mat-button>
                 <i class="fa fa-bell" aria-hidden="true"></i>
             </button>
-            <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" md-button>
+            <button *ngIf="isMuted" (click)="sendVideoControls(VIDEO_COMMAND_TYPE.UNMUTE)" mat-button>
                 <i class="fa fa-bell-slash" aria-hidden="true"></i>
             </button>
-            <md-slider
+            <mat-slider
                 class="sound-slider"
                 [step]="0.1"
                 (input)="volumeChange($event)"
@@ -35,7 +35,7 @@
                 [max]="1"
                 [thumb-label]="true"
                 [value]="volumeSeekBarValue">
-            </md-slider>
+            </mat-slider>
         </div>
 
 

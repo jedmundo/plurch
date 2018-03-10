@@ -1,5 +1,8 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { DragulaService } from 'ng2-dragula';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 import {
     YoutubeManagementService, YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
@@ -8,10 +11,7 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { guid } from '../../../util/util-functions';
-import { DragulaService } from 'ng2-dragula';
-import { Subscription } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
-import { remote } from 'electron';
+import { ElectronService } from '../../../shared/services/electron.service';
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];
 // const allAllowedExtensions: string[] = videoAllowedExtensions.concat(['.png', 'jpg', 'jpeg','pptx', '']);
@@ -36,7 +36,9 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private youtubeManagementService: YoutubeManagementService,
         private dayFilesManagementService: DayFilesManagementService,
-        private dragulaService: DragulaService) {
+        private dragulaService: DragulaService,
+        private electronService: ElectronService,
+    ) {
     }
 
     public ngOnInit() {
@@ -61,7 +63,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     public openChooseItemDialog() {
-        remote.dialog.showOpenDialog({
+        this.electronService.remote.dialog.showOpenDialog({
             title: 'Select files or a folder',
             properties: ['openDirectory', 'openFile', 'multiSelections']
         }, (itemPaths) => {
@@ -115,9 +117,9 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     private addVideosFromFolderOrFile(itemPaths: string[]): void {
         if (itemPaths) {
             itemPaths.forEach((itemPath) => {
-                const isDirectory = fs.lstatSync(itemPath).isDirectory();
+                const isDirectory = this.electronService.fs.lstatSync(itemPath).isDirectory();
                 if (isDirectory) {
-                    fs.readdir(itemPath, (err, files) => {
+                    this.electronService.fs.readdir(itemPath, (err, files) => {
                         this.zone.run(() => {
                             files.forEach(file => {
                                 if (this.isAllowedVideo(file)) {
@@ -129,7 +131,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
                                 }
                             });
                         });
-                    })
+                    });
                 } else {
                     if (this.isAllowedVideo(itemPath)) {
                         this.dayFilesManagementService.addFile(this.selectedDayName,
@@ -144,7 +146,7 @@ export class EditDayScheduleComponent implements OnInit, OnDestroy {
     }
 
     private isAllowedVideo(itemPath: string): boolean {
-        if (videoAllowedExtensions.find((extension) => path.extname(itemPath).indexOf('.' + extension) > -1)) {
+        if (videoAllowedExtensions.find((extension) => this.electronService.path.extname(itemPath).indexOf('.' + extension) > -1)) {
             return true;
         } else {
             console.log('Item with extension not allowed: ', itemPath);

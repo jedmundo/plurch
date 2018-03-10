@@ -11,6 +11,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { RouterModule } from '@angular/router';
 import { MatButtonModule, MatProgressBarModule } from '@angular/material';
 import { FileTagManagementService } from './services/files-tag-management.service';
+import { ElectronService } from './services/electron.service';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { FileTagManagementService } from './services/files-tag-management.servic
         NavigationComponent
     ],
     providers: [
+        ElectronService,
         WindowManagementService,
         DisplayManagementService,
         YoutubeManagementService,

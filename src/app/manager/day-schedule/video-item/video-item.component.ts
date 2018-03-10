@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
-    value?: number
+    value?: number;
 }
 
 export enum VIDEO_COMMAND_TYPE {
@@ -31,11 +31,11 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('videoPlayer') private videoPlayerRef: ElementRef;
 
-    public currentVideoTime: number = 0;
-    public currentVideoDuration: number = 0;
-    public isMuted: boolean = false;
-    public timeSeekBarValue: number = 0;
-    public volumeSeekBarValue: number = 1;
+    public currentVideoTime = 0;
+    public currentVideoDuration = 0;
+    public isMuted = false;
+    public timeSeekBarValue = 0;
+    public volumeSeekBarValue = 1;
 
     public VIDEO_COMMAND_TYPE = VIDEO_COMMAND_TYPE;
 
@@ -47,7 +47,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
     private subscriptions: Subscription[] = [];
 
     // TODO: Ugly fix
-    private isSyncing: boolean = false;
+    private isSyncing = false;
 
     constructor(
         private renderer: Renderer,
@@ -73,7 +73,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.subscriptions.push(this.syncVideo.subscribe((response) => {
-            if (response.id == this.file.id) {
+            if (response.id === this.file.id) {
                 this.isSyncing = true;
                 const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
                 this.renderer.setElementProperty(video, 'currentTime', response.time);
@@ -93,7 +93,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
         }));
 
         this.subscriptions.push(this.muteVideo.subscribe((response) => {
-            if (response.id == this.file.id) {
+            if (response.id === this.file.id) {
                 const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
                 this.renderer.setElementProperty(video, 'muted', response.mute);
             }
@@ -137,7 +137,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public playOrPause(): void {
         const video = this.videoPlayerRef.nativeElement;
-        const isPaused: boolean = (<HTMLVideoElement> video).paused;
+        const isPaused: boolean = (<HTMLVideoElement>video).paused;
         if (isPaused) {
             this.sendVideoControls(VIDEO_COMMAND_TYPE.PLAY);
         } else {
@@ -158,7 +158,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
         this.renderer.listen(video, 'seeked', () => {
             if (!this.isSyncing) {
                 this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type',
-                    {type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime});
+                    { type: VIDEO_COMMAND_TYPE.SYNC_TIME, value: video.currentTime });
             }
         });
 
@@ -176,7 +176,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public videoSeekChange(event: MatSliderChange): void {
         const video = this.videoPlayerRef.nativeElement;
-        this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any> event.value / 100));
+        this.renderer.setElementProperty(video, 'currentTime', video.duration * (<any>event.value / 100));
     }
 
     public volumeChange(event: MatSliderChange): void {

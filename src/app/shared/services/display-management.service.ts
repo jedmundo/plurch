@@ -1,7 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
-import Display = Electron.Display;
-import { screen } from 'electron';
-import { Observable, Observer } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { merge } from 'rxjs/observable/merge';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { startWith, map } from 'rxjs/operators';
+import { Display } from 'electron';
+import { ElectronService } from './electron.service';
 
 export class PlurchDisplay {
 
@@ -12,7 +16,7 @@ export class PlurchDisplay {
     }
 
     private isExternal(electronDisplay: Display): boolean {
-        return electronDisplay.bounds.x != 0 || electronDisplay.bounds.y != 0;
+        return electronDisplay.bounds.x !== 0 || electronDisplay.bounds.y !== 0;
     }
 }
 
@@ -22,7 +26,7 @@ export default function runInZone(zone: NgZone) {
             input.subscribe(
                 (value) => zone.run(() => observer.next(value)),
                 (error) => zone.run(() => observer.error(error)),
-                ()      => zone.run(() => observer.complete())
+                () => zone.run(() => observer.complete())
             );
         });
     };
@@ -33,24 +37,23 @@ export class DisplayManagementService {
 
     public display$: Observable<PlurchDisplay[]>;
 
-    constructor(private zone: NgZone) {
-        const electronScreen = screen;
+    constructor(
+        private zone: NgZone,
+        private electronService: ElectronService
+    ) {
+        const electronScreen = this.electronService.screen;
 
         const displayEvents = ['display-added', 'display-removed'];
 
         this.display$ =
-            Observable.merge(
-                ...displayEvents.map((event) => Observable.fromEvent(electronScreen, event))
+            merge(
+                ...displayEvents.map((event) => fromEvent(electronScreen, event))
             )
-                .startWith(null)
-                .map(() => electronScreen.getAllDisplays())
-                .map((displays) => displays.map((display) => new PlurchDisplay(display)))
-                .let(runInZone(zone));
+            .pipe(
+                startWith(null),
+                map(() => electronScreen.getAllDisplays()),
+                map((displays) => displays.map((display) => new PlurchDisplay(display))),
+                runInZone(zone)
+            );
     }
-
-    // private checkIfPreviewPossible(): boolean {
-    //     return this.displays.length > 1;
-    // }
-
-
 }

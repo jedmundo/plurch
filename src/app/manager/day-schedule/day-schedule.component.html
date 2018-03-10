@@ -7,24 +7,24 @@
         <div class="day-options">
             <div *ngIf="loudnessAvailable" class="overall-volume">
                 <i class="fa fa-bell" title="Overall Volume"></i>
-                <md-slider
+                <mat-slider
                     [step]="1"
                     (input)="volumeChanged($event)"
                     [thumb-label]="true"
                     [value]="volumeBarValue">
-                </md-slider>
+                </mat-slider>
             </div>
 
-            <button *ngIf="!isEditMode" md-icon-button title="Edit Mode" (click)="toggleEdit()" routerLink="edit">
+            <button *ngIf="!isEditMode" mat-icon-button title="Edit Mode" (click)="toggleEdit()" routerLink="edit">
                 <i class="fa fa-pencil-square-o"></i>
             </button>
-            <button *ngIf="isEditMode" md-icon-button title="View Mode" (click)="toggleEdit()" routerLink="view">
+            <button *ngIf="isEditMode" mat-icon-button title="View Mode" (click)="toggleEdit()" routerLink="view">
                 <i class="fa fa-list"></i>
             </button>
-            <button *ngIf="!isItemAlreadyAddedToMenu" md-icon-button title="Add To Menu" (click)="addToMenu()">
+            <button *ngIf="!isItemAlreadyAddedToMenu" mat-icon-button title="Add To Menu" (click)="addToMenu()">
                 <i class="fa fa-plus"></i>
             </button>
-            <button *ngIf="isItemAlreadyAddedToMenu" md-icon-button title="Remove From Menu" (click)="removeFromMenu()">
+            <button *ngIf="isItemAlreadyAddedToMenu" mat-icon-button title="Remove From Menu" (click)="removeFromMenu()">
                 <i class="fa fa-minus"></i>
             </button>
         </div>

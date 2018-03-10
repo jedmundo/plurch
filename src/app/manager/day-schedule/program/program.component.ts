@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { remote } from 'electron';
+import { ElectronService } from '../../../shared/services/electron.service';
 
 export const LOCAL_STORAGE_PROGRAM_KEY_PREFIX = 'PROGRAM-';
 
@@ -18,6 +18,7 @@ export class ProgramComponent implements OnInit {
     constructor(
         private sanitizer: DomSanitizer,
         private zone: NgZone,
+        private electronService: ElectronService,
         @Inject(MAT_DIALOG_DATA) private data: any,
         public dialogRef: MatDialogRef<ProgramComponent>) {
     }
@@ -28,9 +29,9 @@ export class ProgramComponent implements OnInit {
     }
 
     public openChooseFileDialog() {
-        remote.dialog.showOpenDialog({
-            title: "Select image of program file",
-            properties: ["openFile"]
+        this.electronService.remote.dialog.showOpenDialog({
+            title: 'Select image of program file',
+            properties: ['openFile']
         }, (imagePath) => {
             this.zone.run(() => {
                 this.imgPath = imagePath;

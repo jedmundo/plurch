@@ -3,6 +3,7 @@ import { USE_LOUDNESS } from '../../app.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
 import { PlurchDay } from '../../manager/day-list/day-list.component';
+import { ElectronService } from './electron.service';
 
 const OVERALL_VOLUME_KEY = 'overall-volume';
 const ITEMS_ADDED_TO_MENU = 'items-added-to-menu';
@@ -16,7 +17,9 @@ export class AppSettingsService {
     private _menuItems: string[] = [];
     private _menuItems$: Observable<string[]> = this.menuItemsSubject.asObservable();
 
-    constructor() {
+    constructor(
+        private electronService: ElectronService
+    ) {
         const itemsAddedList = localStorage.getItem(ITEMS_ADDED_TO_MENU);
         if (itemsAddedList) {
             const itemsList = JSON.parse(itemsAddedList);
@@ -30,7 +33,7 @@ export class AppSettingsService {
 
         const mainVol = localStorage.getItem(OVERALL_VOLUME_KEY);
         if (!mainVol) {
-            loudness.getVolume((err, vol) => this.overallVolume = vol);
+            this.electronService.loudness.getVolume((err, vol) => this.overallVolume = vol);
         } else {
             this.overallVolume = +mainVol;
         }
@@ -42,9 +45,9 @@ export class AppSettingsService {
         }
 
         this.mainVolume = volume;
-        loudness.setVolume(volume, (err) => {
+        this.electronService.loudness.setVolume(volume, (err) => {
             if (err) {
-                console.log(err)
+                console.log(err);
             }
         });
         localStorage.setItem(OVERALL_VOLUME_KEY, String(volume));

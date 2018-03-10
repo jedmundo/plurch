@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import Display = Electron.Display;
 import { DisplayManagementService, PlurchDisplay } from '../../shared/services/display-management.service';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import {
     PlurchWindow, WINDOW_COMMAND_TYPE,
     WindowManagementService
