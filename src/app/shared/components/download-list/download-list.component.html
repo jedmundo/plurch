@@ -8,7 +8,7 @@
         </div>
         <div *ngIf="videoWithStream.video.percentage" class="percentage">
             <div style="flex-shrink: 0;">{{ videoWithStream.video.percentage }} %</div>
-            <md-progress-bar [value]="videoWithStream.video.percentage" mode="determinate"></md-progress-bar>
+            <mat-progress-bar [value]="videoWithStream.video.percentage" mode="determinate"></mat-progress-bar>
         </div>
         <button md-icon-button (click)="stopDownload(videoWithStream)" title="Stop download"><i class="fa fa-close"></i></button>
     </div>

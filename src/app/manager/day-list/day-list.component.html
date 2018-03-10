@@ -2,17 +2,17 @@
     <table cellspacing="0">
         <tr>
             <td>
-                <md-input-container>
-                    <input mdInput placeholder="Name" [(ngModel)]="newDay.name" name="day-name">
-                </md-input-container>
+                <mat-form-field>
+                    <input matInput placeholder="Name" [(ngModel)]="newDay.name" name="day-name">
+                </mat-form-field>
             </td>
             <td>
-                <md-input-container>
-                    <input mdInput placeholder="Description" [(ngModel)]="newDay.description" name="day-description">
-                </md-input-container>
+                <mat-form-field>
+                    <input matInput placeholder="Description" [(ngModel)]="newDay.description" name="day-description">
+                </mat-form-field>
             </td>
             <td>
-                <button md-raised-button (click)="addDay(newDay.name, newDay.description)" class="add-button">Add</button>
+                <button mat-raised-button (click)="addDay(newDay.name, newDay.description)" class="add-button">Add</button>
             </td>
         </tr>
     </table>
@@ -22,8 +22,8 @@
     <div *ngFor="let day of dayList" class="day-item">
         <div>{{ day.name }}</div>
         <div>
-            <button md-raised-button [routerLink]="['/manager/day-schedule', encodeURIComponent(day.name) ]">GO</button>
-            <button md-raised-button (click)="deleteDay(day.name)">Delete</button>
+            <button mat-raised-button [routerLink]="['/manager/day-schedule', encodeURIComponent(day.name) ]">GO</button>
+            <button mat-raised-button (click)="deleteDay(day.name)">Delete</button>
         </div>
     </div>
 </div>

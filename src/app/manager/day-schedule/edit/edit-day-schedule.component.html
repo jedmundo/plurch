@@ -1,9 +1,9 @@
 <div class="edit-container">
 
-    <md-card class="available-list">
-        <md-tab-group>
-            <md-tab label="Downloaded videos">
-                <md-card-content class="content">
+    <mat-card class="available-list">
+        <mat-tab-group>
+            <mat-tab label="Downloaded videos">
+                <mat-card-content class="content">
                     <div class="search-bar">
                         <b>Search:</b>
                         <div class="input-container">
@@ -21,14 +21,14 @@
                             <button (click)="addVideoToDay(video)">Add</button>
                         </div>
                     </div>
-                </md-card-content>
-            </md-tab>
-            <md-tab label="Download from Youtube and Add" class="search-tab">
-                <md-card-content class="content">
+                </mat-card-content>
+            </mat-tab>
+            <mat-tab label="Download from Youtube and Add" class="search-tab">
+                <mat-card-content class="content">
                     <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
 
                     <div class="searched-video-list">
-                        <md-card *ngFor="let video of searchResults" class="youtube-video-card">
+                        <mat-card *ngFor="let video of searchResults" class="youtube-video-card">
                             <div class="search-result-video-item">
                                 <div class="title">{{video.title}}</div>
                                 <img *ngIf="!video.link" [src]="video.thumbnailUrl">
@@ -42,38 +42,38 @@
 
                             <div class="youtube-result-buttons">
                                 <button *ngIf="!video.isDownloaded && !(isDownloading(video) | async)"
-                                        (click)="downloadVideoAndAdd(video)" md-raised-button>
+                                        (click)="downloadVideoAndAdd(video)" mat-raised-button>
                                     Download and Add
                                 </button>
-                                <md-progress-bar *ngIf="isDownloading(video) | async"
+                                <mat-progress-bar *ngIf="isDownloading(video) | async"
                                                  [value]="video.percentage"
-                                                 mode="determinate"></md-progress-bar>
+                                                 mode="determinate"></mat-progress-bar>
                                 <div *ngIf="isAlreadyAdded(video)" class="downloaded-label">Already Downloaded and
                                     Added
                                 </div>
                                 <div *ngIf="video.isDownloaded && !isAlreadyAdded(video)" class="downloaded-label">
                                     <div>Already Downloaded</div>
-                                    <button (click)="addVideoToDay(video)" md-raised-button>
+                                    <button (click)="addVideoToDay(video)" mat-raised-button>
                                         Add
                                     </button>
                                 </div>
                             </div>
-                        </md-card>
+                        </mat-card>
                     </div>
-                </md-card-content>
-            </md-tab>
-        </md-tab-group>
-    </md-card>
+                </mat-card-content>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
 
-    <md-card class="current-list">
-        <md-card-content [dragula]='"items-bag"' [dragulaModel]='playableItems'>
+    <mat-card class="current-list">
+        <mat-card-content [dragula]='"items-bag"' [dragulaModel]='playableItems'>
             <div *ngFor="let file of playableItems; let i = index" class="small-item">
 
                 <div class="buttons-container">
-                    <button (click)="openFile(file.path)" md-icon-button title="Open Source">
+                    <button (click)="openFile(file.path)" mat-icon-button title="Open Source">
                         <i class="fa fa-external-link"></i>
                     </button>
-                    <button (click)="deleteFile(file)" md-icon-button class="red-button" title="Delete">
+                    <button (click)="deleteFile(file)" mat-icon-button class="red-button" title="Delete">
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>
@@ -86,6 +86,6 @@
                     <div class="description">{{ file.description }}</div>
                 </div>
             </div>
-        </md-card-content>
-    </md-card>
+        </mat-card-content>
+    </mat-card>
 </div>

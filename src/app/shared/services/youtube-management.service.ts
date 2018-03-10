@@ -1,12 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-import * as youtubeSearch from "youtube-search";
-import { Observable } from 'rxjs';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import * as youtubeSearch from 'youtube-search';
+import { Observable } from 'rxjs/Observable';
 
 import { without } from 'lodash';
 import { Subject } from 'rxjs/Subject';
 import { FileTag } from './files-tag-management.service';
+import { scan, publishReplay, refCount, find, map } from 'rxjs/operators';
+import { ElectronService } from './electron.service';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
@@ -19,7 +21,7 @@ export interface YouTubeVideo {
     embeddedLink: SafeUrl;
     thumbnailUrl: string;
     isDownloaded: boolean;
-    duration$: Observable<YoutubeVideoDetails>
+    duration$: Observable<YoutubeVideoDetails>;
 
     percentage?: number;
     selected?: boolean;
@@ -47,7 +49,7 @@ export interface ChangeYoutubeVideoStatusAction {
 
 const opts: youtubeSearch.YouTubeSearchOptions = {
     maxResults: 10,
-    key: "AIzaSyCt3VblWH9CheXDpX1E1HOxuIabEP97A0M"
+    key: 'AIzaSyCt3VblWH9CheXDpX1E1HOxuIabEP97A0M'
 };
 
 @Injectable()
@@ -61,8 +63,9 @@ export class YoutubeManagementService {
     private _downloadingVideo$: Observable<YouTubeVideoWithStream[]>;
 
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private zone: NgZone,
+        private electronService: ElectronService,
         private sanitizer: DomSanitizer) {
 
         this.youtubeVideosFolder = localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER);
@@ -70,12 +73,15 @@ export class YoutubeManagementService {
             this.loadItems();
         }
 
+        // TODO: fix any used in this scan
         this._downloadingVideo$ = this.downloadChangesSubject
-            .scan((acc: YouTubeVideoWithStream[], { add, object }) => {
-                return add ? [...acc, object] : without(acc, object);
-            }, [])
-            .publishReplay(1)
-            .refCount();
+            .pipe(
+                scan((acc: YouTubeVideoWithStream[], { add, object }) => {
+                    return add ? [...acc, object] : without(acc, object);
+                }, <any>[]),
+                publishReplay(1),
+                refCount()
+            );
     }
 
     private storeVideo(youtubeVideo: YouTubeVideo): void {
@@ -86,7 +92,7 @@ export class YoutubeManagementService {
     public deleteVideo(id: string) {
         const youtubeVideo = this.downloadedVideos.find((file) => file.id === id);
         this.downloadedVideos.splice(this.downloadedVideos.indexOf(youtubeVideo), 1);
-        fs.unlinkSync(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4');
+        this.electronService.fs.unlinkSync(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4');
         localStorage.setItem(LOCAL_STORAGE_YOUTUBE_VIDEOS, JSON.stringify(this.downloadedVideos));
     }
 
@@ -105,20 +111,22 @@ export class YoutubeManagementService {
 
     public isDownloading(video: YouTubeVideo): Observable<boolean> {
         return this._downloadingVideo$
-            .find((ysList: YouTubeVideoWithStream[]) => !!ysList.find(item => item.video.id === video.id))
-            .map((item) => !!item);
+            .pipe(
+                find((ysList: YouTubeVideoWithStream[]) => !!ysList.find(item => item.video.id === video.id)),
+                map((item) => !!item)
+            );
     }
 
     private loadItems(): void {
-        const videoList = <YouTubeVideo[]> JSON.parse(localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS));
+        const videoList = <YouTubeVideo[]>JSON.parse(localStorage.getItem(LOCAL_STORAGE_YOUTUBE_VIDEOS));
         if (videoList) {
             this.downloadedVideos = videoList;
         }
     }
 
     public downloadYoutubeVideo(youtubeVideo: YouTubeVideo, finished?: () => void): void {
-        const videoStream = ytdl(youtubeVideo.link);
-        videoStream.pipe(fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
+        const videoStream = this.electronService.ytdl(youtubeVideo.link);
+        videoStream.pipe(this.electronService.fs.createWriteStream(this.youtubeVideosFolder + '/' + youtubeVideo.id + '.mp4'));
         const videoWithStream = { video: youtubeVideo, stream: videoStream };
         this.addDownloadingVideo(videoWithStream);
         videoStream.on('response', (res) => {
@@ -153,7 +161,9 @@ export class YoutubeManagementService {
     public searchVideo(input: string): Promise<any> {
         return new Promise((resolve, reject) => {
             youtubeSearch(input, opts, (err, results) => {
-                if (err) return console.log(err);
+                if (err) {
+                    return console.log(err);
+                }
 
                 console.dir(results);
                 resolve(results);
@@ -193,22 +203,23 @@ export class YoutubeManagementService {
     public getSuggestions(text: string): Observable<YoutubeAutoSuggestion[]> {
         return this.http
             .get(`http://suggestqueries.google.com/complete/search?client=youtube&hjson=t&cp=1&q=${text}&format=5&alt=json&callback=?`)
-            .map((response) => {
-                const resultsArray: { name: string, index: number }[] = (<any> response.json())[1];
-                if (resultsArray.length > 0) {
-                    return resultsArray.map((result) => ({ name: result[0] }));
-                } else {
-                    return [];
-                }
-            })
-            .catch((error) => []);
+            .pipe(
+                map((response) => {
+                    const resultsArray: { name: string, index: number }[] = (<any>response)[1];
+                    if (resultsArray.length > 0) {
+                        return resultsArray.map((result) => ({ name: result[0] }));
+                    } else {
+                        return [];
+                    }
+                })
+            );
     }
 
     private getVideoInformation(id: string): Observable<YoutubeVideoDetails> {
         return this.http
             .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=contentDetails&key=${opts.key}`)
             .map((response) => {
-                const firstItem = (<any> response.json()).items[0];
+                const firstItem = (<any>response).items[0];
                 if (firstItem) {
                     return firstItem.contentDetails;
                 } else {

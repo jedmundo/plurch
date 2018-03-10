@@ -1,7 +1,7 @@
 {
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "project": {
-        "name": "plurch"
+        "name": "angularelectron"
     },
     "apps": [
         {
@@ -9,7 +9,10 @@
             "outDir": "dist",
             "assets": [
                 "assets",
-                "favicon.ico"
+                "favicon.ico",
+                "favicon.png",
+                "favicon.icns",
+                "favicon.256x256.png"
             ],
             "index": "index.html",
             "main": "main.ts",
@@ -19,7 +22,7 @@
             "testTsconfig": "tsconfig.spec.json",
             "prefix": "app",
             "styles": [
-                "styles.css",
+                "styles.scss",
                 "../node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [],
@@ -35,9 +38,6 @@
             "config": "./protractor.conf.js"
         }
     },
-    "addons": [
-        "../node_modules/font-awesome/fonts/*.+(otf|eot|svg|ttf|woff|woff2)"
-    ],
     "lint": [
         {
             "project": "src/tsconfig.app.json",

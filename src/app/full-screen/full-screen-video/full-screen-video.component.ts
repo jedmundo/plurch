@@ -3,8 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-
-import { ipcRenderer } from 'electron';
+import { ElectronService } from '../../shared/services/electron.service';
 
 @Component({
     templateUrl: 'full-screen-video.component.html',
@@ -20,6 +19,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     private windowId: string;
 
     constructor(
+        private electronService: ElectronService,
         private router: Router,
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer,
@@ -34,42 +34,43 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
                 this.windowId = params['windowId'];
             });
 
-        ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
-            const video = this.videoPlayerRef.nativeElement;
+        this.electronService.ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
+            const videoEl = this.videoPlayerRef.nativeElement;
             switch (command.type) {
                 case VIDEO_COMMAND_TYPE.PLAY:
-                    return this.renderer.invokeElementMethod(video, 'play');
+                    return this.renderer.invokeElementMethod(videoEl, 'play');
                 case VIDEO_COMMAND_TYPE.PAUSE:
-                    return this.renderer.invokeElementMethod(video, 'pause');
+                    return this.renderer.invokeElementMethod(videoEl, 'pause');
                 case VIDEO_COMMAND_TYPE.MUTE:
-                    return this.renderer.setElementProperty(video, 'muted', true);
+                    return this.renderer.setElementProperty(videoEl, 'muted', true);
                 case VIDEO_COMMAND_TYPE.UNMUTE:
-                    return this.renderer.setElementProperty(video, 'muted', false);
+                    return this.renderer.setElementProperty(videoEl, 'muted', false);
                 case VIDEO_COMMAND_TYPE.VOLUME:
-                    return this.renderer.setElementProperty(video, 'volume', command.value);
+                    return this.renderer.setElementProperty(videoEl, 'volume', command.value);
                 case VIDEO_COMMAND_TYPE.RESTART:
-                    return this.renderer.invokeElementMethod(video, 'load');
+                    return this.renderer.invokeElementMethod(videoEl, 'load');
                 case VIDEO_COMMAND_TYPE.SYNC_TIME:
-                    this.renderer.setElementProperty(video, 'currentTime', command.value);
+                    this.renderer.setElementProperty(videoEl, 'currentTime', command.value);
                     break;
             }
         });
 
-        ipcRenderer.on('retrieve-video-time', (event, parameters) => {
+        this.electronService.ipcRenderer.on('retrieve-video-time', (event, parameters) => {
             if (parameters.itemId === this.itemId && parameters.windowId === this.windowId) {
-                ipcRenderer.send('respond-video-time', { id: this.itemId, isPaused: video.paused, isMuted: video.muted, time: video.currentTime });
+                this.electronService.ipcRenderer
+                    .send('respond-video-time', { id: this.itemId, isPaused: video.paused, isMuted: video.muted, time: video.currentTime });
             }
         });
 
-        ipcRenderer.on('remove-item', (event, parameters) => {
+        this.electronService.ipcRenderer.on('remove-item', (event, parameters) => {
             if (parameters.itemId === this.itemId) {
-                ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
+                this.electronService.ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
                 this.router.navigate(['/fs/empty-window']);
             }
         });
 
         const video: HTMLMediaElement = this.videoPlayerRef.nativeElement;
-        ipcRenderer.send('new-item-playing', { id: this.itemId, windowId: this.windowId, videoElement: video });
+        this.electronService.ipcRenderer.send('new-item-playing', { id: this.itemId, windowId: this.windowId, videoElement: video });
 
         this.renderer.listen(video, 'ended', () => {
             this.router.navigate(['/fs/empty-window']);
@@ -77,7 +78,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
+        this.electronService.ipcRenderer.send('removed-item-playing', { id: this.itemId, windowId: this.windowId });
     }
 
 }

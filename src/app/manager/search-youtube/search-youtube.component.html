@@ -1,13 +1,13 @@
 <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
 
 <div class="youtube-videos-container">
-    <md-card *ngFor="let video of searchResults" class="youtube-video-card">
-        <md-card-header>
-            <md-card-title><b>{{ video.title }}</b></md-card-title>
-            <md-card-subtitle>{{ video.description }}</md-card-subtitle>
-        </md-card-header>
+    <mat-card *ngFor="let video of searchResults" class="youtube-video-card">
+        <mat-card-header>
+            <mat-card-title><b>{{ video.title }}</b></mat-card-title>
+            <mat-card-subtitle>{{ video.description }}</mat-card-subtitle>
+        </mat-card-header>
 
-        <md-card-content>
+        <mat-card-content>
             <img *ngIf="!video.link" [src]="video.thumbnailUrl">
 
             <iframe [src]="video.embeddedLink" height="180"></iframe>
@@ -15,15 +15,15 @@
             <div class="duration">
                 <b>Duration:</b> {{ (video.duration$ | async)?.duration }}
             </div>
-        </md-card-content>
+        </mat-card-content>
 
-        <md-card-actions>
-            <button *ngIf="!video.isDownloaded && !(isDownloading(video) | async)" (click)="downloadVideo(video)" md-button>
+        <mat-card-actions>
+            <button *ngIf="!video.isDownloaded && !(isDownloading(video) | async)" (click)="downloadVideo(video)" mat-button>
                 Download
             </button>
-            <md-progress-bar *ngIf="isDownloading(video) | async" [value]="video.percentage"
-                             mode="determinate"></md-progress-bar>
+            <mat-progress-bar *ngIf="isDownloading(video) | async" [value]="video.percentage"
+                             mode="determinate"></mat-progress-bar>
             <div *ngIf="video.isDownloaded" class="downloaded-label">Already Downloaded</div>
-        </md-card-actions>
-    </md-card>
+        </mat-card-actions>
+    </mat-card>
 </div>

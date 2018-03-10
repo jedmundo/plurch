@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import { ipcRenderer } from 'electron';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ElectronService } from './electron.service';
 
 export class ItemPlaying {
 
@@ -19,13 +20,15 @@ export class ItemsPlayingManagementService {
     private itemsPlaying$: Observable<ItemPlaying[]> = this.itemsPlayingSubject.asObservable();
     private itemsPlayingArray: ItemPlaying[] = [];
 
-    constructor() {
-        ipcRenderer.on('new-item-playing', (event, itemPlaying: ItemPlaying) => {
+    constructor(
+        private electronService: ElectronService
+    ) {
+        this.electronService.ipcRenderer.on('new-item-playing', (event, itemPlaying: ItemPlaying) => {
             console.log('ADDED ITEM');
             this.addItem(new ItemPlaying(itemPlaying.id, itemPlaying.windowId, itemPlaying.videoElement));
         });
 
-        ipcRenderer.on('removed-item-playing', (event, obj: any) => {
+        this.electronService.ipcRenderer.on('removed-item-playing', (event, obj: any) => {
             console.log('REMOVED ITEM');
             this.removeItem(obj.id, obj.windowId);
         });

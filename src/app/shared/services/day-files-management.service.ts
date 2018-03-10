@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ItemPlaying } from './items-playing-management.service';
-import { shell } from 'electron';
+import { ElectronService } from './electron.service';
 
 export const LOCAL_STORAGE_FILE_LIST_PREFIX = 'FILES_';
 
@@ -12,9 +12,9 @@ export enum PLAYABLE_FILE_TYPE {
 
 export class PlayableItem {
 
-    public isPlaying: boolean = false;
-    public isSendingToWindow: boolean = false;
-    public isRemovingFromWindow: boolean = false;
+    public isPlaying = false;
+    public isSendingToWindow = false;
+    public isRemovingFromWindow = false;
 
     constructor(
         public id: string,
@@ -25,25 +25,26 @@ export class PlayableItem {
         public type: PLAYABLE_FILE_TYPE = PLAYABLE_FILE_TYPE.DEFAULT,
         public thumbnailPath?: string,
         public itemsPlaying: ItemPlaying[] = []
-    ) {}
+    ) { }
 }
 
 @Injectable()
 export class DayFilesManagementService {
 
     constructor(
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private electronService: ElectronService
     ) {
 
     }
 
     public openFile(path: string) {
-        shell.openItem(path);
+        this.electronService.shell.openItem(path);
     }
 
     public deleteFile(dayName: string, path: string, files: PlayableItem[]) {
-        const file = files.find((file) => file.path === path);
-        files.splice(files.indexOf(file) , 1);
+        const file = files.find((playableItem) => playableItem.path === path);
+        files.splice(files.indexOf(file), 1);
         localStorage.setItem(LOCAL_STORAGE_FILE_LIST_PREFIX + dayName, JSON.stringify(files));
     }
 
@@ -97,13 +98,13 @@ export class DayFilesManagementService {
     }
 
     private storeFile(dayName: string,
-                      files: PlayableItem[],
-                      id: string,
-                      path: string,
-                      type: PLAYABLE_FILE_TYPE,
-                      name?: string,
-                      description?: string,
-                      thumbnailPath?: string
+        files: PlayableItem[],
+        id: string,
+        path: string,
+        type: PLAYABLE_FILE_TYPE,
+        name?: string,
+        description?: string,
+        thumbnailPath?: string
     ): void {
         files.push(
             new PlayableItem(
@@ -119,7 +120,7 @@ export class DayFilesManagementService {
     }
 
     private generateName(path: string): string {
-        return path.split('/')[path.split('/').length-1].split('.')[0];
+        return path.split('/')[path.split('/').length - 1].split('.')[0];
     }
 
 }

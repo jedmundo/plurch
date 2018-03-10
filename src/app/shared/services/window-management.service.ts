@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ipcRenderer, remote, BrowserWindow } from 'electron';
 import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { guid } from '../../util/util-functions';
 import { IS_DEBUG } from '../../app.component';
+import { ElectronService } from './electron.service';
 
 export class PlurchWindow {
 
@@ -36,10 +37,12 @@ export class WindowManagementService {
     private pWindows: PlurchWindow[] = [];
     private indexUrl: string;
 
-    constructor() {
-        ipcRenderer.send('get-index-url');
+    constructor(
+        private electronService: ElectronService
+    ) {
+        this.electronService.ipcRenderer.send('get-index-url');
 
-        ipcRenderer.on('get-index-url-reply', (event, arg) => {
+        this.electronService.ipcRenderer.on('get-index-url-reply', (event, arg) => {
             this.indexUrl = arg.indexUrl;
         });
     }
@@ -75,7 +78,7 @@ export class WindowManagementService {
         const rightExternalMonitorXPosition = externalMonitorXBounds < 0 ? externalMonitorXBounds - 10 : externalMonitorXBounds + 10;
         const rightExternalMonitorYPosition = externalMonitorYBounds < 0 ? externalMonitorYBounds - 10 : externalMonitorYBounds + 10;
 
-        let previewWindow = new remote.BrowserWindow({
+        const previewWindow = new this.electronService.remote.BrowserWindow({
             title: title,
             icon: 'assets/icon.png',
             width: 800,
@@ -117,7 +120,7 @@ export class WindowManagementService {
     public closeAllWindows(): void {
         this.pWindows.forEach((pWindow: PlurchWindow) => {
             this.closeWindow(pWindow.id);
-        })
+        });
     }
 
     public getPlurchWindow(id: string): PlurchWindow {
@@ -125,7 +128,7 @@ export class WindowManagementService {
     }
 
     public addToWindow(windowId: string, file: PlayableItem): void {
-        const pWindow = this.pWindows.find((pWindow) => pWindow.id === windowId);
+        const pWindow = this.pWindows.find((currPWindow) => currPWindow.id === windowId);
         pWindow.playableItem = file;
         if (file.type === PLAYABLE_FILE_TYPE.VIDEO) {
             const url = `#/fs/video/${file.path.replace(/\//g, '___')}/${file.id}/${pWindow.id}`;
@@ -137,7 +140,7 @@ export class WindowManagementService {
     }
 
     public sendMessageToWindow(id: string, messageTitle: string, message: any): void {
-        const pWindow = this.pWindows.find((pWindow) => pWindow.id === id);
+        const pWindow = this.pWindows.find((currentPWindow) => currentPWindow.id === id);
         if (pWindow) {
             pWindow.electronWindow.webContents.send(messageTitle, message);
         }
@@ -145,7 +148,7 @@ export class WindowManagementService {
 
     public sendMessageToWindows(file: PlayableItem, messageTitle: string, message: any): void {
         file.itemsPlaying.map((item) => item.windowId).forEach((windowID) => {
-            const pWindow = this.pWindows.find((pWindow) => pWindow.id === windowID);
+            const pWindow = this.pWindows.find((currentPWindow) => currentPWindow.id === windowID);
             if (pWindow) {
                 pWindow.electronWindow.webContents.send(messageTitle, message);
             }
@@ -153,7 +156,7 @@ export class WindowManagementService {
     }
 
     public sendCommandToWindow(id: string, command: WINDOW_COMMAND_TYPE): void {
-        const pWindow = this.pWindows.find((pWindow) => pWindow.id === id);
+        const pWindow = this.pWindows.find((currentPWindow) => currentPWindow.id === id);
         if (pWindow) {
             switch (command) {
                 case WINDOW_COMMAND_TYPE.FULL_SCREEN:
