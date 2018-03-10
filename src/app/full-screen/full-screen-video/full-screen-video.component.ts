@@ -29,7 +29,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.params
             .subscribe((params: Params) => {
-                this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(params['path'].replace(/___/g, '/'));
+                this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(`file://${params['path'].replace(/___/g, '/')}`);
                 this.itemId = params['id'];
                 this.windowId = params['windowId'];
             });

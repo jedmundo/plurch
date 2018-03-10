@@ -77,6 +77,18 @@ try {
     // throw e;
 }
 
+ipcMain.on('get-index-url', (event, arg) => {
+
+    let indexUrl;
+    if (serve) {
+        indexUrl = 'http://localhost:4200';
+    } else {
+        indexUrl = path.join(__dirname, 'dist/index.html');
+    }
+
+    event.sender.send('get-index-url-reply', {indexUrl});
+});
+
 ipcMain.on('new-item-playing', (event, arg) => {
     win.webContents.send('new-item-playing', arg);
 });
