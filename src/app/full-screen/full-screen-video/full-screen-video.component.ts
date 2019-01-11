@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import 'rxjs/add/operator/map';
 import { VIDEO_COMMAND_TYPE, VideoCommand } from '../../manager/day-schedule/video-item/video-item.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 import { ElectronService } from '../../shared/services/electron.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.route.params
             .subscribe((params: Params) => {
-                this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(`file://${params['path'].replace(/___/g, '/')}`);
+                this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(params['path'].replace(/___/g, '/'));
                 this.itemId = params['id'];
                 this.windowId = params['windowId'];
             });

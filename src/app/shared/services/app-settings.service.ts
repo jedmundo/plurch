@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { USE_LOUDNESS } from '../../app.component';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Observable } from 'rxjs/Observable';
-import { PlurchDay } from '../../manager/day-list/day-list.component';
+import { ReplaySubject, Observable } from 'rxjs';
 import { ElectronService } from './electron.service';
 
 const OVERALL_VOLUME_KEY = 'overall-volume';

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PlayableItem, PLAYABLE_FILE_TYPE } from './day-files-management.service';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable, ReplaySubject } from 'rxjs';
 import { guid } from '../../util/util-functions';
 import { IS_DEBUG } from '../../app.component';
 import { ElectronService } from './electron.service';

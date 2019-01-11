@@ -14,30 +14,30 @@ import { FileTagManagementService } from './services/files-tag-management.servic
 import { ElectronService } from './services/electron.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatProgressBarModule,
-        MatButtonModule
-    ],
-    declarations: [
-        DownloadListComponent,
-        NavigationComponent
-    ],
-    providers: [
-        ElectronService,
-        WindowManagementService,
-        DisplayManagementService,
-        YoutubeManagementService,
-        DayFilesManagementService,
-        ItemsPlayingManagementService,
-        AppSettingsService,
-        FileTagManagementService
-    ],
-    exports: [
-        CommonModule,
-        DownloadListComponent,
-        NavigationComponent
-    ]
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatProgressBarModule,
+    MatButtonModule
+  ],
+  declarations: [
+    DownloadListComponent,
+    NavigationComponent
+  ],
+  providers: [
+    WindowManagementService,
+    DisplayManagementService,
+    YoutubeManagementService,
+    DayFilesManagementService,
+    ItemsPlayingManagementService,
+    AppSettingsService,
+    FileTagManagementService,
+    ElectronService
+  ],
+  exports: [
+    CommonModule,
+    DownloadListComponent,
+    NavigationComponent
+  ]
 })
 export class SharedModule { }

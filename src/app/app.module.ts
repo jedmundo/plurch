@@ -1,4 +1,3 @@
-import 'zone.js/dist/zone-mix';
 import 'reflect-metadata';
 import '../polyfills';
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,6 +8,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { ElectronService } from './shared/services/electron.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -46,22 +47,20 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { FullScreenVideoComponent } from './full-screen/full-screen-video/full-screen-video.component';
-import { ROUTER_MODULE } from './app.routes';
 import { MonitorDisplaysComponent } from './manager/monitor-displays/monitor-displays.component';
 import { DayScheduleComponent } from './manager/day-schedule/day-schedule.component';
 import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
-import 'hammerjs';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
     imports: [
         BrowserModule,
-        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
-        ROUTER_MODULE,
+        AppRoutingModule,
         HttpClientModule,
         TranslateModule.forRoot({
             loader: {
@@ -80,6 +79,7 @@ import 'hammerjs';
         MatSnackBarModule,
         MatInputModule,
         MatTabsModule,
+        BrowserAnimationsModule,
         DragulaModule
     ],
     declarations: [
@@ -105,6 +105,7 @@ import 'hammerjs';
         ProgramComponent,
         CreateTagComponent
     ],
+    providers: [ElectronService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

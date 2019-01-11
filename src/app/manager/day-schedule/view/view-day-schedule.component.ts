@@ -11,7 +11,7 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { ProgramComponent } from '../program/program.component';
 import { ElectronService } from '../../../shared/services/electron.service';

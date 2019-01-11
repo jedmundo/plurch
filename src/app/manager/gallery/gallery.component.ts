@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { YouTubeVideo, YoutubeManagementService } from '../../shared/services/youtube-management.service';
 import { FileTag, FileTagManagementService } from '../../shared/services/files-tag-management.service';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { CreateTagComponent } from './create-tag/create-tag.component';
-import { Subscription } from 'rxjs/Subscription';
 import { dragula, DragulaService } from 'ng2-dragula';
 
 @Component({

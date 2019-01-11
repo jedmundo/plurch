@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {
     YouTubeVideo, YoutubeManagementService
 } from '../../shared/services/youtube-management.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-search-youtube',

@@ -55,7 +55,7 @@ export class DayFilesManagementService {
                 list.push(new PlayableItem(
                     file.id,
                     file.path,
-                    this.sanitizer.bypassSecurityTrustResourceUrl(`file://${file.path}`),
+                    this.sanitizer.bypassSecurityTrustResourceUrl(file.path),
                     file.name ? file.name : this.generateName(file.path),
                     file.description,
                     file.type,

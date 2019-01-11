@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import Display = Electron.Display;
 import { DisplayManagementService, PlurchDisplay } from '../../shared/services/display-management.service';
-import { Observable } from 'rxjs/Observable';
+import { Subscription, Observable } from 'rxjs';
 import {
     PlurchWindow, WINDOW_COMMAND_TYPE,
     WindowManagementService
 } from '../../shared/services/window-management.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-monitor-displays',

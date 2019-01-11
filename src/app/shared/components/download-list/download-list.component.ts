@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 import {
     YoutubeManagementService,
     YouTubeVideoWithStream
 } from '../../services/youtube-management.service';
-import { Subscription } from 'rxjs/Subscription';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'pl-download-list',
@@ -57,8 +57,7 @@ export class DownloadListComponent implements OnInit, OnDestroy {
         // ]);
         this.dlVideos$ = this.youtubeManagementService.downloadingVideo$;
 
-        this.dlVideosExists = this.dlVideos$
-            .map(videos => !!videos && videos.length > 0);
+        this.dlVideosExists = this.dlVideos$.pipe(map(videos => !!videos && videos.length > 0));
 
         this.dlChangeVideoStatusSubscription = this.youtubeManagementService.downloadChanges$
             .subscribe((videoStatus) => {

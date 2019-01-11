@@ -1,8 +1,5 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { DragulaService } from 'ng2-dragula';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 import {
     YoutubeManagementService, YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
@@ -11,6 +8,8 @@ import {
     PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
 import { guid } from '../../../util/util-functions';
+import { DragulaService } from 'ng2-dragula';
+import { Subscription, Observable } from 'rxjs';
 import { ElectronService } from '../../../shared/services/electron.service';
 
 const videoAllowedExtensions: string[] = ['mp4', 'm4v', 'mkv'];

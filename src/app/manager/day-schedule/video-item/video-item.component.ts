@@ -5,7 +5,7 @@ import {
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
 import { MatSliderChange } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 export interface VideoCommand {
     type: VIDEO_COMMAND_TYPE;
@@ -182,8 +182,7 @@ export class VideoItemComponent implements OnInit, OnDestroy, AfterViewInit {
     public volumeChange(event: MatSliderChange): void {
         const volumeValue = event.value;
         this.renderer.setElementProperty(this.videoPlayerRef.nativeElement, 'volume', volumeValue);
-        this.windowManagementService
-            .sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
+        this.windowManagementService.sendMessageToWindows(this.file, 'send-video-type', { type: VIDEO_COMMAND_TYPE.VOLUME, value: volumeValue });
     }
 
     public get isPaused(): boolean {
