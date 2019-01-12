@@ -1,4 +1,4 @@
-export const AppConfig = {
-  production: false,
-  environment: 'LOCAL'
+export const CONF = {
+  production: true,
+  environment: 'PROD'
 };
