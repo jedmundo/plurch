@@ -1,10 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable, Subject, Subscription } from 'rxjs';
+import { scan, startWith, refCount, publishReplay } from 'rxjs/operators';
 
 import { without } from 'lodash';
-import { Subject } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
-import { scan, startWith, refCount, publishReplay } from 'rxjs/operators';
 
 export const LOCAL_STORAGE_TAGS = 'file-tags';
 

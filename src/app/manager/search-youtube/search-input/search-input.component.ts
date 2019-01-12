@@ -2,16 +2,15 @@ import {
     Component, OnInit, NgZone, OnDestroy, Output,
     EventEmitter
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
 import { setTimeout } from 'timers';
 import {
     YoutubeAutoSuggestion, YoutubeManagementService,
     YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
-import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 import { ElectronService } from '../../../shared/services/electron.service';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'pl-search-youtube-input',

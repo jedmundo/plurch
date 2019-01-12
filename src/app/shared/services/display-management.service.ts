@@ -1,11 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { merge } from 'rxjs/observable/merge';
-import { fromEvent } from 'rxjs/observable/fromEvent';
+import { Observable, Observer, merge, fromEvent } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { Display } from 'electron';
 import { ElectronService } from './electron.service';
+import { Display } from 'electron';
 
 export class PlurchDisplay {
 
