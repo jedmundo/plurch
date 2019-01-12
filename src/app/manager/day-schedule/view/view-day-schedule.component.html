@@ -15,11 +15,12 @@
 
             <mat-card-content class="playing-content">
                 <div *ngIf="itemPlaying.type === FILE_TYPE.VIDEO">
-                    <plurch-video-item [file]="itemPlaying"
-                                       [newFileAddedToWindow]="newFileAddedToWindow"
-                                       [muteVideo]="muteVideo"
-                                       [syncVideo]="syncVideo">
-                    </plurch-video-item>
+                    <pl-video-item
+                      [file]="itemPlaying"
+                      [newFileAddedToWindow]="newFileAddedToWindow"
+                      [muteVideo]="muteVideo"
+                      [syncVideo]="syncVideo">
+                    </pl-video-item>
                 </div>
 
                 <div *ngIf="itemPlaying.type === FILE_TYPE.DEFAULT">
