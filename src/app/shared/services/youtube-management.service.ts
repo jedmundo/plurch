@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as youtubeSearch from 'youtube-search';
 import { Observable, Subject } from 'rxjs';
 
@@ -49,8 +49,11 @@ export interface ChangeYoutubeVideoStatusAction {
 
 const opts: youtubeSearch.YouTubeSearchOptions = {
   maxResults: 10,
-  key: 'AIzaSyCt3VblWH9CheXDpX1E1HOxuIabEP97A0M'
+  key: 'AIzaSyDAhY2VvWaspwC17roUkmksYDSdRF_GVIY'
 };
+
+const YOUTUBE_API_KEY = 'AIzaSyDAhY2VvWaspwC17roUkmksYDSdRF_GVIY';
+const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/search';
 
 @Injectable()
 export class YoutubeManagementService {
@@ -200,17 +203,21 @@ export class YoutubeManagementService {
     }
   }
 
-  public getSuggestions(text: string): Observable<YoutubeAutoSuggestion[]> {
-    return this.http
-      .get(`http://suggestqueries.google.com/complete/search?client=youtube&hjson=t&cp=1&q=${text}&format=5&alt=json&callback=?`)
+  public getSuggestions(query: string): Observable<YoutubeAutoSuggestion[]> {
+    const params: string = [
+      `q=${query}`,
+      `key=${YOUTUBE_API_KEY}`,
+      `part=snippet`,
+      `type=video`,
+      `maxResults=10`
+    ].join('&');
+
+    const queryUrl = `${YOUTUBE_API_URL}?${params}`;
+
+    return this.http.get(queryUrl)
       .pipe(
         map((response) => {
-          const resultsArray: { name: string, index: number }[] = (<any>response)[1];
-          if (resultsArray.length > 0) {
-            return resultsArray.map((result) => ({ name: result[0] }));
-          } else {
-            return [];
-          }
+          return response['items'].map((item) => ({ name: item.snippet.title }));
         })
       );
   }

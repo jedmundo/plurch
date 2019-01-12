@@ -1,95 +1,95 @@
 import {
-    Component, OnInit, NgZone, OnDestroy, Output,
-    EventEmitter
+  Component, OnInit, NgZone, OnDestroy, Output,
+  EventEmitter
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { setTimeout } from 'timers';
 import {
-    YoutubeAutoSuggestion, YoutubeManagementService,
-    YouTubeVideo
+  YoutubeAutoSuggestion, YoutubeManagementService,
+  YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
 import { ElectronService } from '../../../shared/services/electron.service';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
-    selector: 'pl-search-youtube-input',
-    templateUrl: 'search-input.component.html',
-    styleUrls: ['search-input.component.scss']
+  selector: 'pl-search-youtube-input',
+  templateUrl: 'search-input.component.html',
+  styleUrls: ['search-input.component.scss']
 })
 export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
 
-    @Output() public resultsEmitter = new EventEmitter<YouTubeVideo[]>();
+  @Output() public resultsEmitter = new EventEmitter<YouTubeVideo[]>();
 
-    public searchInputControl = new FormControl();
+  public searchInputControl = new FormControl();
 
-    public youtubeAutoSuggest$: Observable<YoutubeAutoSuggestion[]>;
-    public searchValue: string;
-    public chosenFolder: string;
+  public youtubeAutoSuggest$: Observable<YoutubeAutoSuggestion[]>;
+  public searchValue: string;
+  public chosenFolder: string;
 
-    public autoSuggestVisible = false;
+  public autoSuggestVisible = false;
 
-    private searchSubscription: Subscription;
+  private searchSubscription: Subscription;
 
-    constructor(
-        private zone: NgZone,
-        private electronService: ElectronService,
-        private youtubeManagementService: YoutubeManagementService) {
-    }
+  constructor(
+    private zone: NgZone,
+    private electronService: ElectronService,
+    private youtubeManagementService: YoutubeManagementService) {
+  }
 
-    public ngOnInit() {
-        this.chosenFolder = this.youtubeManagementService.youtubeVideosFolder;
-        this.searchSubscription = this.searchInputControl.valueChanges
-            .subscribe((value) => {
-                this.searchValue = value;
-                this.autoSuggestVisible = true;
-            });
+  public ngOnInit() {
+    this.chosenFolder = this.youtubeManagementService.youtubeVideosFolder;
+    this.searchSubscription = this.searchInputControl.valueChanges
+      .subscribe((value) => {
+        this.searchValue = value;
+        this.autoSuggestVisible = true;
+      });
 
-        this.youtubeAutoSuggest$ = this.searchInputControl.valueChanges
-            .pipe(
-                debounceTime(700),
-                distinctUntilChanged(),
-                switchMap(term => this.youtubeManagementService.getSuggestions(term))
-            );
-    }
+    this.youtubeAutoSuggest$ = this.searchInputControl.valueChanges
+      .pipe(
+        debounceTime(700),
+        distinctUntilChanged(),
+        switchMap(term => this.youtubeManagementService.getSuggestions(term))
+      );
+  }
 
-    public ngOnDestroy(): void {
-        this.searchSubscription.unsubscribe();
-    }
+  public ngOnDestroy(): void {
+    this.searchSubscription.unsubscribe();
+  }
 
-    public pickSuggestion(suggestion: YoutubeAutoSuggestion): void {
-        this.searchValue = suggestion.name;
-        this.searchInputControl.setValue(this.searchValue, { emitEvent: false });
-        this.searchVideos();
-    }
+  public pickSuggestion(suggestion: YoutubeAutoSuggestion): void {
+    this.searchValue = suggestion.name;
+    this.searchInputControl.setValue(this.searchValue, { emitEvent: false });
+    this.searchVideos();
+    this.autoSuggestVisible = false;
+  }
 
-    public searchVideos(): void {
-        this.youtubeManagementService.searchVideo(this.searchValue)
-            .then((results) => {
-                this.resultsEmitter.emit(results
-                    .map((video) => this.youtubeManagementService.parseVideo(video))
-                    .filter((video) => !!video));
-            }
-            );
-    }
+  public searchVideos(): void {
+    this.youtubeManagementService.searchVideo(this.searchValue)
+      .then((results) => {
+        this.resultsEmitter.emit(results
+          .map((video) => this.youtubeManagementService.parseVideo(video))
+          .filter((video) => !!video));
+      });
+  }
 
-    public openChooseItemDialog() {
-        this.electronService.remote.dialog.showOpenDialog({
-            title: 'Select folder to store videos',
-            properties: ['openDirectory']
-        }, (folder) => {
-            this.zone.run(() => {
-                this.chosenFolder = folder[0];
-                this.youtubeManagementService.videosFolder = folder[0];
-            });
-        });
-    }
+  public openChooseItemDialog() {
+    this.electronService.remote.dialog.showOpenDialog({
+      title: 'Select folder to store videos',
+      properties: ['openDirectory']
+    }, (folder) => {
+      this.zone.run(() => {
+        this.chosenFolder = folder[0];
+        this.youtubeManagementService.videosFolder = folder[0];
+      });
+    });
+  }
 
-    public hideAutoSuggestList(): void {
-        // TODO: Ugly
-        setTimeout(() => {
-            this.autoSuggestVisible = false;
-        }, 500);
-    }
+  public hideAutoSuggestList(): void {
+    // TODO: Ugly
+    setTimeout(() => {
+      this.autoSuggestVisible = false;
+    }, 500);
+  }
 
 }
