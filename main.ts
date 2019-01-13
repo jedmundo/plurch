@@ -29,6 +29,7 @@ function createWindow() {
       electron: require(`${__dirname}/node_modules/electron`)
     });
     win.loadURL(LOCAL_URL);
+    win.webContents.openDevTools();
   } else {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
@@ -36,8 +37,6 @@ function createWindow() {
       slashes: true
     }));
   }
-
-  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -79,7 +78,11 @@ try {
   // In this file you can include the rest of your app's specific main process
   // code. You can also put them in separate files and require them here.
   ipcMain.on('get-index-url', (event, arg) => {
-    const indexUrl = serve ? LOCAL_URL : `${__dirname}/dist/index.html`;
+    const indexUrl = serve ? LOCAL_URL : url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
+    });
     event.sender.send('get-index-url-reply', { indexUrl });
   });
 
