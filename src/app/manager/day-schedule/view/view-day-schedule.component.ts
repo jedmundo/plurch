@@ -1,23 +1,21 @@
 import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
-import Display = Electron.Display;
-import Event = Electron.Event;
-import BrowserWindow = Electron.BrowserWindow;
-import {
-  WindowManagementService
-} from '../../../shared/services/window-management.service';
 import { ActivatedRoute, Params } from '@angular/router';
+import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
+
+import { Subscription } from 'rxjs';
+
 import {
-  PlayableItem, DayFilesManagementService,
+  PlayableItem,
+  DayFilesManagementService,
   PLAYABLE_FILE_TYPE
 } from '../../../shared/services/day-files-management.service';
+import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { ItemsPlayingManagementService } from '../../../shared/services/items-playing-management.service';
-import { Subscription } from 'rxjs';
-import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
-import { ProgramComponent } from '../program/program.component';
 import { ElectronService } from '../../../shared/services/electron.service';
+import { ProgramComponent } from '../program/program.component';
 
 @Component({
-  selector: 'app-view-day-schedule',
+  selector: 'pl-view-day-schedule',
   templateUrl: 'view-day-schedule.component.html',
   styleUrls: ['view-day-schedule.component.scss']
 })

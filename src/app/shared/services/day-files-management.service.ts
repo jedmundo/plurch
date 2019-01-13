@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 import { ItemPlaying } from './items-playing-management.service';
 import { ElectronService } from './electron.service';
 

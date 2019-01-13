@@ -1,16 +1,15 @@
-import {
-  Component, OnInit, NgZone, OnDestroy, Output,
-  EventEmitter
-} from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { setTimeout } from 'timers';
+
+import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
+
 import {
-  YoutubeAutoSuggestion, YoutubeManagementService,
+  YoutubeAutoSuggestion,
+  YoutubeManagementService,
   YouTubeVideo
 } from '../../../shared/services/youtube-management.service';
 import { ElectronService } from '../../../shared/services/electron.service';
-import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'pl-search-youtube-input',
@@ -34,8 +33,8 @@ export class SearchYoutubeInputComponent implements OnInit, OnDestroy {
   constructor(
     private zone: NgZone,
     private electronService: ElectronService,
-    private youtubeManagementService: YoutubeManagementService) {
-  }
+    private youtubeManagementService: YoutubeManagementService
+  ) { }
 
   public ngOnInit() {
     this.chosenFolder = this.youtubeManagementService.youtubeVideosFolder;

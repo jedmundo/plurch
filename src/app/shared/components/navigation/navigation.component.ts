@@ -1,26 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Observable } from 'rxjs';
+
 import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
-    selector: 'app-navigation',
-    templateUrl: 'navigation.component.html',
-    styleUrls: ['navigation.component.scss']
+  selector: 'pl-navigation',
+  templateUrl: 'navigation.component.html',
+  styleUrls: ['navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
 
-    public menuItems$: Observable<string[]>;
+  public menuItems$: Observable<string[]>;
 
-    constructor(
-        private appSettingsService: AppSettingsService
-    ) { }
+  constructor(
+    private appSettingsService: AppSettingsService
+  ) { }
 
-    public ngOnInit(): void {
-        this.menuItems$ = this.appSettingsService.menuItems$;
-    }
+  public ngOnInit(): void {
+    this.menuItems$ = this.appSettingsService.menuItems$;
+  }
 
-    public encodeURIComponent(url: string): string {
-        return encodeURIComponent(url);
-    }
-
+  public encodeURIComponent(url: string): string {
+    return encodeURIComponent(url);
+  }
 }
