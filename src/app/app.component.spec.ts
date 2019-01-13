@@ -1,7 +1,9 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
+
 import { TranslateModule } from '@ngx-translate/core';
+
+import { AppComponent } from './app.component';
 import { ElectronService } from './shared/services/electron.service';
 
 describe('AppComponent', () => {
@@ -26,8 +28,3 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   }));
 });
-
-class TranslateServiceStub {
-  setDefaultLang(lang: string): void {
-  }
-}

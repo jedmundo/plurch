@@ -13,19 +13,19 @@ import { ElectronService } from './shared/services/electron.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 import {
-    MatButtonModule,
-    MatDialogModule,
-    MatProgressBarModule,
-    MatSliderModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatInputModule,
-    MatTabsModule,
-    MatFormFieldModule
+  MatButtonModule,
+  MatDialogModule,
+  MatProgressBarModule,
+  MatSliderModule,
+  MatCardModule,
+  MatSnackBarModule,
+  MatInputModule,
+  MatTabsModule,
+  MatFormFieldModule
 } from '@angular/material';
 
 import { ManagerComponent } from './manager/manager.component';
@@ -55,57 +55,57 @@ import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.co
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpModule,
-        AppRoutingModule,
-        HttpClientModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (HttpLoaderFactory),
-                deps: [HttpClient]
-            }
-        }),
-        SharedModule,
-        MatDialogModule,
-        MatProgressBarModule,
-        MatFormFieldModule,
-        MatSliderModule,
-        MatButtonModule,
-        MatCardModule,
-        MatSnackBarModule,
-        MatInputModule,
-        MatTabsModule,
-        BrowserAnimationsModule,
-        DragulaModule
-    ],
-    declarations: [
-        AppComponent,
-        FullScreenVideoComponent,
-        MonitorDisplaysComponent,
-        DayScheduleComponent,
-        VideoItemComponent,
-        EmptyWindowComponent,
-        ManagerComponent,
-        DayListComponent,
-        GalleryComponent,
-        ViewDayScheduleComponent,
-        EditDayScheduleComponent,
-        SearchYoutubeComponent,
-        TimeFormatPipe,
-        SearchedItemsPipe,
-        ProgramComponent,
-        CreateTagComponent,
-        SearchYoutubeInputComponent
-    ],
-    entryComponents: [
-        ProgramComponent,
-        CreateTagComponent
-    ],
-    providers: [ElectronService],
-    bootstrap: [AppComponent]
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
+    AppRoutingModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (HttpLoaderFactory),
+        deps: [HttpClient]
+      }
+    }),
+    SharedModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatFormFieldModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatCardModule,
+    MatSnackBarModule,
+    MatInputModule,
+    MatTabsModule,
+    BrowserAnimationsModule,
+    DragulaModule
+  ],
+  declarations: [
+    AppComponent,
+    FullScreenVideoComponent,
+    MonitorDisplaysComponent,
+    DayScheduleComponent,
+    VideoItemComponent,
+    EmptyWindowComponent,
+    ManagerComponent,
+    DayListComponent,
+    GalleryComponent,
+    ViewDayScheduleComponent,
+    EditDayScheduleComponent,
+    SearchYoutubeComponent,
+    TimeFormatPipe,
+    SearchedItemsPipe,
+    ProgramComponent,
+    CreateTagComponent,
+    SearchYoutubeInputComponent
+  ],
+  entryComponents: [
+    ProgramComponent,
+    CreateTagComponent
+  ],
+  providers: [ElectronService],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

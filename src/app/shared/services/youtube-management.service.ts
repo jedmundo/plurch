@@ -1,14 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import * as youtubeSearch from 'youtube-search';
-import { Observable, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
+import { Observable, Subject } from 'rxjs';
+import { scan, publishReplay, refCount, find, map } from 'rxjs/operators';
+import * as youtubeSearch from 'youtube-search';
 import { without } from 'lodash';
 
 import { FileTag } from './files-tag-management.service';
 import { ElectronService } from './electron.service';
-import { scan, publishReplay, refCount, find, map } from 'rxjs/operators';
 
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS_FOLDER = 'youtube-videos-folder';
 export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';

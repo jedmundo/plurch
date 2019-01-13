@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-manager',
+  selector: 'pl-manager',
   templateUrl: './manager.component.html',
   styleUrls: ['./manager.component.scss']
 })

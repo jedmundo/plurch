@@ -2,10 +2,12 @@ import {
   Component, OnInit, Input, ViewChild, AfterViewInit, ElementRef, Renderer,
   EventEmitter, OnDestroy
 } from '@angular/core';
+import { MatSliderChange } from '@angular/material';
+
+import { Subscription } from 'rxjs';
+
 import { WindowManagementService } from '../../../shared/services/window-management.service';
 import { PlayableItem } from '../../../shared/services/day-files-management.service';
-import { MatSliderChange } from '@angular/material';
-import { Subscription } from 'rxjs';
 
 export interface VideoCommand {
   type: VIDEO_COMMAND_TYPE;
