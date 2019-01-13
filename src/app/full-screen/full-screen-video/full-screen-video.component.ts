@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, Renderer } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -29,28 +29,28 @@ export class FullScreenVideoComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.route.params
       .subscribe((params: Params) => {
-        this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl(params['path'].replace(/___/g, '/'));
+        this.videoPath = this.sanitizer.bypassSecurityTrustResourceUrl('file:///' + params['path'].replace(/___/g, '/'));
         this.itemId = params['id'];
         this.windowId = params['windowId'];
       });
 
     this.electronService.ipcRenderer.on('send-video-type', (event, command: VideoCommand) => {
-      const videoEl = this.videoPlayerRef.nativeElement;
+      const videoElNative = this.videoPlayerRef.nativeElement;
       switch (command.type) {
         case VIDEO_COMMAND_TYPE.PLAY:
-          return this.renderer.invokeElementMethod(videoEl, 'play');
+          return videoElNative.play();
         case VIDEO_COMMAND_TYPE.PAUSE:
-          return this.renderer.invokeElementMethod(videoEl, 'pause');
+          return videoElNative.pause();
         case VIDEO_COMMAND_TYPE.MUTE:
-          return this.renderer.setElementProperty(videoEl, 'muted', true);
+          return this.renderer.setElementProperty(videoElNative, 'muted', true);
         case VIDEO_COMMAND_TYPE.UNMUTE:
-          return this.renderer.setElementProperty(videoEl, 'muted', false);
+          return this.renderer.setElementProperty(videoElNative, 'muted', false);
         case VIDEO_COMMAND_TYPE.VOLUME:
-          return this.renderer.setElementProperty(videoEl, 'volume', command.value);
+          return this.renderer.setElementProperty(videoElNative, 'volume', command.value);
         case VIDEO_COMMAND_TYPE.RESTART:
-          return this.renderer.invokeElementMethod(videoEl, 'load');
+          return videoElNative.load();
         case VIDEO_COMMAND_TYPE.SYNC_TIME:
-          this.renderer.setElementProperty(videoEl, 'currentTime', command.value);
+          this.renderer.setElementProperty(videoElNative, 'currentTime', command.value);
           break;
       }
     });

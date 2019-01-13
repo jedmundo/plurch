@@ -85,13 +85,17 @@ export class WindowManagementService {
       width: 800,
       height: 600,
       x: rightExternalMonitorXPosition,
-      y: rightExternalMonitorYPosition
+      y: rightExternalMonitorYPosition,
+      webPreferences: {
+        webSecurity: false
+      }
     });
 
     const id = guid();
 
     // and load the index.html of the app.
     const finalLoadUrl = this.indexUrl + loadUrl;
+    console.log('FINAL URL' + finalLoadUrl);
     previewWindow.loadURL(finalLoadUrl);
 
     // Open the DevTools.

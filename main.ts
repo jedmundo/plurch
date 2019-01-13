@@ -1,6 +1,8 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
+const LOCAL_URL = 'http://localhost:4200';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -26,7 +28,7 @@ function createWindow() {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
     });
-    win.loadURL('http://localhost:4200');
+    win.loadURL(LOCAL_URL);
   } else {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
@@ -49,6 +51,9 @@ function createWindow() {
 
 try {
 
+  // Added this because after Chrome 66 auto play is only possible with user interaction
+  app.commandLine.appendSwitch('--autoplay-policy', 'no-user-gesture-required');
+
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
@@ -69,6 +74,25 @@ try {
     if (win === null) {
       createWindow();
     }
+  });
+
+  // In this file you can include the rest of your app's specific main process
+  // code. You can also put them in separate files and require them here.
+  ipcMain.on('get-index-url', (event, arg) => {
+    const indexUrl = serve ? LOCAL_URL : `${__dirname}/dist/index.html`;
+    event.sender.send('get-index-url-reply', { indexUrl });
+  });
+
+  ipcMain.on('new-item-playing', (event, arg) => {
+    win.webContents.send('new-item-playing', arg);
+  });
+
+  ipcMain.on('removed-item-playing', (event, arg) => {
+    win.webContents.send('removed-item-playing', arg);
+  });
+
+  ipcMain.on('respond-video-time', (event, arg) => {
+    win.webContents.send('respond-video-time', arg);
   });
 
 } catch (e) {
