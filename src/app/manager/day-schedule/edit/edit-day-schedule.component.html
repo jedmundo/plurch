@@ -2,27 +2,6 @@
 
     <mat-card class="available-list">
         <mat-tab-group>
-            <mat-tab label="Downloaded videos">
-                <mat-card-content class="content">
-                    <div class="search-bar">
-                        <b>Search:</b>
-                        <div class="input-container">
-                            <input [(ngModel)]="searchValue">
-                        </div>
-                    </div>
-
-                    <!--<div class="add-local-files">-->
-                    <!--<button (click)="openChooseItemDialog()">Add Local Files</button>-->
-                    <!--</div>-->
-                    <div class="video-list">
-                        <div *ngFor="let video of (availableVideos | searchedItems: searchValue)"
-                             class="video-item">
-                            {{ video.title }}
-                            <button (click)="addVideoToDay(video)">Add</button>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-tab>
             <mat-tab label="Download from Youtube and Add" class="search-tab">
                 <mat-card-content class="content">
                     <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
@@ -59,6 +38,27 @@
                                 </div>
                             </div>
                         </mat-card>
+                    </div>
+                </mat-card-content>
+            </mat-tab>
+            <mat-tab label="Downloaded videos">
+                <mat-card-content class="content">
+                    <div class="search-bar">
+                        <b>Search:</b>
+                        <div class="input-container">
+                            <input [(ngModel)]="searchValue">
+                        </div>
+                    </div>
+
+                    <!--<div class="add-local-files">-->
+                    <!--<button (click)="openChooseItemDialog()">Add Local Files</button>-->
+                    <!--</div>-->
+                    <div class="video-list">
+                        <div *ngFor="let video of (availableVideos | searchedItems: searchValue)"
+                             class="video-item">
+                            {{ video.title }}
+                            <button (click)="addVideoToDay(video)">Add</button>
+                        </div>
                     </div>
                 </mat-card-content>
             </mat-tab>
