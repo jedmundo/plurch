@@ -6,7 +6,7 @@
 
     <div *ngIf="dayHasFiles()" class="playlist-container">
 
-        <mat-card *ngIf="itemPlaying">
+        <mat-card *ngIf="itemPlaying" class="playing-content">
             <mat-card-header>
                 <!--<div mat-card-avatar class="example-header-image"></div>-->
                 <mat-card-title><b> {{ itemPlaying.name }} </b></mat-card-title>

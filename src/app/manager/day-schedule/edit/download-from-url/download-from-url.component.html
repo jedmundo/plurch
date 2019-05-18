@@ -1,0 +1,11 @@
+<div class="main-container">
+  <div class="label-container">
+    <label><b>Url:</b></label>
+    <input (change)="inputChange($event)"/>
+  </div>
+  <div class="label-container">
+    <label><b>Title:</b></label>
+    <input [(ngModel)]="title" />
+  </div>
+  <button (click)="clickDownloadFile()">Download</button>
+</div>

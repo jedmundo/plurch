@@ -4,7 +4,8 @@
         <mat-tab-group>
             <mat-tab label="Download from Youtube and Add" class="search-tab">
                 <mat-card-content class="content">
-                    <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
+                  <pl-search-youtube-input (resultsEmitter)="getSearchResults($event)"></pl-search-youtube-input>
+                  <pl-youtube-download-from-url (downloadFile)="downloadFileFromUrl($event)"></pl-youtube-download-from-url>
 
                     <div class="searched-video-list">
                         <mat-card *ngFor="let video of searchResults" class="youtube-video-card">

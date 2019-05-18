@@ -53,6 +53,7 @@ import { SharedModule } from './shared/shared.module';
 import { VideoItemComponent } from './manager/day-schedule/video-item/video-item.component';
 import { EmptyWindowComponent } from './full-screen/empty-window/empty-window.component';
 import { AppRoutingModule } from './app-routing.module';
+import { DownloadFromYoutubeUrlComponent } from './manager/day-schedule/edit/download-from-url/download-from-url.component'
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { AppRoutingModule } from './app-routing.module';
     GalleryComponent,
     ViewDayScheduleComponent,
     EditDayScheduleComponent,
+    DownloadFromYoutubeUrlComponent,
     SearchYoutubeComponent,
     TimeFormatPipe,
     SearchedItemsPipe,

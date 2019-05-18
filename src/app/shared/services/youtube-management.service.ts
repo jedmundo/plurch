@@ -15,13 +15,13 @@ export const LOCAL_STORAGE_YOUTUBE_VIDEOS = 'youtube-videos';
 
 export interface YouTubeVideo {
   id: string;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   link: string;
-  embeddedLink: SafeUrl;
-  thumbnailUrl: string;
-  isDownloaded: boolean;
-  duration$: Observable<YoutubeVideoDetails>;
+  embeddedLink?: SafeUrl;
+  thumbnailUrl?: string;
+  isDownloaded?: boolean;
+  duration$?: Observable<YoutubeVideoDetails>;
 
   percentage?: number;
   selected?: boolean;
@@ -190,6 +190,26 @@ export class YoutubeManagementService {
       duration$: this.getVideoInformation(video.id)
     };
   }
+
+  // public parseVideoFromUrl(url: string): Observable<YouTubeVideo> {
+  //   const videoId = url.split('?v=')[1];
+
+  //   console.log('video with id = ', videoId);
+  //   if (!url || !videoId) {
+  //     return of();
+  //   }
+
+  //   return this.http.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${opts.key}`).pipe(
+  //     tap(console.log),
+  //     map((videoInfo) => ({
+  //       id: videoId,
+  //       link: url,
+  //       thumbnails: {
+  //         high: 'https://via.placeholder.com/150'
+  //       }
+  //     }))
+  //   );
+  // }
 
   public get downloadedVideosList(): YouTubeVideo[] {
     return this.downloadedVideos;
