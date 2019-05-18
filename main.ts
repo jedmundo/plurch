@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, Menu } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -37,6 +37,27 @@ function createWindow() {
       slashes: true
     }));
   }
+
+  const template = [{
+    label: 'Application',
+    submenu: [
+      { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
+      { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); } }
+    ]
+  }, {
+    label: 'Edit',
+    submenu: [
+      { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+      { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+      { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+      { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+      { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+      { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+    ]
+  }
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
   // Emitted when the window is closed.
   win.on('closed', () => {
