@@ -1,0 +1,23 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 2rem;
+
+  .label-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  label {
+    margin-right: 10px;
+  }
+
+  input {
+    width: 100%;
+    line-height: 2rem;
+    font-size: 1.3rem;
+  }
+
+}
